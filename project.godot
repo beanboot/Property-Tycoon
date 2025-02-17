@@ -12,8 +12,13 @@ config_version=5
 
 config/name="movement_prototype"
 run/main_scene="res://board.tscn"
-config/features=PackedStringArray("4.3", "Forward Plus")
+config/features=PackedStringArray("4.3", "C#", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=1280
 
 [dotnet]
 
