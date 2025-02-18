@@ -1,61 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://c8b72xjdwwdl3"]
+[gd_scene load_steps=3 format=3 uid="uid://c8b72xjdwwdl3"]
 
-[ext_resource type="PackedScene" uid="uid://dyvx0i12s4qma" path="res://player.tscn" id="1_jqxn6"]
 [ext_resource type="Script" path="res://Board.cs" id="1_o8w5g"]
 [ext_resource type="Texture2D" uid="uid://dcye6ki23xeje" path="res://Square-white.svg.png" id="2_qw51a"]
 
 [node name="Board" type="Node2D"]
 script = ExtResource("1_o8w5g")
 
-[node name="Player" parent="." instance=ExtResource("1_jqxn6")]
-z_index = 1
-position = Vector2(528, 130)
-
-[node name="BoardSpace1" type="Sprite2D" parent="."]
-position = Vector2(153, 297)
-scale = Vector2(0.117188, 0.117188)
-texture = ExtResource("2_qw51a")
-
-[node name="BoardSpace2" type="Sprite2D" parent="."]
-position = Vector2(278, 297)
-scale = Vector2(0.117188, 0.117188)
-texture = ExtResource("2_qw51a")
-
-[node name="BoardSpace3" type="Sprite2D" parent="."]
-position = Vector2(403, 297)
-scale = Vector2(0.117188, 0.117188)
-texture = ExtResource("2_qw51a")
-
-[node name="BoardSpace4" type="Sprite2D" parent="."]
-position = Vector2(528, 297)
-scale = Vector2(0.117188, 0.117188)
-texture = ExtResource("2_qw51a")
-
-[node name="BoardSpace5" type="Sprite2D" parent="."]
-position = Vector2(653, 297)
-scale = Vector2(0.117188, 0.117188)
-texture = ExtResource("2_qw51a")
-
-[node name="BoardSpace6" type="Sprite2D" parent="."]
-position = Vector2(778, 297)
-scale = Vector2(0.117188, 0.117188)
-texture = ExtResource("2_qw51a")
-
-[node name="BoardSpace7" type="Sprite2D" parent="."]
-position = Vector2(903, 297)
-scale = Vector2(0.117188, 0.117188)
-texture = ExtResource("2_qw51a")
-
-[node name="BoardSpace8" type="Sprite2D" parent="."]
-position = Vector2(1028, 297)
-scale = Vector2(0.117188, 0.117188)
-texture = ExtResource("2_qw51a")
-
 [node name="Button" type="Button" parent="."]
-offset_left = 63.0
-offset_top = 530.0
-offset_right = 142.0
-offset_bottom = 561.0
+offset_left = 765.0
+offset_top = 886.0
+offset_right = 844.0
+offset_bottom = 917.0
 text = "Roll Dice:"
 
 [node name="DiceOutput" type="RichTextLabel" parent="Button"]
@@ -63,5 +18,231 @@ layout_mode = 0
 offset_left = 91.0
 offset_right = 230.0
 offset_bottom = 40.0
+
+[node name="BoardSpaces" type="Node2D" parent="."]
+
+[node name="BoardSpace1" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(1131.85, 1136.45)
+scale = Vector2(0.144, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace2" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(1010.89, 1136.45)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace3" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(920.888, 1136.45)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace4" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(830.888, 1136.45)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace5" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(740.888, 1136.45)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace6" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(650.888, 1136.45)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace7" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(560.888, 1136.45)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace8" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(470.888, 1136.45)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace9" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(380.888, 1136.45)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace10" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(290.888, 1136.45)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace11" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(169.928, 1136.45)
+scale = Vector2(0.144, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace12" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(169.928, 1015.49)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace13" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(169.928, 925.488)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace14" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(169.928, 835.488)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace15" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(169.928, 745.488)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace16" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(169.928, 655.488)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace17" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(169.928, 565.488)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace18" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(169.928, 475.488)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace19" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(169.928, 385.488)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace20" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(169.928, 295.488)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace21" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(169.928, 174.528)
+scale = Vector2(0.144, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace22" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(290.888, 174.528)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace23" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(380.888, 174.528)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace24" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(470.888, 174.528)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace25" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(560.888, 174.528)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace26" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(650.888, 174.528)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace27" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(740.888, 174.528)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace28" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(830.888, 174.528)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace29" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(920.888, 174.528)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace30" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(1010.89, 174.528)
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace31" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(1131.85, 174.528)
+scale = Vector2(0.144, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace32" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(1131.85, 295.488)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace33" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(1131.85, 385.488)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace34" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(1131.85, 475.488)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace35" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(1131.85, 565.488)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace36" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(1131.85, 655.488)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace37" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(1131.85, 745.488)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace38" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(1131.85, 835.488)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace39" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(1131.85, 925.488)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="BoardSpace40" type="Sprite2D" parent="BoardSpaces"]
+position = Vector2(1131.85, 1015.49)
+rotation = -1.5708
+scale = Vector2(0.0843754, 0.144)
+texture = ExtResource("2_qw51a")
+
+[node name="CurrentPlayerText" type="RichTextLabel" parent="."]
+offset_left = 440.0
+offset_top = 537.0
+offset_right = 834.0
+offset_bottom = 671.0
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
