@@ -1,15 +1,15 @@
 using Godot;
 using System;
-using System.Formats.Asn1;
+
 
 public partial class Board : Node2D
 {
-	private uint[] diceRoll;
-	private Sprite2D[] boardSpaces;
-	private Player[] players;
-	private bool canPressButton = true;
-	private int numOfPlayers = 2;
-	private int currentPlayer;
+	private uint[] _diceRoll;
+	private Sprite2D[] _boardSpaces;
+	private Player[] _players;
+	private bool _canPressButton = true;
+	private int _numOfPlayers = 2;
+	private int _currentPlayer;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -18,7 +18,7 @@ public partial class Board : Node2D
 
 		initialise_players();
 		
-		currentPlayer = 0;
+		_currentPlayer = 0;
 
 		display_current_player_text();
 	}
@@ -26,12 +26,12 @@ public partial class Board : Node2D
 	// Iterates the currentPlayer variable by 1 unless it excedes the number of players
 	public void change_player()
 	{
-		if (currentPlayer >= (numOfPlayers - 1)) {
-			currentPlayer = 0;
+		if (_currentPlayer >= (_numOfPlayers - 1)) {
+			_currentPlayer = 0;
 		}
 
 		else {
-			currentPlayer += 1;
+			_currentPlayer += 1;
 		}
 
 		display_current_player_text();
@@ -41,7 +41,7 @@ public partial class Board : Node2D
 	public void display_current_player_text()
 	{
 		var playerTextBox = GetNode<RichTextLabel>("CurrentPlayerText");
-		playerTextBox.Text = ("It is currently: ") + players[currentPlayer].Name + ("'s turn");
+		playerTextBox.Text = ("It is currently: ") + _players[_currentPlayer].Name + ("'s turn");
 	}
 
 	// Called within _Ready(), fills the array players[] by instantiating the player scene depending on numOfPlayers
@@ -49,13 +49,13 @@ public partial class Board : Node2D
 	{
 		int i;
 		var playerScene = GD.Load<PackedScene>("res://player.tscn");
-		players = new Player[numOfPlayers];
-		for (i = 0; i < numOfPlayers; i++) {
+		_players = new Player[_numOfPlayers];
+		for (i = 0; i < _numOfPlayers; i++) {
 			var playerInstance = playerScene.Instantiate();
 			playerInstance.Name = ("Player" + (i+1));
 			AddChild(playerInstance);
-			players[i] = GetNode<Player>("Player" + (i+1));
-			players[i].player_movement(boardSpaces[0].Position);
+			_players[i] = GetNode<Player>("Player" + (i+1));
+			_players[i].player_movement(_boardSpaces[0].Position);
 		};
 	}
 
@@ -63,9 +63,9 @@ public partial class Board : Node2D
 	public void initialise_board() 
 	{
 		int i;
-		boardSpaces = new Sprite2D[40];
+		_boardSpaces = new Sprite2D[40];
 		for (i = 0; i < 40; i++) {
-			boardSpaces[i] = GetNode<Sprite2D>("BoardSpaces/BoardSpace" + (i+1));
+			_boardSpaces[i] = GetNode<Sprite2D>("BoardSpaces/BoardSpace" + (i+1));
 		};
 	}
 
@@ -74,19 +74,19 @@ public partial class Board : Node2D
 	{
 			var textBox = GetNode<RichTextLabel>("Button/DiceOutput");
 
-			diceRoll = new uint[] {GD.Randi() % 6 + 1, GD.Randi() % 6 + 1};
-			textBox.Text = Convert.ToString(diceRoll[0]) + ", " + Convert.ToString(diceRoll[1]);
+			_diceRoll = new uint[] {GD.Randi() % 6 + 1, GD.Randi() % 6 + 1};
+			textBox.Text = Convert.ToString(_diceRoll[0]) + ", " + Convert.ToString(_diceRoll[1]);
 	}
 
 	public async void move_current_player()
 	{
 			// targetMoveValue combines each dice roll into one integer
-			int targetMoveValue = Convert.ToInt16(diceRoll[0] + diceRoll[1]);
+			int targetMoveValue = Convert.ToInt16(_diceRoll[0] + _diceRoll[1]);
 		
 			// Iterates the current player through the boardSpaces array targetMoveValue times (with a delay)
 			for (int i = 0; i < targetMoveValue; i++) {
-				players[currentPlayer].player_movement(boardSpaces[(players[currentPlayer].get_pos() + 1) % 40].Position);
-				players[currentPlayer].iterate_pos();
+				_players[_currentPlayer].player_movement(_boardSpaces[(_players[_currentPlayer].get_pos() + 1) % 40].Position);
+				_players[_currentPlayer].iterate_pos();
 				await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
 
 				/* Potential dynamic delay code:
@@ -101,14 +101,14 @@ public partial class Board : Node2D
 	private async void _on_button_pressed()
 	{
 		// If statement will only run if a player is not currently moving
-		if (canPressButton) {
-			canPressButton = false;
+		if (_canPressButton) {
+			_canPressButton = false;
 
 			dice_roll();
 			
 			move_current_player();
 
-			canPressButton = true;
+			_canPressButton = true;
 		}
 
 	}
