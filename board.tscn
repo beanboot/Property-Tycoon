@@ -1,7 +1,41 @@
-[gd_scene load_steps=3 format=3 uid="uid://c8b72xjdwwdl3"]
+[gd_scene load_steps=12 format=3 uid="uid://c8b72xjdwwdl3"]
 
 [ext_resource type="Script" path="res://Board.cs" id="1_o8w5g"]
+[ext_resource type="Texture2D" uid="uid://s4atf70aapvt" path="res://icons/ffffff/000000/1x1/delapouite/rolling-dice-cup.svg" id="2_1i8ye"]
 [ext_resource type="Texture2D" uid="uid://dcye6ki23xeje" path="res://Square-white.svg.png" id="2_qw51a"]
+[ext_resource type="Texture2D" uid="uid://cfe6xa4v3bbr0" path="res://icons/ffffff/000000/1x1/delapouite/dice-six-faces-one.svg" id="3_tqv6b"]
+[ext_resource type="Texture2D" uid="uid://hpq240oq2nx2" path="res://icons/ffffff/000000/1x1/delapouite/dice-six-faces-two.svg" id="4_4lkkb"]
+[ext_resource type="Texture2D" uid="uid://8cptso5co8cl" path="res://icons/ffffff/000000/1x1/delapouite/dice-six-faces-three.svg" id="5_b5ugf"]
+[ext_resource type="Texture2D" uid="uid://dsjyo6on3xe74" path="res://icons/ffffff/000000/1x1/delapouite/dice-six-faces-four.svg" id="6_s4afn"]
+[ext_resource type="Texture2D" uid="uid://t7pvmojn3h5m" path="res://icons/ffffff/000000/1x1/delapouite/dice-six-faces-five.svg" id="7_maa2f"]
+[ext_resource type="Texture2D" uid="uid://d0h133202yajp" path="res://icons/ffffff/000000/1x1/delapouite/dice-six-faces-six.svg" id="8_qvn64"]
+[ext_resource type="Script" path="res://Dice.cs" id="9_k0pyn"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_lqcvg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_tqv6b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_4lkkb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_b5ugf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_s4afn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_maa2f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_qvn64")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [node name="Board" type="Node2D"]
 position = Vector2(442, 20)
@@ -9,19 +43,36 @@ scale = Vector2(0.942071, 0.917475)
 script = ExtResource("1_o8w5g")
 
 [node name="Button" type="Button" parent="."]
-offset_left = 696.8
-offset_top = 794.2
-offset_right = 775.8
-offset_bottom = 825.2
-text = "Roll Dice:"
+offset_left = -468.118
+offset_top = 930.816
+offset_right = 126.882
+offset_bottom = 1450.82
+scale = Vector2(0.405351, 0.418528)
+icon = ExtResource("2_1i8ye")
 metadata/_edit_use_anchors_ = true
 
 [node name="DiceOutput" type="RichTextLabel" parent="Button"]
-layout_mode = 0
 offset_left = 91.0
 offset_right = 230.0
 offset_bottom = 40.0
+scale = Vector2(1.20606, 1.2055)
 metadata/_edit_use_anchors_ = true
+
+[node name="Dice1" type="AnimatedSprite2D" parent="Button"]
+position = Vector2(75.9422, -80.7314)
+scale = Vector2(0.3, 0.3)
+sprite_frames = SubResource("SpriteFrames_lqcvg")
+frame = 3
+frame_progress = 0.556081
+script = ExtResource("9_k0pyn")
+
+[node name="Dice2" type="AnimatedSprite2D" parent="Button"]
+position = Vector2(240.92, -80.7314)
+scale = Vector2(0.3, 0.3)
+sprite_frames = SubResource("SpriteFrames_lqcvg")
+frame = 2
+frame_progress = 0.798442
+script = ExtResource("9_k0pyn")
 
 [node name="BoardSpaces" type="Node2D" parent="."]
 
@@ -244,10 +295,10 @@ scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="CurrentPlayerText" type="RichTextLabel" parent="."]
-offset_left = 371.8
-offset_top = 445.2
-offset_right = 765.8
-offset_bottom = 579.2
+offset_left = 329.062
+offset_top = 431.619
+offset_right = 723.062
+offset_bottom = 565.619
 metadata/_edit_use_anchors_ = true
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

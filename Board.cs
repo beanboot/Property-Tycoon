@@ -74,8 +74,12 @@ public partial class Board : Node2D
 	{
 			var textBox = GetNode<RichTextLabel>("Button/DiceOutput");
 
-			_diceRoll = new uint[] {GD.Randi() % 6 + 1, GD.Randi() % 6 + 1};
+			_diceRoll = new []{GD.Randi() % 6 + 1, GD.Randi() % 6 + 1};
 			textBox.Text = Convert.ToString(_diceRoll[0]) + ", " + Convert.ToString(_diceRoll[1]);
+			var dice1 = GetNode<Dice>("Button/Dice1");
+			dice1.roll(_diceRoll[0]);
+			var dice2 = GetNode<Dice>("Button/Dice2");
+			dice2.roll(_diceRoll[1]);
 	}
 
 	public async void move_current_player()
