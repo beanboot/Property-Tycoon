@@ -70,7 +70,7 @@ public partial class Board : Node2D
 	}
 
 	// Rolls two d6s and stores each roll in the diceRoll array, prints result to textbox
-	public void dice_roll()
+	public async void dice_roll()
 	{
 			var textBox = GetNode<RichTextLabel>("Button/DiceOutput");
 
@@ -80,6 +80,8 @@ public partial class Board : Node2D
 			dice1.roll(_diceRoll[0]);
 			var dice2 = GetNode<Dice>("Button/Dice2");
 			dice2.roll(_diceRoll[1]);
+			await ToSignal(GetTree().CreateTimer(2.0f), "timeout");
+			move_current_player();
 	}
 
 	public async void move_current_player()
@@ -110,7 +112,7 @@ public partial class Board : Node2D
 
 			dice_roll();
 			
-			move_current_player();
+			
 
 			_canPressButton = true;
 		}

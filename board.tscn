@@ -52,6 +52,7 @@ icon = ExtResource("2_1i8ye")
 metadata/_edit_use_anchors_ = true
 
 [node name="DiceOutput" type="RichTextLabel" parent="Button"]
+layout_mode = 0
 offset_left = 91.0
 offset_right = 230.0
 offset_bottom = 40.0
