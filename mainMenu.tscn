@@ -1,0 +1,42 @@
+[gd_scene load_steps=3 format=3 uid="uid://cea4287x8pn87"]
+
+[ext_resource type="Script" path="res://MainMenu.cs" id="1_34sy5"]
+
+[sub_resource type="Theme" id="Theme_ul47s"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_34sy5")
+
+[node name="start_button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 192.0
+offset_top = 368.0
+offset_right = 512.0
+offset_bottom = 496.0
+theme = SubResource("Theme_ul47s")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_normal_color = Color(0.0687983, 0.0687983, 0.0687983, 1)
+theme_override_font_sizes/font_size = 30
+text = "Play Game"
+
+[node name="Button2" type="Button" parent="."]
+layout_mode = 0
+offset_left = 192.0
+offset_top = 536.0
+offset_right = 512.0
+offset_bottom = 664.0
+theme = SubResource("Theme_ul47s")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_normal_color = Color(0.0687983, 0.0687983, 0.0687983, 1)
+theme_override_font_sizes/font_size = 30
+text = "Settings"
+
+[connection signal="pressed" from="start_button" to="." method="_on_start_button_pressed"]
