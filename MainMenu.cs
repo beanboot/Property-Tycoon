@@ -13,7 +13,7 @@ public partial class MainMenu : Node
 	{
 	}
 
-	public async void _on_start_button_pressed()
+	public void _on_start_button_pressed()
 	{
 		GetTree().ChangeSceneToFile("res://board.tscn");
 	}

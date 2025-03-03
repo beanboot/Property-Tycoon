@@ -101,21 +101,23 @@ public partial class Board : Node2D
 				await ToSignal(GetTree().CreateTimer(delay), "timeout"); */ 
 			};
 
-			change_player();
+			if (_diceRoll[0] == _diceRoll[1]) {
+				// placeholder for double roll counter (go to jail)
+			} else {
+				change_player();
+			}
+	
+			_canPressButton = true;
 	}
 
 	// Called when the Roll Dice button is pressed
-	private async void _on_button_pressed()
+	private void _on_button_pressed()
 	{
 		// If statement will only run if a player is not currently moving
 		if (_canPressButton) {
 			_canPressButton = false;
 
 			dice_roll();
-			
-			
-
-			_canPressButton = true;
 		}
 
 	}
