@@ -73,10 +73,7 @@ public partial class Board : Node2D
 	// Rolls two d6s and stores each roll in the diceRoll array, displays results via 2 AnimatedSprite2Ds
 	public async void dice_roll()
 	{
-			var textBox = GetNode<RichTextLabel>("Button/DiceOutput");
-
 			_diceRoll = new []{GD.Randi() % 6 + 1, GD.Randi() % 6 + 1};
-			textBox.Text = Convert.ToString(_diceRoll[0]) + ", " + Convert.ToString(_diceRoll[1]);
 			var dice1 = GetNode<Dice>("Button/Dice1");
 			dice1.roll(_diceRoll[0]);
 			var dice2 = GetNode<Dice>("Button/Dice2");
@@ -84,6 +81,7 @@ public partial class Board : Node2D
 			await ToSignal(GetTree().CreateTimer(2.0f), "timeout");
 			move_current_player();
 	}
+	
 	//Moves the player based on the number they rolled in dice_roll
 	public async void move_current_player()
 	{
