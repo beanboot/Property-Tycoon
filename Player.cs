@@ -19,7 +19,6 @@ public partial class Player : Node2D
 	public void player_movement(Godot.Vector2 p1)
 	{
 		Position = p1;
-		
 	}
 
 	// Iterates the currentPos variable by 1, if it surpasses 40 it goes back to 0

@@ -1,6 +1,37 @@
 using Godot;
 using System;
 
+public class BoardSpaceData
+{
+	public int Position;
+	public string Name;
+	public string Group;
+	public string Action;
+	public string CanBeBought;
+	public int Cost;
+	public int Rent0;
+	public int Rent1;
+	public int Rent2;
+	public int Rent3;
+	public int Rent4;
+	public int Rent5;
+
+	public BoardSpaceData(int position, string name, string group, string action, string canBeBought, int cost, int rent0, int rent1, int rent2, int rent3, int rent4, int rent5)
+	{
+		Position = position;
+		Name = name;
+		Group = group;
+		Action = action;
+		CanBeBought = canBeBought;
+		Cost = cost;
+		Rent0 = rent0;
+		Rent1 = rent1;
+		Rent2 = rent2;
+		Rent3 = rent3;
+		Rent4 = rent4;
+		Rent5 = rent5;
+	}
+}
 
 public partial class Board : Node2D
 {
@@ -11,6 +42,7 @@ public partial class Board : Node2D
 	private bool _canPressButton = true;
 	private int _numOfPlayers = 2;
 	private int _currentPlayerIndex;
+	private BoardSpaceData[] _boardSpaceData;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -22,6 +54,40 @@ public partial class Board : Node2D
 		_currentPlayerIndex = 0;
 
 		display_current_player_text();
+
+		initialise_board_data();
+	}
+
+	public void initialise_board_data()
+	{
+		_boardSpaceData = new BoardSpaceData[39];
+		using (var boardData = FileAccess.Open("res://data/BoardData.csv", FileAccess.ModeFlags.Read))
+		{
+			bool firstLine = true;
+			int i = 0;
+			while (!boardData.EofReached())
+			{
+				string line = boardData.GetLine();
+				if (firstLine) {
+					firstLine = false;
+					continue;
+				}
+
+				string[] values = line.Split(",");
+				if (values.Length >= 12) {
+					BoardSpaceData space = new BoardSpaceData(int.Parse(values[0]), values[1], values[2], values[3], values[4], int.Parse(values[5]), 
+					int.Parse(values[6]), int.Parse(values[7]), int.Parse(values[8]), int.Parse(values[9]), int.Parse(values[10]), int.Parse(values[11]));
+					_boardSpaceData[i] = space;
+				}
+				
+				i += 1;
+			}
+		}
+	}
+
+	public void display_board_info() {
+		var debugTextBox = GetNode<RichTextLabel>("CurrentBoardInfo");
+		debugTextBox.Text = ("Position: ") + _boardSpaceData[_players[0].get_pos()].Position;
 	}
 
 	// Iterates the currentPlayer variable by 1 unless it excedes the number of players
@@ -41,7 +107,7 @@ public partial class Board : Node2D
 	// Updates the text displaying what player's turn it is
 	public void display_current_player_text()
 	{
-		var playerTextBox = GetNode<RichTextLabel>("CurrentPlayerText");
+		var playerTextBox = GetNode<RichTextLabel>("CurrentPlayerDebug");
 		playerTextBox.Text = ("It is currently: ") + _players[_currentPlayerIndex].Name + ("'s turn");
 	}
 
@@ -56,7 +122,7 @@ public partial class Board : Node2D
 			playerInstance.Name = ("Player" + (i+1));
 			AddChild(playerInstance);
 			_players[i] = GetNode<Player>("Player" + (i+1));
-			_players[i].player_movement(_boardSpaces[0].Position);
+			_players[i].player_movement((_boardSpaces[0].Position) + (GetNode<Node2D>("BoardSpaces").Position));
 		};
 	}
 
@@ -90,7 +156,7 @@ public partial class Board : Node2D
 		
 			// Iterates the current player through the boardSpaces array targetMoveValue times (with a delay)
 			for (int i = 0; i < targetMoveValue; i++) {
-				_players[_currentPlayerIndex].player_movement(_boardSpaces[(_players[_currentPlayerIndex].get_pos() + 1) % 40].Position);
+				_players[_currentPlayerIndex].player_movement((_boardSpaces[(_players[_currentPlayerIndex].get_pos() + 1) % 40].Position) + (GetNode<Node2D>("BoardSpaces").Position));
 				_players[_currentPlayerIndex].iterate_pos();
 				await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
 
@@ -118,5 +184,10 @@ public partial class Board : Node2D
 			dice_roll();
 		}
 
+	}
+
+	public override void _Process(double delta) 
+	{
+		display_board_info();
 	}
 }
