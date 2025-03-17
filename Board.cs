@@ -1,37 +1,9 @@
+namespace PropTycoon
+{
+	
+
 using Godot;
 using System;
-
-public class BoardSpaceData
-{
-	public int Position;
-	public string Name;
-	public string Group;
-	public string Action;
-	public string CanBeBought;
-	public int Cost;
-	public int Rent0;
-	public int Rent1;
-	public int Rent2;
-	public int Rent3;
-	public int Rent4;
-	public int Rent5;
-
-	public BoardSpaceData(int position, string name, string group, string action, string canBeBought, int cost, int rent0, int rent1, int rent2, int rent3, int rent4, int rent5)
-	{
-		Position = position;
-		Name = name;
-		Group = group;
-		Action = action;
-		CanBeBought = canBeBought;
-		Cost = cost;
-		Rent0 = rent0;
-		Rent1 = rent1;
-		Rent2 = rent2;
-		Rent3 = rent3;
-		Rent4 = rent4;
-		Rent5 = rent5;
-	}
-}
 
 public partial class Board : Node2D
 {
@@ -42,7 +14,7 @@ public partial class Board : Node2D
 	private bool _canPressButton = true;
 	private int _numOfPlayers = 2;
 	private int _currentPlayerIndex;
-	private BoardSpaceData[] _boardSpaceData;
+	private Space[] _boardSpaceData;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -60,7 +32,7 @@ public partial class Board : Node2D
 
 	public void initialise_board_data()
 	{
-		_boardSpaceData = new BoardSpaceData[39];
+		_boardSpaceData = new Space[39];
 		using (var boardData = FileAccess.Open("res://data/BoardData.csv", FileAccess.ModeFlags.Read))
 		{
 			bool firstLine = true;
@@ -72,12 +44,12 @@ public partial class Board : Node2D
 					firstLine = false;
 					continue;
 				}
-
+				
 				string[] values = line.Split(",");
-				if (values.Length >= 12) {
-					BoardSpaceData space = new BoardSpaceData(int.Parse(values[0]), values[1], values[2], values[3], values[4], int.Parse(values[5]), 
-					int.Parse(values[6]), int.Parse(values[7]), int.Parse(values[8]), int.Parse(values[9]), int.Parse(values[10]), int.Parse(values[11]));
-					_boardSpaceData[i] = space;
+				SpaceType spaceType = SpaceType.Parse(spaceType);
+				if(values[4].Equals("Yes")){
+					int[] rent = Array.ConvertAll(values[6..], int.Parse);
+					_boardSpaceData[i] = new PropertySpace(int.Parse(values[0]), values[1], values[2], int.Parse(values[5]), rent);
 				}
 				
 				i += 1;
@@ -190,4 +162,7 @@ public partial class Board : Node2D
 	{
 		display_board_info();
 	}
+}
+
+
 }

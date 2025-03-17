@@ -1,0 +1,19 @@
+enum SpaceType{
+GO,
+PL,
+OK,
+FINE,
+FP,
+JAIL,
+GTJ,
+STATION,
+UTIL,
+BROWN,
+BLUE,
+PURPLE,
+ORANGE,
+RED,
+YELLOW,
+GREEN,
+DEEPBLUE
+}
