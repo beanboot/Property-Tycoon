@@ -1,3 +1,4 @@
+using System;
 
 public class Space
 {
@@ -5,9 +6,11 @@ public class Space
     protected string name;
     protected SpaceType type;
 
-	public Space()
+	public Space(int position, string name, string type)
 	{
-		
+		this.position = position;
+        this.name = name;
+        this.type = Enum.Parse<SpaceType>(type);
 	}
     public int get_pos()
     {

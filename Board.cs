@@ -1,7 +1,5 @@
 namespace PropTycoon
 {
-	
-
 using Godot;
 using System;
 
@@ -32,11 +30,12 @@ public partial class Board : Node2D
 
 	public void initialise_board_data()
 	{
-		_boardSpaceData = new Space[39];
+		_boardSpaceData = new Space[40];
 		using (var boardData = FileAccess.Open("res://data/BoardData.csv", FileAccess.ModeFlags.Read))
 		{
 			bool firstLine = true;
 			int i = 0;
+			int j;
 			while (!boardData.EofReached())
 			{
 				string line = boardData.GetLine();
@@ -46,10 +45,20 @@ public partial class Board : Node2D
 				}
 				
 				string[] values = line.Split(",");
-				SpaceType spaceType = SpaceType.Parse(spaceType);
-				if(values[4].Equals("Yes")){
-					int[] rent = Array.ConvertAll(values[6..], int.Parse);
+				if(values[4].Equals("Yes")) {
+					int[] rent = new int[6];
+					for (j = 0; j < 6; j++) {
+						if (values[j + 6].Equals("")) {
+							rent[j] = 0;
+						}
+						else {
+							rent[j] = int.Parse(values[j + 6]);
+						}
+					}
 					_boardSpaceData[i] = new PropertySpace(int.Parse(values[0]), values[1], values[2], int.Parse(values[5]), rent);
+				}
+				else if(values[4].Equals("No")) {
+					_boardSpaceData[i] = new Space(int.Parse(values[0]), values[1], values[2]);
 				}
 				
 				i += 1;
@@ -59,7 +68,10 @@ public partial class Board : Node2D
 
 	public void display_board_info() {
 		var debugTextBox = GetNode<RichTextLabel>("CurrentBoardInfo");
-		debugTextBox.Text = ("Position: ") + _boardSpaceData[_players[0].get_pos()].Position;
+		debugTextBox.Text = "Player 1 Position: " + _players[0].get_pos() + "\n" 
+		+ "Player 1 Current Space: " + _boardSpaceData[_players[0].get_pos()].get_name() + "\n\n" 
+		+ "Player 2 Position: " + _players[1].get_pos() + "\n" 
+		+ "Player 1 Current Space: " + _boardSpaceData[_players[1].get_pos()].get_name();
 	}
 
 	// Iterates the currentPlayer variable by 1 unless it excedes the number of players

@@ -1,3 +1,4 @@
+using System;
 
 public class PropertySpace : Space
 {
@@ -6,10 +7,8 @@ public class PropertySpace : Space
     private Player owner;
     private int numHouses;
     public PropertySpace(int position, string name, string type, int cost, int[] rent)
+    : base(position, name, type)
     {
-        this.position = position;
-        this.name = name;
-        this.type = SpaceType.type;
         this.cost = cost;
         this.rent = rent;
         numHouses = 0;

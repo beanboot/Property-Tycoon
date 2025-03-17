@@ -24,10 +24,12 @@ public partial class Player : Node2D
 	// Iterates the currentPos variable by 1, if it surpasses 40 it goes back to 0
 	public void iterate_pos()
 	{
-		_currentPos += 1;
-		if (_currentPos > 39) {
+	
+		if (_currentPos + 1 > 39) {
 			_currentPos = 0;
-		};
+		} else {
+			_currentPos += 1;
+		}
 	}
 
 	// Returns the player's current position

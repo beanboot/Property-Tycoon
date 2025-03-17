@@ -1,4 +1,4 @@
-enum SpaceType{
+public enum SpaceType{
 GO,
 PL,
 OK,
