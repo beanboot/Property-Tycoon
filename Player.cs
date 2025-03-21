@@ -18,6 +18,7 @@ public partial class Player : Node2D
 	// Takes a vector2 as a parameter (p1) and sets the player's spacial position to that of p1
 	public void player_movement(Godot.Vector2 p1)
 	{
+		Console.WriteLine(p1);
 		Position = p1;
 	}
 

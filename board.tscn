@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c8b72xjdwwdl3"]
+[gd_scene load_steps=17 format=3 uid="uid://c8b72xjdwwdl3"]
 
 [ext_resource type="Script" path="res://Board.cs" id="1_o8w5g"]
 [ext_resource type="Texture2D" uid="uid://s4atf70aapvt" path="res://icons/ffffff/000000/1x1/delapouite/rolling-dice-cup.svg" id="2_1i8ye"]
@@ -10,6 +10,11 @@
 [ext_resource type="Texture2D" uid="uid://t7pvmojn3h5m" path="res://icons/ffffff/000000/1x1/delapouite/dice-six-faces-five.svg" id="7_maa2f"]
 [ext_resource type="Texture2D" uid="uid://d0h133202yajp" path="res://icons/ffffff/000000/1x1/delapouite/dice-six-faces-six.svg" id="8_qvn64"]
 [ext_resource type="Script" path="res://Dice.cs" id="9_k0pyn"]
+[ext_resource type="Texture2D" uid="uid://c18ws4lj4wt14" path="res://BoardSprites/Go.png" id="10_1gq8e"]
+[ext_resource type="Texture2D" uid="uid://wk7knli1iwjy" path="res://BoardSprites/Property Spaces/brownPSpace.png" id="11_22oym"]
+[ext_resource type="Texture2D" uid="uid://d0clprb0n1rdk" path="res://BoardSprites/Jail.png" id="12_411ix"]
+[ext_resource type="Texture2D" uid="uid://csjf1mgtcgqym" path="res://BoardSprites/FreeParking.png" id="14_lrnli"]
+[ext_resource type="Texture2D" uid="uid://3703jwvbxff5" path="res://BoardSprites/GoToJail.png" id="15_0ri8w"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_lqcvg"]
 animations = [{
@@ -38,21 +43,22 @@ animations = [{
 }]
 
 [node name="Board" type="Node2D"]
+position = Vector2(4, 0)
 scale = Vector2(0.942071, 0.917475)
 script = ExtResource("1_o8w5g")
 
 [node name="Button" type="Button" parent="."]
-offset_left = 130.563
-offset_top = 464.318
-offset_right = 725.563
-offset_bottom = 984.322
-scale = Vector2(0.8, 0.8)
+offset_left = -1.52588e-05
+offset_top = 919.916
+offset_right = 595.0
+offset_bottom = 1439.92
+scale = Vector2(0.50726, 0.493322)
 icon = ExtResource("2_1i8ye")
 icon_alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="Dice1" type="AnimatedSprite2D" parent="Button"]
-position = Vector2(128.316, -135.421)
+position = Vector2(690.557, 128.145)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_lqcvg")
 frame = 3
@@ -60,7 +66,7 @@ frame_progress = 0.556081
 script = ExtResource("9_k0pyn")
 
 [node name="Dice2" type="AnimatedSprite2D" parent="Button"]
-position = Vector2(466.128, -135.421)
+position = Vector2(684.279, 397.693)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_lqcvg")
 frame = 2
@@ -68,17 +74,30 @@ frame_progress = 0.798442
 script = ExtResource("9_k0pyn")
 
 [node name="BoardSpaces" type="Node2D" parent="."]
-position = Vector2(440.519, 29.4286)
+position = Vector2(274.926, 35.9683)
 
 [node name="BoardSpace1" type="Sprite2D" parent="BoardSpaces"]
-position = Vector2(1367.9, 1044.37)
-scale = Vector2(0.144, 0.144)
-texture = ExtResource("2_qw51a")
+position = Vector2(1366.13, 1045.26)
+scale = Vector2(0.167118, 0.160697)
+texture = ExtResource("10_1gq8e")
 
 [node name="BoardSpace2" type="Sprite2D" parent="BoardSpaces"]
-position = Vector2(1246.94, 1044.37)
-scale = Vector2(0.0843754, 0.144)
-texture = ExtResource("2_qw51a")
+position = Vector2(1244.63, 1043.71)
+scale = Vector2(0.156676, 0.16991)
+texture = ExtResource("11_22oym")
+
+[node name="Label" type="Label" parent="BoardSpaces/BoardSpace2"]
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -287.5
+offset_right = -247.5
+offset_bottom = -896.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(3, 3)
+text = "Hello"
 
 [node name="BoardSpace3" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(1156.93, 1044.37)
@@ -121,118 +140,130 @@ scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace11" type="Sprite2D" parent="BoardSpaces"]
-position = Vector2(405.975, 1044.37)
-scale = Vector2(0.144, 0.144)
-texture = ExtResource("2_qw51a")
+position = Vector2(403.367, 1048.53)
+rotation = 1.5708
+scale = Vector2(0.171904, 0.172329)
+texture = ExtResource("12_411ix")
 
 [node name="BoardSpace12" type="Sprite2D" parent="BoardSpaces"]
-position = Vector2(405.975, 923.41)
-rotation = -1.5708
+position = Vector2(405.49, 923.186)
+rotation = 1.5708
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace13" type="Sprite2D" parent="BoardSpaces"]
-position = Vector2(405.975, 833.408)
-rotation = -1.5708
-scale = Vector2(0.0843754, 0.144)
+position = Vector2(405.975, 834.631)
+rotation = 1.5708
+scale = Vector2(0.0867649, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace14" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(405.975, 743.408)
-rotation = -1.5708
+rotation = 1.5708
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace15" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(405.975, 653.408)
-rotation = -1.5708
+rotation = 1.5708
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace16" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(405.975, 563.408)
-rotation = -1.5708
+rotation = 1.5708
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace17" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(405.975, 473.408)
-rotation = -1.5708
+rotation = 1.5708
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace18" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(405.975, 383.408)
-rotation = -1.5708
+rotation = 1.5708
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace19" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(405.975, 293.408)
-rotation = -1.5708
+rotation = 1.5708
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace20" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(405.975, 203.408)
-rotation = -1.5708
+rotation = 1.5708
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace21" type="Sprite2D" parent="BoardSpaces"]
-position = Vector2(405.975, 82.4476)
-scale = Vector2(0.144, 0.144)
-texture = ExtResource("2_qw51a")
+position = Vector2(403.366, 77.3863)
+rotation = 3.14159
+scale = Vector2(0.1582, 0.162882)
+texture = ExtResource("14_lrnli")
 
 [node name="BoardSpace22" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(526.935, 82.4476)
+rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace23" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(616.935, 82.4476)
+rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace24" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(706.935, 82.4476)
+rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace25" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(796.935, 82.4476)
+rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace26" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(886.935, 82.4476)
+rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace27" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(976.935, 82.4476)
+rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace28" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(1066.93, 82.4476)
+rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace29" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(1156.93, 82.4476)
+rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace30" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(1246.94, 82.4476)
+rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace31" type="Sprite2D" parent="BoardSpaces"]
-position = Vector2(1367.9, 82.4476)
-scale = Vector2(0.144, 0.144)
-texture = ExtResource("2_qw51a")
+position = Vector2(1368.26, 81.7461)
+rotation = -1.5708
+scale = Vector2(0.165097, 0.160357)
+texture = ExtResource("15_0ri8w")
 
 [node name="BoardSpace32" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(1367.9, 203.408)
@@ -289,15 +320,15 @@ scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="CurrentPlayerDebug" type="RichTextLabel" parent="."]
-offset_left = 137.0
-offset_top = 910.0
-offset_right = 604.0
-offset_bottom = 960.0
+offset_left = 7.0
+offset_top = 705.0
+offset_right = 474.0
+offset_bottom = 787.0
 
 [node name="CurrentBoardInfo" type="RichTextLabel" parent="."]
-offset_left = 137.0
-offset_top = 997.0
-offset_right = 604.0
-offset_bottom = 1125.0
+offset_left = 10.6149
+offset_top = 789.122
+offset_right = 477.615
+offset_bottom = 917.122
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

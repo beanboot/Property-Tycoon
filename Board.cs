@@ -10,68 +10,34 @@ public partial class Board : Node2D
 	private Sprite2D[] _boardSpaces;
 	private Player[] _players;
 	private bool _canPressButton = true;
-	private int _numOfPlayers = 2;
+	private int _numOfPlayers = 5;
 	private int _currentPlayerIndex;
-	private Space[] _boardSpaceData;
+	private BoardData _boardData;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		_boardData = new BoardData();
 		initialise_board();
-
+		
 		initialise_players();
 		
 		_currentPlayerIndex = 0;
-
+		
 		display_current_player_text();
-
-		initialise_board_data();
-	}
-
-	public void initialise_board_data()
-	{
-		_boardSpaceData = new Space[40];
-		using (var boardData = FileAccess.Open("res://data/BoardData.csv", FileAccess.ModeFlags.Read))
-		{
-			bool firstLine = true;
-			int i = 0;
-			int j;
-			while (!boardData.EofReached())
-			{
-				string line = boardData.GetLine();
-				if (firstLine) {
-					firstLine = false;
-					continue;
-				}
-				
-				string[] values = line.Split(",");
-				if(values[4].Equals("Yes")) {
-					int[] rent = new int[6];
-					for (j = 0; j < 6; j++) {
-						if (values[j + 6].Equals("")) {
-							rent[j] = 0;
-						}
-						else {
-							rent[j] = int.Parse(values[j + 6]);
-						}
-					}
-					_boardSpaceData[i] = new PropertySpace(int.Parse(values[0]), values[1], values[2], int.Parse(values[5]), rent);
-				}
-				else if(values[4].Equals("No")) {
-					_boardSpaceData[i] = new Space(int.Parse(values[0]), values[1], values[2]);
-				}
-				
-				i += 1;
-			}
-		}
+		
 	}
 
 	public void display_board_info() {
 		var debugTextBox = GetNode<RichTextLabel>("CurrentBoardInfo");
-		debugTextBox.Text = "Player 1 Position: " + _players[0].get_pos() + "\n" 
-		+ "Player 1 Current Space: " + _boardSpaceData[_players[0].get_pos()].get_name() + "\n\n" 
-		+ "Player 2 Position: " + _players[1].get_pos() + "\n" 
-		+ "Player 1 Current Space: " + _boardSpaceData[_players[1].get_pos()].get_name();
+		string displayBoardInfo = "";
+		for (int i = 0; i < _numOfPlayers; i++)
+		{
+			int playerPos = _players[i].get_pos();
+			displayBoardInfo += "Player " + (i+1) + " is on " + _boardData.get_space(playerPos).get_name() + "\n";
+			
+		}
+		debugTextBox.Text = displayBoardInfo;
 	}
 
 	// Iterates the currentPlayer variable by 1 unless it excedes the number of players
@@ -86,6 +52,7 @@ public partial class Board : Node2D
 		}
 
 		display_current_player_text();
+		display_board_info();
 	}
 
 	// Updates the text displaying what player's turn it is
@@ -93,6 +60,7 @@ public partial class Board : Node2D
 	{
 		var playerTextBox = GetNode<RichTextLabel>("CurrentPlayerDebug");
 		playerTextBox.Text = ("It is currently: ") + _players[_currentPlayerIndex].Name + ("'s turn");
+		
 	}
 
 	// Called within _Ready(), fills the array players[] by instantiating the player scene depending on numOfPlayers
@@ -117,8 +85,89 @@ public partial class Board : Node2D
 		_boardSpaces = new Sprite2D[40];
 		for (i = 0; i < 40; i++) {
 			_boardSpaces[i] = GetNode<Sprite2D>("BoardSpaces/BoardSpace" + (i+1));
+			//determines the type of board space and loads the respective texture
+			SpaceType type = _boardData.get_space(i).get_type();
+			switch (type)
+			{
+				case SpaceType.PL:
+					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/potluckSpace.png");
+					break;
+				case SpaceType.OK:
+					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/opportunityknocksSpace.png");
+					break;
+				case SpaceType.FINE:
+					if (i == 4)
+					{
+						_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/taxSpace.png");
+					}else if (i == 38)
+					{
+						_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/supertaxSpace.png");
+					}
+					break;
+				case SpaceType.STATION:
+					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/stationSpace.png");
+					break;
+				case SpaceType.UTIL:
+					if (i == 12)
+					{
+						_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/electriccompanySpace.png");
+					}
+					else if (i == 28)
+					{
+						_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/waterworksSpace.png");
+					}
+					break;
+				case SpaceType.BROWN:
+					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/brownPSpace.png");
+					break;
+				case SpaceType.BLUE:
+					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/bluePSpace.png");
+					break;
+				case SpaceType.PURPLE:
+					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/purplePSpace.png");
+					break;
+				case SpaceType.ORANGE:
+					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/orangePSpace.png");
+					break;
+				case SpaceType.RED:
+					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/redPSpace.png");
+					break;
+				case SpaceType.YELLOW:
+					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/yellowPSpace.png");
+					break;
+				case SpaceType.GREEN:
+					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/greenPSpace.png");
+					break;
+				case SpaceType.DEEPBLUE:
+					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/deepbluePSpace.png");
+					break;
+				
+			}
+			//sets the scale for each space that isn't on a corner
+			if((i+1) % 10 != 1)
+			{
+				//sets scale and adds label to space
+				_boardSpaces[i].Scale = new Vector2((float)0.157, (float)0.17);
+				add_label_to_space(_boardSpaces[i], i);
+			}
 		};
 	}
+
+	private void add_label_to_space(Sprite2D space, int pos)
+	{
+		//creates a label, adds the name and cost/description and then sets the position
+		Label name = new Label();
+		name.Text = _boardData.get_space(pos).get_name();
+		Vector2 position = space.GetTexture().GetSize();
+		name.Position.Clamp(position.X, position.Y);
+		Console.WriteLine("Space " + (pos + 1) + " " + position); ;
+		
+		name.Position = position;
+		name.Scale = new Vector2(4, 4);
+		space.AddChild(name);
+		
+	}
+	
 
 	// Rolls two d6s and stores each roll in the diceRoll array, displays results via 2 AnimatedSprite2Ds
 	public async void dice_roll()
@@ -164,7 +213,6 @@ public partial class Board : Node2D
 		// If statement will only run if a player is not currently moving
 		if (_canPressButton) {
 			_canPressButton = false;
-
 			dice_roll();
 		}
 
@@ -172,7 +220,6 @@ public partial class Board : Node2D
 
 	public override void _Process(double delta) 
 	{
-		display_board_info();
 	}
 }
 
