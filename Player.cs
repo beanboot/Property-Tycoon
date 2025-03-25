@@ -7,6 +7,7 @@ public partial class Player : Node2D
 	// CurrentPos is unique to each player and holds the current position of the player
 	private int _currentPos;
 	private int _balance; 
+	private string name;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -42,5 +43,12 @@ public partial class Player : Node2D
 	public int get_balance()
 	{
 		return _balance;
+	}
+
+	public void set_name(string name){
+		this.name = name;
+	}
+	public string get_name(){
+		return name;
 	}
 }

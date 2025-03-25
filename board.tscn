@@ -74,7 +74,7 @@ frame_progress = 0.798442
 script = ExtResource("9_k0pyn")
 
 [node name="BoardSpaces" type="Node2D" parent="."]
-position = Vector2(274.926, 35.9683)
+position = Vector2(215.483, 23.9789)
 
 [node name="BoardSpace1" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(1366.13, 1045.26)
@@ -98,6 +98,7 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(3, 3)
 text = "Hello"
+metadata/_edit_use_anchors_ = true
 
 [node name="BoardSpace3" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(1156.93, 1044.37)
@@ -201,66 +202,56 @@ texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace21" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(403.366, 77.3863)
-rotation = 3.14159
 scale = Vector2(0.1582, 0.162882)
 texture = ExtResource("14_lrnli")
 
 [node name="BoardSpace22" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(526.935, 82.4476)
-rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace23" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(616.935, 82.4476)
-rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace24" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(706.935, 82.4476)
-rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace25" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(796.935, 82.4476)
-rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace26" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(886.935, 82.4476)
-rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace27" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(976.935, 82.4476)
-rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace28" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(1066.93, 82.4476)
-rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace29" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(1156.93, 82.4476)
-rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace30" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(1246.94, 82.4476)
-rotation = 3.14159
 scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace31" type="Sprite2D" parent="BoardSpaces"]
-position = Vector2(1368.26, 81.7461)
+position = Vector2(1371.45, 78.4762)
 rotation = -1.5708
 scale = Vector2(0.165097, 0.160357)
 texture = ExtResource("15_0ri8w")

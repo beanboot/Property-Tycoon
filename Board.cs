@@ -13,11 +13,14 @@ public partial class Board : Node2D
 	private int _numOfPlayers = 5;
 	private int _currentPlayerIndex;
 	private BoardData _boardData;
+	private Deck _deck;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		_deck = new Deck();
 		_boardData = new BoardData();
+
 		initialise_board();
 		
 		initialise_players();
@@ -74,6 +77,7 @@ public partial class Board : Node2D
 			playerInstance.Name = ("Player" + (i+1));
 			AddChild(playerInstance);
 			_players[i] = GetNode<Player>("Player" + (i+1));
+			_players[i].set_name("Player"+(i+1));
 			_players[i].player_movement((_boardSpaces[0].Position) + (GetNode<Node2D>("BoardSpaces").Position));
 		};
 	}
@@ -87,6 +91,7 @@ public partial class Board : Node2D
 			_boardSpaces[i] = GetNode<Sprite2D>("BoardSpaces/BoardSpace" + (i+1));
 			//determines the type of board space and loads the respective texture
 			SpaceType type = _boardData.get_space(i).get_type();
+			Console.WriteLine(_boardData.get_space(i));
 			switch (type)
 			{
 				case SpaceType.PL:
@@ -197,6 +202,8 @@ public partial class Board : Node2D
 				double delay = (0.6 / (targetMoveValue - i)) + 0.1;
 				await ToSignal(GetTree().CreateTimer(delay), "timeout"); */ 
 			};
+			Player currentPlayer = _players[_currentPlayerIndex];
+			_boardData.get_space(currentPlayer.get_pos()).land(currentPlayer);
 
 			if (_diceRoll[0] == _diceRoll[1]) {
 				// placeholder for double roll counter (go to jail)

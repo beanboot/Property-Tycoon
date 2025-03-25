@@ -2,21 +2,18 @@ using System;
 
 public class PropertySpace : Space
 {
-    private int cost;
-    private int[] rent;
-    private Player owner;
-    private int numHouses;
-    public PropertySpace(int position, string name, string type, int cost, int[] rent)
-    : base(position, name, type)
-    {
-        this.cost = cost;
-        this.rent = rent;
-        numHouses = 0;
-    }
-    public void purchase(Player player){
-        if(player.get_balance() > cost){
-            owner = player;
-        }
-    }
-}
+	private Property _property;
+	public PropertySpace(int position, Property property)
+	{
+		this.position = position;
+		this.name = property.get_name();
+		this.type = property.get_type();
+		_property = property;
+	}
 
+	public Property get_property()
+	{
+		return _property;
+	}
+	
+}
