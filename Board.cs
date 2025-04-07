@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace PropTycoon
 {
 using Godot;
@@ -10,8 +12,10 @@ public partial class Board : Node2D
 	private Sprite2D[] _boardSpaces;
 	private Player[] _players;
 	private bool _canPressButton = true;
-	private int _numOfPlayers = 5;
+	private int _numOfPlayers = 1;
 	private int _currentPlayerIndex;
+	private Jail jail;
+	private FreeParking freeParking;
 	private BoardData _boardData;
 	private Deck _deck;
 
@@ -52,6 +56,27 @@ public partial class Board : Node2D
 
 		else {
 			_currentPlayerIndex += 1;
+		}
+		Player currentPlayer = _players[_currentPlayerIndex];
+		//if the player is in prison they can either use their Get out of jail free card or remain in prison until daysInJail reaches 2
+		//leaving prison uses your turn so no matter what the player is changed after a turn concerning prison sentence
+			
+		if (jail.is_in_jail(currentPlayer))
+		{
+			if (currentPlayer.getOutJail)
+			{
+				jail.release_from_jail(currentPlayer);
+			}
+			else
+			{
+				if (currentPlayer.daysInJail >= 2)
+				{
+					jail.release_from_jail(currentPlayer);
+					currentPlayer.daysInJail = 0;
+				}
+				currentPlayer.daysInJail++;
+			}
+			change_player();
 		}
 
 		display_current_player_text();
@@ -161,6 +186,9 @@ public partial class Board : Node2D
 				_boardSpaces[i].Scale = new Vector2((float)0.157, (float)0.17);
 				add_name_label_to_space(_boardSpaces[i], i);
 			}
+			
+			jail = (Jail) _boardData.get_space(10);
+			freeParking = (FreeParking) _boardData.get_space(20);
 		};
 	}
 
@@ -212,6 +240,7 @@ public partial class Board : Node2D
 	//Moves the player based on the number they rolled in dice_roll
 	public async void move_current_player()
 	{
+		Player currentPlayer = _players[_currentPlayerIndex];
 			// targetMoveValue combines each dice roll into one integer
 			int targetMoveValue = Convert.ToInt16(_diceRoll[0] + _diceRoll[1]);
 		
@@ -225,8 +254,11 @@ public partial class Board : Node2D
 				double delay = (0.6 / (targetMoveValue - i)) + 0.1;
 				await ToSignal(GetTree().CreateTimer(delay), "timeout"); */ 
 			};
-			Player currentPlayer = _players[_currentPlayerIndex];
-			_boardData.get_space(currentPlayer.get_pos()).land(currentPlayer);
+			SpaceType spaceType = _boardData.get_space(currentPlayer.get_pos()).land(currentPlayer);
+			if (spaceType == SpaceType.PL | spaceType == SpaceType.OK)
+			{
+				play_card(currentPlayer, _deck.draw(spaceType));
+			}
 
 			if (_diceRoll[0] == _diceRoll[1]) {
 				// placeholder for double roll counter (go to jail)
@@ -248,8 +280,94 @@ public partial class Board : Node2D
 
 	}
 
+	public void fine(Player player)
+	{
+		
+	}
+	
+	public void play_card(Player player, Card card)
+	{
+		CardType cardType = card.get_cardType();
+		int cardParam = card.get_cardParameter();
+		//finds which cardType is being played and then applies the card's parameter value
+		switch (cardType)
+		{
+			case CardType.GTJ:
+				send_to_jail(player);
+				break;
+			case CardType.FINE:
+				freeParking.collect_fine(cardParam);
+				break;
+			case CardType.GOOJF:
+				player.getOutJail = true;
+				break;
+			case CardType.PAYALL:
+				for (int i = 0; i < _players.Length; i++)
+				{
+					if (i != _currentPlayerIndex)
+					{
+						player.decrease_balance(cardParam);
+						_players[i].increase_balance(cardParam);
+					}
+				}
+				break;
+			case CardType.COLLECT:
+				player.increase_balance(cardParam);
+				break;
+			case CardType.PAYBANK:
+				
+				break;
+			case CardType.FINEOROK:
+				
+				break;
+			case CardType.COLLECTALL:
+				for (int i = 0; i < _players.Length; i++)
+				{
+					if (i != _currentPlayerIndex)
+					{
+						player.increase_balance(cardParam);
+						_players[i].decrease_balance(cardParam);
+					}
+				}
+				break;
+			case CardType.PAYREPAIRS:
+				LinkedList<Property> properties = player.get_properties();
+				foreach (Property property in properties)
+				{
+					if (property.get_num_houses() < 5)
+					{
+						player.decrease_balance(cardParam * property.get_num_houses());
+					}
+				}
+				break;
+			case CardType.MOVESPACESB:
+				
+				break;
+			case CardType.MOVELOCATIONB:
+				
+				break;
+			case CardType.MOVELOCATIONF:
+				
+				break;
+			default:
+				Console.WriteLine("Unknown card type");
+				break;
+			
+		}
+	}
+
+	public void send_to_jail(Player player)
+	{
+		_players[_currentPlayerIndex].set_pos(10);
+		_players[_currentPlayerIndex].player_movement(_boardSpaces[(_players[_currentPlayerIndex].get_pos() + 1) % 40].Position);
+		jail.send_to_jail(player);
+	}
+
+	
+	
 	public override void _Process(double delta) 
 	{
+		
 	}
 }
 
