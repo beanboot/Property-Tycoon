@@ -7,6 +7,7 @@ public partial class Player : Node2D
 	// CurrentPos is unique to each player and holds the current position of the player
 	private int _currentPos;
 	private int _balance; 
+	private string name;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -18,17 +19,19 @@ public partial class Player : Node2D
 	// Takes a vector2 as a parameter (p1) and sets the player's spacial position to that of p1
 	public void player_movement(Godot.Vector2 p1)
 	{
+		Console.WriteLine(p1);
 		Position = p1;
-		
 	}
 
 	// Iterates the currentPos variable by 1, if it surpasses 40 it goes back to 0
 	public void iterate_pos()
 	{
-		_currentPos += 1;
-		if (_currentPos > 39) {
+	
+		if (_currentPos + 1 > 39) {
 			_currentPos = 0;
-		};
+		} else {
+			_currentPos += 1;
+		}
 	}
 
 	// Returns the player's current position
@@ -40,5 +43,12 @@ public partial class Player : Node2D
 	public int get_balance()
 	{
 		return _balance;
+	}
+
+	public void set_name(string name){
+		this.name = name;
+	}
+	public string get_name(){
+		return name;
 	}
 }

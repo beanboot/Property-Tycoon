@@ -1,0 +1,17 @@
+public enum CardType{
+    COLLECT,
+    COLLECTALL,
+    FINE,
+    PAYBANK,
+    PAYALL,
+    MOVELOCATIONB,
+    MOVELOCATIONF,
+    MOVESPACESB,
+    GOOJF,
+    GTJ,
+    PAYREPAIRS,
+    FINEOROK,
+
+
+
+}

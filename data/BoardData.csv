@@ -1,0 +1,41 @@
+position,spaceName,group,action,canBeBought?,cost,rent0,rent1,rent2,rent3,rent4,rent5
+1,Go,GO,Collect-200,No,,,,,,,
+2,The Old Creek,BROWN,,Yes,60,2,10,30,90,160,250
+3,Pot Luck,PL,,No,,,,,,,
+4,Gangsters Paradise,BROWN,,Yes,60,4,20,60,180,320,450
+5,Income Tax,FINE,Pay-200,No,,,,,,,
+6,Brighton Station,STATION,,Yes,200,25,50,100,200,,
+7,The Angels Delight,BLUE,,Yes,100,6,30,90,270,400,550
+8,Opportunity Knocks,OK,,No,,,,,,,
+9,Potter Avenue,BLUE,,Yes,100,6,30,90,270,400,550
+10,Granger Drive,BLUE,,Yes,120,8,40,100,300,450,600
+11,Jail/Just visiting,JAIL,,No,,,,,,,
+12,Skywalker Drive,PURPLE,,Yes,140,10,50,150,450,625,750
+13,Tesla Power Co,UTIL,,Yes,150,25,50,100,200,,
+14,Wookie Hole,PURPLE,,Yes,140,10,50,150,450,625,750
+15,Rey Lane,PURPLE,,Yes,160,12,60,180,500,700,900
+16,Hove Station,STATION,,Yes,200,25,50,100,200,,
+17,Bishop Drive,ORANGE,,Yes,180,14,70,200,550,750,950
+18,Pot Luck,PL,,No,,,,,,,
+19,Dunham Street,ORANGE,,Yes,180,14,70,200,550,750,950
+20,Broyles Lane,ORANGE,,Yes,200,16,80,220,600,800,1000
+21,Free Parking,FP,Collect-0,No,,,,,,,
+22,Yue Fei Square,RED,,Yes,220,18,90,250,700,875,1050
+23,Opportunity Knocks,OK,,No,,,,,,,
+24,Mulan Rouge,RED,,Yes,220,18,90,250,700,875,1050
+25,Han Xin Gardens,RED,,Yes,240,20,100,300,750,925,1100
+26,Falmer Station,STATION,,Yes,200,25,50,100,200,,
+27,Shatner Close,YELLOW,,Yes,260,22,110,330,800,975,1150
+28,Picard Avenue,YELLOW,,Yes,260,22,110,330,800,975,1150
+29,Edison Water,UTIL,,Yes,150,,,,,,
+30,Crusher Creek,YELLOW,,Yes,280,22,120,360,850,1025,1200
+31,Go to Jail,GTJ,GTJ-0,No,,,,,,,
+32,Sirat Mews,GREEN,,Yes,300,26,130,390,900,1100,1275
+33,Ghengis Crescent,GREEN,,Yes,300,26,130,390,900,1100,1275
+34,Pot Luck,PL,,No,,,,,,,
+35,Ibis Close,GREEN,,Yes,320,28,150,450,1000,1200,1400
+36,Portslade Station,STATION,,Yes,200,25,50,100,200,,
+37,Opportunity Knocks,OK,,No,,,,,,,
+38,James Webb Way,DEEPBLUE,,Yes,350,35,175,500,1100,1300,1500
+39,Super Tax,FINE,Pay-100,No,,,,,,,
+40,Turing Heights,DEEPBLUE,,Yes,400,50,200,600,1400,1700,2000
