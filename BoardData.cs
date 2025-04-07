@@ -63,7 +63,6 @@ public class BoardData
 						{
 							_boardSpaceData[i] = new ActionSpace(int.Parse(values[0]), values[1], spaceType, values[3]);
 						}
-						
 						break;
 				}
 
