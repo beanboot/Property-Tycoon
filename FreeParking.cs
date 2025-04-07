@@ -4,7 +4,7 @@ public class FreeParking:Space
 {
     private int collectedFines;
     
-    public FreeParking()
+    public FreeParking(int position)
     {
         
     }

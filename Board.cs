@@ -178,7 +178,6 @@ public partial class Board : Node2D
 			{
 				//sets scale and adds label to space
 				_boardSpaces[i].Scale = new Vector2((float)0.157, (float)0.17);
-				add_label_to_space(_boardSpaces[i], i);
 			}
 			
 			jail = (Jail) _boardData.get_space(10);
@@ -186,20 +185,7 @@ public partial class Board : Node2D
 		};
 	}
 
-	private void add_label_to_space(Sprite2D space, int pos)
-	{
-		//creates a label, adds the name and cost/description and then sets the position
-		Label name = new Label();
-		name.Text = _boardData.get_space(pos).get_name();
-		Vector2 position = space.GetTexture().GetSize();
-		name.Position.Clamp(position.X, position.Y);
-		Console.WriteLine("Space " + (pos + 1) + " " + position); ;
-		
-		name.Position = position;
-		name.Scale = new Vector2(4, 4);
-		space.AddChild(name);
-		
-	}
+
 	
 
 	// Rolls two d6s and stores each roll in the diceRoll array, displays results via 2 AnimatedSprite2Ds

@@ -60,6 +60,9 @@ public class BoardData
 							case SpaceType.JAIL:
 								_boardSpaceData[i] = new Jail(int.Parse(values[0]));
 								break;
+							case SpaceType.FP:
+								_boardSpaceData[i] = new FreeParking(int.Parse(values[0]));
+								break;
 							default:
 								_boardSpaceData[i] = new ActionSpace(int.Parse(values[0]), values[1], spaceType, values[3]);
 								break;

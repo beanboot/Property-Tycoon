@@ -28,7 +28,7 @@ position,spaceName,group,action,canBeBought?,cost,rent0,rent1,rent2,rent3,rent4,
 27,Shatner Close,YELLOW,,Yes,260,22,110,330,800,975,1150
 28,Picard Avenue,YELLOW,,Yes,260,22,110,330,800,975,1150
 29,Edison Water,UTIL,,Yes,150,,,,,,
-30,Crusher Creek,YELLOW,,Yes,280,22,120,360,850,1025,1200
+30,Crusher Creek,YELLOW,,Yes,280,24,120,360,850,1025,1200
 31,Go to Jail,GTJ,GTJ-0,No,,,,,,,
 32,Sirat Mews,GREEN,,Yes,300,26,130,390,900,1100,1275
 33,Ghengis Crescent,GREEN,,Yes,300,26,130,390,900,1100,1275
