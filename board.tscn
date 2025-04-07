@@ -86,20 +86,6 @@ position = Vector2(1244.63, 1043.71)
 scale = Vector2(0.156676, 0.16991)
 texture = ExtResource("11_22oym")
 
-[node name="Label" type="Label" parent="BoardSpaces/BoardSpace2"]
-anchors_preset = 13
-anchor_left = 0.5
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -287.5
-offset_right = -247.5
-offset_bottom = -896.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(3, 3)
-text = "Hello"
-metadata/_edit_use_anchors_ = true
-
 [node name="BoardSpace3" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(1156.93, 1044.37)
 scale = Vector2(0.0843754, 0.144)

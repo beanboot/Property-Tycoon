@@ -129,7 +129,7 @@ public partial class Board : Node2D
 					if (i == 4)
 					{
 						_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/taxSpace.png");
-					}else if (i == 38)
+					} else if (i == 38)
 					{
 						_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/supertaxSpace.png");
 					}
@@ -171,13 +171,20 @@ public partial class Board : Node2D
 				case SpaceType.DEEPBLUE:
 					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/deepbluePSpace.png");
 					break;
-				
 			}
+			
+			if (type == SpaceType.BROWN || type == SpaceType.BLUE || type == SpaceType.PURPLE || type == SpaceType.ORANGE
+			|| type == SpaceType.RED || type == SpaceType.YELLOW || type == SpaceType.GREEN || type == SpaceType.DEEPBLUE)
+			{
+				add_cost_label_to_space(_boardSpaces[i], i);
+			}
+			
 			//sets the scale for each space that isn't on a corner
-			if((i+1) % 10 != 1)
+			if ((i+1) % 10 != 1)
 			{
 				//sets scale and adds label to space
 				_boardSpaces[i].Scale = new Vector2((float)0.157, (float)0.17);
+				add_name_label_to_space(_boardSpaces[i], i);
 			}
 			
 			jail = (Jail) _boardData.get_space(10);
@@ -185,8 +192,38 @@ public partial class Board : Node2D
 		};
 	}
 
+	private void add_name_label_to_space(Sprite2D space, int pos)
+	{
+		//creates a label, adds the name and then sets the position
+		Label name = new Label();
+		Vector2 size = new Vector2(200, 50);
+		name.Text = _boardData.get_space(pos).get_name();
+		name.Scale = new Vector2(4, 4);
+		name.Size = size;
+		name.Position = -(size * name.Scale) / 2 + new Vector2(0, 500);
+		name.HorizontalAlignment = HorizontalAlignment.Center;
+		name.VerticalAlignment = VerticalAlignment.Center;
 
+		space.AddChild(name);
+	}
 	
+	private void add_cost_label_to_space(Sprite2D space, int pos)
+	{
+		//creates a label, adds the cost and then sets the position
+		Label cost = new Label();
+		Vector2 size = new Vector2(200, 50);
+		PropertySpace propertySpace = (PropertySpace) _boardData.get_space(pos);
+		int costValue = propertySpace.get_property().get_cost();
+		cost.Text = "£" + costValue.ToString();
+		cost.Modulate = new Color(0, 0, 0);
+		cost.Scale = new Vector2(4, 4);
+		cost.Size = size;
+		cost.Position = -(size * cost.Scale) / 2 + new Vector2(0, 350);
+		cost.HorizontalAlignment = HorizontalAlignment.Center;
+		cost.VerticalAlignment = VerticalAlignment.Center;
+
+		space.AddChild(cost);
+	}
 
 	// Rolls two d6s and stores each roll in the diceRoll array, displays results via 2 AnimatedSprite2Ds
 	public async void dice_roll()
