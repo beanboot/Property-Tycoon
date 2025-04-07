@@ -1,11 +1,11 @@
 public enum SpaceType{
-GO,
-PL,
-OK,
-FINE,
-FP,
-JAIL,
-GTJ,
+GO, 
+PL, //Potluck
+OK, //Opportunity Knocks
+FINE, 
+FP, //Free Parking
+JAIL, 
+GTJ, //Go to Jail
 STATION,
 UTIL,
 BROWN,

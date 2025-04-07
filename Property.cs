@@ -22,4 +22,9 @@ public class Property{
     public SpaceType get_type(){
         return type;
     }
+
+    public int get_num_houses()
+    {
+        return numHouses;
+    }
 }

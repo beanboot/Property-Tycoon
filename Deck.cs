@@ -28,10 +28,12 @@ public class Deck{
 					firstLine = false;
 					continue;
 				}
+				//split by cp,,as
 				string[] values = line.Split(",");
+				//read the description, actionType, actionParameter and cardType 
 				string description = values[0];
 				CardType cardActionType = Enum.Parse<CardType>(values[1]);
-				string cardActionParameter = values[2];
+				int cardActionParameter = int.Parse(values[2]);
 				SpaceType cardType = Enum.Parse<SpaceType>(values[3]);
 
 				switch(cardType){
@@ -66,9 +68,10 @@ public class Deck{
 				foreach(Card card in cards){
 					deck.Enqueue(card);
 				}
-				return deck.Dequeue();
 		}
-		return deck.Dequeue();
+		Card returnCard = deck.Dequeue();
+		deck.Enqueue(returnCard);
+		return returnCard;
 		
 	}
 	private Card[] shuffle(Card[] cards){

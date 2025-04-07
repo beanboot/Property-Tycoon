@@ -18,7 +18,13 @@ public class Space
 	{
 		return type;
 	}
-	public void land(Player player){
+	public virtual SpaceType land(Player player){
 		Console.WriteLine(player.get_name() + "landed on " + name);
+		return type;
+	}
+
+	public virtual void release_from_jail(Player player)
+	{
+		Console.WriteLine("this is not the Jail Space");
 	}
 }
