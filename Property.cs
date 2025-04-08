@@ -17,23 +17,23 @@ public class Property{
 	}
 	
 	public int get_cost()
-  {
+  	{
 		return cost;
 	}
 
-  public string get_name()
-  {
+  	public string get_name()
+  	{
     return name;
-  }
+  	}
   
-  public SpaceType get_type()
-  {
+  	public SpaceType get_type()
+  	{
     return type;
-  }
+  	}
 
-  public int get_num_houses()
-  {
+  	public int get_num_houses()
+  	{
         return numHouses;
-  }
+  	}
 }
 

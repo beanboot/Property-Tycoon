@@ -28,13 +28,16 @@ public partial class Player : Node2D
 	}
 
 	// Iterates the currentPos variable by 1, if it surpasses 40 it goes back to 0
-	public void iterate_pos()
+	public bool iterate_pos()
 	{
 	
 		if (currentPos + 1 > 39) {
 			currentPos = 0;
+			return true;
+
 		} else {
 			currentPos += 1;
+			return false;
 		}
 	}
 
@@ -49,7 +52,7 @@ public partial class Player : Node2D
 		currentPos = position;
 	}
 
-	public int getbalance()
+	public int get_balance()
 	{
 		return balance;
 	}
@@ -66,6 +69,10 @@ public partial class Player : Node2D
 
 	public void set_name(string name){
 		this.name = name;
+	}
+
+	public void add_to_properties(Property property){
+		properties.AddLast(property);
 	}
 
 	public LinkedList<Property> get_properties()

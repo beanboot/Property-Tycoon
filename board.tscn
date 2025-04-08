@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://c8b72xjdwwdl3"]
+[gd_scene load_steps=16 format=3 uid="uid://c8b72xjdwwdl3"]
 
 [ext_resource type="Script" path="res://Board.cs" id="1_o8w5g"]
 [ext_resource type="Texture2D" uid="uid://s4atf70aapvt" path="res://icons/ffffff/000000/1x1/delapouite/rolling-dice-cup.svg" id="2_1i8ye"]
@@ -11,7 +11,6 @@
 [ext_resource type="Texture2D" uid="uid://d0h133202yajp" path="res://icons/ffffff/000000/1x1/delapouite/dice-six-faces-six.svg" id="8_qvn64"]
 [ext_resource type="Script" path="res://Dice.cs" id="9_k0pyn"]
 [ext_resource type="Texture2D" uid="uid://c18ws4lj4wt14" path="res://BoardSprites/Go.png" id="10_1gq8e"]
-[ext_resource type="Texture2D" uid="uid://wk7knli1iwjy" path="res://BoardSprites/Property Spaces/brownPSpace.png" id="11_22oym"]
 [ext_resource type="Texture2D" uid="uid://d0clprb0n1rdk" path="res://BoardSprites/Jail.png" id="12_411ix"]
 [ext_resource type="Texture2D" uid="uid://csjf1mgtcgqym" path="res://BoardSprites/FreeParking.png" id="14_lrnli"]
 [ext_resource type="Texture2D" uid="uid://3703jwvbxff5" path="res://BoardSprites/GoToJail.png" id="15_0ri8w"]
@@ -82,9 +81,9 @@ scale = Vector2(0.167118, 0.160697)
 texture = ExtResource("10_1gq8e")
 
 [node name="BoardSpace2" type="Sprite2D" parent="BoardSpaces"]
-position = Vector2(1244.63, 1043.71)
-scale = Vector2(0.156676, 0.16991)
-texture = ExtResource("11_22oym")
+position = Vector2(1246.93, 1044.37)
+scale = Vector2(0.084, 0.144)
+texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace3" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(1156.93, 1044.37)
@@ -128,7 +127,6 @@ texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace11" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(403.367, 1048.53)
-rotation = 1.5708
 scale = Vector2(0.171904, 0.172329)
 texture = ExtResource("12_411ix")
 
@@ -238,7 +236,6 @@ texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace31" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(1371.45, 78.4762)
-rotation = -1.5708
 scale = Vector2(0.165097, 0.160357)
 texture = ExtResource("15_0ri8w")
 
@@ -308,4 +305,52 @@ offset_top = 789.122
 offset_right = 477.615
 offset_bottom = 917.122
 
+[node name="PlayerBalances" type="RichTextLabel" parent="."]
+offset_left = 140.0
+offset_top = 215.0
+offset_right = 485.0
+offset_bottom = 539.0
+
+[node name="CardDisplay" type="RichTextLabel" parent="."]
+offset_left = 913.944
+offset_top = 447.969
+offset_right = 1258.94
+offset_bottom = 771.969
+
+[node name="PurchaseDisplay" type="RichTextLabel" parent="."]
+offset_left = 914.0
+offset_top = 832.0
+offset_right = 1259.0
+offset_bottom = 870.0
+
+[node name="OwnedPropertiesDisplay" type="RichTextLabel" parent="."]
+offset_left = 1715.0
+offset_top = 186.0
+offset_right = 1968.0
+offset_bottom = 702.0
+
+[node name="Button2" type="Button" parent="."]
+offset_left = 835.393
+offset_top = 324.805
+offset_right = 1042.39
+offset_bottom = 363.805
+text = "send current player to jail"
+
+[node name="PurchaseButton" type="Button" parent="."]
+offset_left = 775.95
+offset_top = 893.757
+offset_right = 992.95
+offset_bottom = 933.757
+text = "Purchase"
+
+[node name="AuctionButton" type="Button" parent="."]
+offset_left = 1207.98
+offset_top = 898.117
+offset_right = 1419.98
+offset_bottom = 932.117
+text = "Auction"
+
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="Button2" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="PurchaseButton" to="." method="_on_purchase_button_pressed"]
+[connection signal="pressed" from="AuctionButton" to="." method="_on_auction_button_pressed"]

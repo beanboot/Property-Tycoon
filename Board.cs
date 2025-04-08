@@ -5,25 +5,29 @@ namespace PropTycoon
 using Godot;
 using System;
 
-public partial class Board : Node2D
+    public partial class Board : Node2D
 {
 	//Global Variables
 	private uint[] _diceRoll;
 	private Sprite2D[] _boardSpaces;
 	private Player[] _players;
 	private bool _canPressButton = true;
-	private int _numOfPlayers = 1;
+	private int _numOfPlayers = 4;
 	private int _currentPlayerIndex;
 	private Jail jail;
 	private FreeParking freeParking;
 	private BoardData _boardData;
 	private Deck _deck;
+	private Bank bank;
+	private int goValue = 200;
+	private bool purchaseable;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		_deck = new Deck();
 		_boardData = new BoardData();
+		bank = new Bank(_boardData.get_property_list(), 50000);
 
 		initialise_board();
 		
@@ -35,7 +39,8 @@ public partial class Board : Node2D
 		
 	}
 
-	public void display_board_info() {
+	public void display_board_info() 
+	{
 		var debugTextBox = GetNode<RichTextLabel>("CurrentBoardInfo");
 		string displayBoardInfo = "";
 		for (int i = 0; i < _numOfPlayers; i++)
@@ -78,17 +83,55 @@ public partial class Board : Node2D
 			}
 			change_player();
 		}
-
 		display_current_player_text();
-		display_board_info();
 	}
 
 	// Updates the text displaying what player's turn it is
 	public void display_current_player_text()
 	{
 		var playerTextBox = GetNode<RichTextLabel>("CurrentPlayerDebug");
-		playerTextBox.Text = ("It is currently: ") + _players[_currentPlayerIndex].Name + ("'s turn");
+		playerTextBox.Text = "It is currently: " + _players[_currentPlayerIndex].Name + "'s turn";
 		
+	}
+
+	public void display_player_balances()
+	{
+		var balanceTextBox = GetNode<RichTextLabel>("PlayerBalances");
+		string displayBalances = "Bank balance: £" + bank.get_bank_balance() + "\n\n";
+		
+		for (int i = 0; i < _numOfPlayers; i++)
+		{
+			int playerBalance = _players[i].get_balance();
+			string playerName = _players[i].get_name();
+			displayBalances += playerName + "'s balance is: £" + playerBalance + "\n";
+			
+		}
+
+		balanceTextBox.Text = displayBalances;
+	}
+
+		public void display_player_properties()
+	{
+		var propertiesTextBox = GetNode<RichTextLabel>("OwnedPropertiesDisplay");
+		string propertiesText = "";
+		
+		for (int i = 0; i < _numOfPlayers; i++)
+		{
+			string playerName = _players[i].get_name();
+			LinkedList<Property> properties = _players[i].get_properties();
+			propertiesText += "\n" + playerName + " owns:" + "\n";
+
+			var current = properties.First;
+			for (int j = 0; j < properties.Count; j++)
+			{
+				propertiesText += current.Value.get_name() + "\n";
+				current = current.Next;
+			}
+			
+			propertiesTextBox.Text = propertiesText;
+		}
+
+		propertiesTextBox.Text = propertiesText;
 	}
 
 	// Called within _Ready(), fills the array players[] by instantiating the player scene depending on numOfPlayers
@@ -97,13 +140,14 @@ public partial class Board : Node2D
 		int i;
 		var playerScene = GD.Load<PackedScene>("res://player.tscn");
 		_players = new Player[_numOfPlayers];
-		for (i = 0; i < _numOfPlayers; i++) {
+		for (i = 0; i < _numOfPlayers; i++)
+		{
 			var playerInstance = playerScene.Instantiate();
-			playerInstance.Name = ("Player" + (i+1));
+			playerInstance.Name = "Player" + (i+1);
 			AddChild(playerInstance);
 			_players[i] = GetNode<Player>("Player" + (i+1));
 			_players[i].set_name("Player"+(i+1));
-			_players[i].player_movement((_boardSpaces[0].Position) + (GetNode<Node2D>("BoardSpaces").Position));
+			_players[i].player_movement(_boardSpaces[0].Position + GetNode<Node2D>("BoardSpaces").Position);
 		};
 	}
 
@@ -174,7 +218,8 @@ public partial class Board : Node2D
 			}
 			
 			if (type == SpaceType.BROWN || type == SpaceType.BLUE || type == SpaceType.PURPLE || type == SpaceType.ORANGE
-			|| type == SpaceType.RED || type == SpaceType.YELLOW || type == SpaceType.GREEN || type == SpaceType.DEEPBLUE)
+			|| type == SpaceType.RED || type == SpaceType.YELLOW || type == SpaceType.GREEN || type == SpaceType.DEEPBLUE
+			|| type == SpaceType.STATION || type == SpaceType.UTIL)
 			{
 				add_cost_label_to_space(_boardSpaces[i], i);
 			}
@@ -246,27 +291,51 @@ public partial class Board : Node2D
 		
 			// Iterates the current player through the boardSpaces array targetMoveValue times (with a delay)
 			for (int i = 0; i < targetMoveValue; i++) {
-				_players[_currentPlayerIndex].player_movement((_boardSpaces[(_players[_currentPlayerIndex].get_pos() + 1) % 40].Position) + (GetNode<Node2D>("BoardSpaces").Position));
-				_players[_currentPlayerIndex].iterate_pos();
+				_players[_currentPlayerIndex].player_movement(_boardSpaces[(_players[_currentPlayerIndex].get_pos() + 1) % 40].Position + GetNode<Node2D>("BoardSpaces").Position);
+				// if the player moves past go, this method will return true and we will give the player £200 from the bank
+				if (_players[_currentPlayerIndex].iterate_pos())
+				{
+					if (bank.take_from_bank(goValue))
+					{
+						_players[_currentPlayerIndex].increase_balance(goValue);
+					} else
+					{
+						break;
+					}
+				}
 				await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
-
-				/* Potential dynamic delay code:
-				double delay = (0.6 / (targetMoveValue - i)) + 0.1;
-				await ToSignal(GetTree().CreateTimer(delay), "timeout"); */ 
 			};
-			SpaceType spaceType = _boardData.get_space(currentPlayer.get_pos()).land(currentPlayer);
-			if (spaceType == SpaceType.PL | spaceType == SpaceType.OK)
+			SpaceType type = _boardData.get_space(currentPlayer.get_pos()).land(currentPlayer);
+			if (type == SpaceType.PL | type == SpaceType.OK)
 			{
-				play_card(currentPlayer, _deck.draw(spaceType));
+				play_card(currentPlayer, _deck.draw(type), type);
+			} 
+			else if (type == SpaceType.GTJ)
+			{
+				send_to_jail(currentPlayer);
+				_canPressButton = true;
+				return;
+			} 
+			else if (type == SpaceType.BROWN || type == SpaceType.BLUE || type == SpaceType.PURPLE || type == SpaceType.ORANGE
+			|| type == SpaceType.RED || type == SpaceType.YELLOW || type == SpaceType.GREEN || type == SpaceType.DEEPBLUE
+			|| type == SpaceType.STATION || type == SpaceType.UTIL)
+			{
+				// CHECK IF PROPERTY IS IN THE BANK'S LIST THEN
+				purchaseable = true;
 			}
 
-			if (_diceRoll[0] == _diceRoll[1]) {
-				// placeholder for double roll counter (go to jail)
-			} else {
-				change_player();
+			if (!purchaseable)
+			{
+				if (_diceRoll[0] == _diceRoll[1]) 
+				{
+					// placeholder for double roll counter (go to jail)
+				} else 
+				{
+					change_player();
+				}
+
+				_canPressButton = true;
 			}
-	
-			_canPressButton = true;
 	}
 
 	// Called when the Roll Dice button is pressed
@@ -280,15 +349,60 @@ public partial class Board : Node2D
 
 	}
 
-	public void fine(Player player)
+	private void _on_button_2_pressed()
 	{
-		
+		send_to_jail(_players[_currentPlayerIndex]);
 	}
-	
-	public void play_card(Player player, Card card)
+
+	public void _on_purchase_button_pressed()
+	{
+		Player currentPlayer = _players[_currentPlayerIndex];
+		PropertySpace currentSpace = (PropertySpace) _boardData.get_space(currentPlayer.get_pos());
+		Property property = currentSpace.get_property();
+
+		if (bank.purchase_property(property))
+		{
+			currentPlayer.decrease_balance(property.get_cost());
+			currentPlayer.add_to_properties(property);
+			Console.WriteLine(currentPlayer.get_name() + " has purchased " + property.get_name() + " for £" + property.get_cost());
+		}
+
+		if (_diceRoll[0] == _diceRoll[1]) 
+		{
+			// placeholder for double roll counter (go to jail)
+		} else 
+		{
+			change_player();
+		}
+
+		purchaseable = false;
+		_canPressButton = true;
+
+	}
+
+	public void _on_auction_button_pressed()
+	{
+
+	}
+
+	public void play_card(Player player, Card card, SpaceType spaceType)
 	{
 		CardType cardType = card.get_cardType();
 		int cardParam = card.get_cardParameter();
+		string cardDescription = card.get_description();
+		var cardTextBox = GetNode<RichTextLabel>("CardDisplay");
+
+		string text = player.get_name();
+		if (spaceType == SpaceType.OK)
+		{
+			text += " drew an opportunity knocks card:";
+		} else
+		{
+			text += " drew a pot luck card:";
+		}
+		text += "\n" + cardType + "\n" + cardDescription;
+		cardTextBox.Text = text;
+
 		//finds which cardType is being played and then applies the card's parameter value
 		switch (cardType)
 		{
@@ -296,6 +410,7 @@ public partial class Board : Node2D
 				send_to_jail(player);
 				break;
 			case CardType.FINE:
+				player.decrease_balance(cardParam);
 				freeParking.collect_fine(cardParam);
 				break;
 			case CardType.GOOJF:
@@ -315,10 +430,11 @@ public partial class Board : Node2D
 				player.increase_balance(cardParam);
 				break;
 			case CardType.PAYBANK:
-				
+				player.decrease_balance(cardParam);
+				bank.add_to_bank(cardParam);
 				break;
 			case CardType.FINEOROK:
-				
+				// PLAYER HAS TO CHOOSE A FINE OR AN OK CARD
 				break;
 			case CardType.COLLECTALL:
 				for (int i = 0; i < _players.Length; i++)
@@ -332,13 +448,21 @@ public partial class Board : Node2D
 				break;
 			case CardType.PAYREPAIRS:
 				LinkedList<Property> properties = player.get_properties();
+				int totalCost = 0;
 				foreach (Property property in properties)
 				{
 					if (property.get_num_houses() < 5)
 					{
-						player.decrease_balance(cardParam * property.get_num_houses());
+						totalCost += cardParam * property.get_num_houses();
+					}else if(property.get_num_houses() == 5){
+						if(cardParam == 25){
+							totalCost += 100;
+						}if(cardParam == 40){
+							totalCost += 115;
+						}
 					}
 				}
+				player.decrease_balance(totalCost);
 				break;
 			case CardType.MOVESPACESB:
 				
@@ -359,17 +483,26 @@ public partial class Board : Node2D
 	public void send_to_jail(Player player)
 	{
 		_players[_currentPlayerIndex].set_pos(10);
-		_players[_currentPlayerIndex].player_movement(_boardSpaces[(_players[_currentPlayerIndex].get_pos() + 1) % 40].Position);
+		_players[_currentPlayerIndex].player_movement(_boardSpaces[_players[_currentPlayerIndex].get_pos() % 40].Position + GetNode<Node2D>("BoardSpaces").Position + new Vector2(20, -20));
 		jail.send_to_jail(player);
+		change_player();
 	}
 
-	
-	
 	public override void _Process(double delta) 
 	{
-		
+		display_player_balances();
+		display_board_info();
+		display_player_properties();
+
+		if (!purchaseable)
+		{
+			GetNode<Button>("PurchaseButton").Hide();
+			GetNode<Button>("AuctionButton").Hide();
+		} else
+		{
+			GetNode<Button>("PurchaseButton").Show();
+			GetNode<Button>("AuctionButton").Show();
+		}
 	}
 }
-
-
 }
