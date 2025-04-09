@@ -1,7 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using System.Numerics;
+
 
 public partial class Player : Node2D
 {
@@ -38,8 +38,16 @@ public partial class Player : Node2D
 			return true;
 
 		} else {
-			currentPos += 1;
+			currentPos ++;
 			return false;
+		}
+	}
+
+	public void iterate_pos_backwards(){
+		if(currentPos - 1 < 0){
+			currentPos = 39;
+		}else{
+			currentPos--;
 		}
 	}
 

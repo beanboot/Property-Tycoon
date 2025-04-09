@@ -364,7 +364,13 @@ offset_right = 1419.98
 offset_bottom = 932.117
 text = "Auction"
 
+[node name="DrawCardButton(DEBUG)" type="Button" parent="."]
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Draw Card"
+
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="JailButton(DEBUG)" to="." method="_on_button_2_pressed"]
 [connection signal="pressed" from="PurchaseButton" to="." method="_on_purchase_button_pressed"]
 [connection signal="pressed" from="AuctionButton" to="." method="_on_auction_button_pressed"]
+[connection signal="pressed" from="DrawCardButton(DEBUG)" to="." method="_on_draw_card_button_debug_pressed"]
