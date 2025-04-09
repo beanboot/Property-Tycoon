@@ -1,17 +1,3 @@
 [remap]
 
-importer="csv_translation"
-type="Translation"
-uid="uid://b72ieco07o4cj"
-
-[deps]
-
-files=["res://data/CardData.ActionType.translation", "res://data/CardData.ActionParam.translation", "res://data/CardData.PLOK.translation"]
-
-source_file="res://data/CardData.csv"
-dest_files=["res://data/CardData.ActionType.translation", "res://data/CardData.ActionParam.translation", "res://data/CardData.PLOK.translation"]
-
-[params]
-
-compress=true
-delimiter=0
+importer="keep"

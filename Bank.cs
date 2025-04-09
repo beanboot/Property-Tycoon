@@ -50,4 +50,15 @@ public class Bank
             return true;
         }
     }
+
+    public bool does_bank_contain(Property property)
+    {
+        if (properties.Contains(property))
+        {
+            return true;
+        } else 
+        {
+            return false;
+        }
+    }
 }

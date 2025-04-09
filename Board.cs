@@ -12,7 +12,7 @@ using System;
 	private Sprite2D[] _boardSpaces;
 	private Player[] _players;
 	private bool _canPressButton = true;
-	private int _numOfPlayers = 4;
+	private int _numOfPlayers = 2;
 	private int _currentPlayerIndex;
 	private Jail jail;
 	private FreeParking freeParking;
@@ -21,6 +21,8 @@ using System;
 	private Bank bank;
 	private int goValue = 200;
 	private bool purchaseable;
+	private bool doubleRoll = false;
+	private int doubleRollCounter = 0;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -279,63 +281,87 @@ using System;
 			var dice2 = GetNode<Dice>("Button/Dice2");
 			dice2.roll(_diceRoll[1]);
 			await ToSignal(GetTree().CreateTimer(2.0f), "timeout");
-			move_current_player();
-	}
-	
-	//Moves the player based on the number they rolled in dice_roll
-	public async void move_current_player()
-	{
-		Player currentPlayer = _players[_currentPlayerIndex];
+
+			if (_diceRoll[0] == _diceRoll[1]) 
+			{
+				doubleRoll = true;
+				doubleRollCounter++;
+			} else
+			{
+				doubleRoll = false;
+				doubleRollCounter = 0;
+			}
+
 			// targetMoveValue combines each dice roll into one integer
 			int targetMoveValue = Convert.ToInt16(_diceRoll[0] + _diceRoll[1]);
-		
-			// Iterates the current player through the boardSpaces array targetMoveValue times (with a delay)
-			for (int i = 0; i < targetMoveValue; i++) {
-				_players[_currentPlayerIndex].player_movement(_boardSpaces[(_players[_currentPlayerIndex].get_pos() + 1) % 40].Position + GetNode<Node2D>("BoardSpaces").Position);
-				// if the player moves past go, this method will return true and we will give the player £200 from the bank
-				if (_players[_currentPlayerIndex].iterate_pos())
+			move_current_player(targetMoveValue, true);
+	}
+	
+	// Moves the player equal times to the targetMoveValue parameter, canCollect is used to determine whether the player collects £200 when passing go
+	public async void move_current_player(int targetMoveValue, bool canCollect)
+	{
+		Player currentPlayer = _players[_currentPlayerIndex];
+
+		if (doubleRollCounter >= 3)
+		{
+			send_to_jail(currentPlayer);
+			doubleRollCounter = 0;
+			change_player();
+			_canPressButton = true;
+			return;
+		}
+
+		// Iterates the current player through the boardSpaces array targetMoveValue times (with a delay)
+		for (int i = 0; i < targetMoveValue; i++) {
+			_players[_currentPlayerIndex].player_movement(_boardSpaces[(_players[_currentPlayerIndex].get_pos() + 1) % 40].Position + GetNode<Node2D>("BoardSpaces").Position);
+			// if the player moves past go, this method will return true and we will give the player £200 from the bank
+			if (_players[_currentPlayerIndex].iterate_pos() && canCollect)
+			{
+				if (bank.take_from_bank(goValue))
 				{
-					if (bank.take_from_bank(goValue))
-					{
-						_players[_currentPlayerIndex].increase_balance(goValue);
-					} else
-					{
-						break;
-					}
+					_players[_currentPlayerIndex].increase_balance(goValue);
+				} else
+				{
+					break;
 				}
-				await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
-			};
-			SpaceType type = _boardData.get_space(currentPlayer.get_pos()).land(currentPlayer);
-			if (type == SpaceType.PL | type == SpaceType.OK)
+			}
+			await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
+		};
+
+		SpaceType type = _boardData.get_space(currentPlayer.get_pos()).land(currentPlayer);
+
+		if (type == SpaceType.PL | type == SpaceType.OK)
+		{
+			play_card(currentPlayer, _deck.draw(type), type);
+		} 
+		else if (type == SpaceType.GTJ)
+		{
+			send_to_jail(currentPlayer);
+			_canPressButton = true;
+			return;
+		} 
+		else if (type == SpaceType.BROWN || type == SpaceType.BLUE || type == SpaceType.PURPLE || type == SpaceType.ORANGE
+		|| type == SpaceType.RED || type == SpaceType.YELLOW || type == SpaceType.GREEN || type == SpaceType.DEEPBLUE
+		|| type == SpaceType.STATION || type == SpaceType.UTIL)
+		{
+			PropertySpace currentSpace = (PropertySpace) _boardData.get_space(currentPlayer.get_pos());
+			Property property = currentSpace.get_property();
+
+			if (bank.does_bank_contain(property) && currentPlayer.hasPassedGo)
 			{
-				play_card(currentPlayer, _deck.draw(type), type);
-			} 
-			else if (type == SpaceType.GTJ)
-			{
-				send_to_jail(currentPlayer);
-				_canPressButton = true;
-				return;
-			} 
-			else if (type == SpaceType.BROWN || type == SpaceType.BLUE || type == SpaceType.PURPLE || type == SpaceType.ORANGE
-			|| type == SpaceType.RED || type == SpaceType.YELLOW || type == SpaceType.GREEN || type == SpaceType.DEEPBLUE
-			|| type == SpaceType.STATION || type == SpaceType.UTIL)
-			{
-				// CHECK IF PROPERTY IS IN THE BANK'S LIST THEN
 				purchaseable = true;
 			}
+		}
 
-			if (!purchaseable)
+		if (!purchaseable)
+		{
+			if (!doubleRoll) 
 			{
-				if (_diceRoll[0] == _diceRoll[1]) 
-				{
-					// placeholder for double roll counter (go to jail)
-				} else 
-				{
-					change_player();
-				}
+				change_player();
+			} 
 
-				_canPressButton = true;
-			}
+			_canPressButton = true;
+		}
 	}
 
 	// Called when the Roll Dice button is pressed
@@ -364,20 +390,17 @@ using System;
 		{
 			currentPlayer.decrease_balance(property.get_cost());
 			currentPlayer.add_to_properties(property);
-			Console.WriteLine(currentPlayer.get_name() + " has purchased " + property.get_name() + " for £" + property.get_cost());
+			var purchaseTextBox = GetNode<RichTextLabel>("PurchaseDisplay");
+			purchaseTextBox.Text = currentPlayer.get_name() + " has purchased " + property.get_name() + " for £" + property.get_cost();
 		}
 
-		if (_diceRoll[0] == _diceRoll[1]) 
-		{
-			// placeholder for double roll counter (go to jail)
-		} else 
+		if (!doubleRoll) 
 		{
 			change_player();
-		}
+		} 
 
 		purchaseable = false;
 		_canPressButton = true;
-
 	}
 
 	public void _on_auction_button_pressed()
@@ -400,7 +423,7 @@ using System;
 		{
 			text += " drew a pot luck card:";
 		}
-		text += "\n" + cardType + "\n" + cardDescription;
+		text += "\n(" + cardType + ")\n" + cardDescription;
 		cardTextBox.Text = text;
 
 		//finds which cardType is being played and then applies the card's parameter value

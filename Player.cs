@@ -12,6 +12,7 @@ public partial class Player : Node2D
 	private LinkedList<Property> properties;
 	public int daysInJail = 0;
 	public bool getOutJail = false;
+	public bool hasPassedGo = false;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -33,6 +34,7 @@ public partial class Player : Node2D
 	
 		if (currentPos + 1 > 39) {
 			currentPos = 0;
+			hasPassedGo = true;
 			return true;
 
 		} else {
