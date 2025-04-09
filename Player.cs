@@ -12,7 +12,7 @@ public partial class Player : Node2D
 	private LinkedList<Property> properties;
 	public int daysInJail = 0;
 	public bool getOutJail = false;
-	public bool hasPassedGo = false;
+	public bool hasPassedGo = true;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -64,9 +64,15 @@ public partial class Player : Node2D
 		balance += amount;
 	}
 
-	public void decrease_balance(int amount)
+	public bool decrease_balance(int amount)
 	{
-		balance -= amount;
+		if (balance - amount >= 0)
+		{
+			balance -= amount;
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public void set_name(string name){

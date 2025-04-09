@@ -332,16 +332,29 @@ offset_right = 1447.0
 offset_bottom = 443.0
 
 [node name="PurchaseDisplay" type="RichTextLabel" parent="."]
-offset_left = 782.0
-offset_top = 831.0
-offset_right = 1414.0
-offset_bottom = 869.0
+offset_left = 24.4143
+offset_top = 465.408
+offset_right = 510.414
+offset_bottom = 672.408
+text = "Purchase Log:"
+
+[node name="RentDisplay" type="RichTextLabel" parent="."]
+offset_left = 782.319
+offset_top = 706.286
+offset_right = 1414.32
+offset_bottom = 744.286
+
+[node name="CollectDisplay" type="RichTextLabel" parent="."]
+offset_left = 1687.0
+offset_top = 1040.0
+offset_right = 1976.0
+offset_bottom = 1078.0
 
 [node name="OwnedPropertiesDisplay" type="RichTextLabel" parent="."]
 offset_left = 1715.0
 offset_top = 186.0
 offset_right = 1968.0
-offset_bottom = 1084.0
+offset_bottom = 1002.0
 
 [node name="JailButton(DEBUG)" type="Button" parent="."]
 offset_left = 835.393
