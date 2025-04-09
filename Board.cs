@@ -333,8 +333,8 @@ using System;
 		else
 		{
 			for(int i = 0; i < targetMoveValue; i++){
-				_players[_currentPlayerIndex].player_movement(_boardSpaces[(_players[_currentPlayerIndex].get_pos() - 1) % 40].Position + GetNode<Node2D>("BoardSpaces").Position);
 				_players[_currentPlayerIndex].iterate_pos_backwards();
+				_players[_currentPlayerIndex].player_movement(_boardSpaces[_players[_currentPlayerIndex].get_pos() % 40].Position + GetNode<Node2D>("BoardSpaces").Position);
 				await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
 			}
 		}
@@ -468,7 +468,8 @@ using System;
 				bank.add_to_bank(cardParam);
 				break;
 			case CardType.FINEOROK:
-				// PLAYER HAS TO CHOOSE A FINE OR AN OK CARD
+				_canPressButton = false;
+				GetNode<HBoxContainer>("FineOrOpportunity").Show();
 				break;
 			case CardType.COLLECTALL:
 				for (int i = 0; i < _players.Length; i++)
@@ -504,11 +505,11 @@ using System;
 			case CardType.MOVELOCATIONB:
 				if(cardParam < player.get_pos())
 				{
-					move_current_player(cardParam - player.get_pos(), false, false);
+					move_current_player((player.get_pos() - cardParam), false, false);
 				}
 				else
 				{
-					move_current_player(40 - player.get_pos() + cardParam, false, false);
+					move_current_player((40 - cardParam) + player.get_pos(), false, false);
 				}
 				break;
 			case CardType.MOVELOCATIONF:
@@ -554,7 +555,18 @@ using System;
 	}
 
 	public void _on_draw_card_button_debug_pressed(){
+		play_card(_players[_currentPlayerIndex], _deck.draw(SpaceType.PL), SpaceType.PL);
+	}
+	public void _on_draw_opportunity_card_pressed(){
 		play_card(_players[_currentPlayerIndex], _deck.draw(SpaceType.OK), SpaceType.OK);
+		GetNode<HBoxContainer>("FineOrOpportunity").Hide();
+		_canPressButton = true;
+	}
+	public void _on_take_fine_pressed(){
+		freeParking.collect_fine(10);
+		_players[_currentPlayerIndex].decrease_balance(10);
+		GetNode<HBoxContainer>("FineOrOpportunity").Hide();
+		_canPressButton = true;
 	}
 }
 }

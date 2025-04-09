@@ -369,8 +369,25 @@ offset_right = 8.0
 offset_bottom = 8.0
 text = "Draw Card"
 
+[node name="FineOrOpportunity" type="HBoxContainer" parent="."]
+visible = false
+offset_left = 807.795
+offset_top = 809.831
+offset_right = 841.795
+offset_bottom = 849.831
+
+[node name="DrawOpportunityCard" type="Button" parent="FineOrOpportunity"]
+layout_mode = 2
+text = "Draw Opportunity Knocks"
+
+[node name="TakeFine" type="Button" parent="FineOrOpportunity"]
+layout_mode = 2
+text = "Take £10 Fine"
+
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="JailButton(DEBUG)" to="." method="_on_button_2_pressed"]
 [connection signal="pressed" from="PurchaseButton" to="." method="_on_purchase_button_pressed"]
 [connection signal="pressed" from="AuctionButton" to="." method="_on_auction_button_pressed"]
 [connection signal="pressed" from="DrawCardButton(DEBUG)" to="." method="_on_draw_card_button_debug_pressed"]
+[connection signal="pressed" from="FineOrOpportunity/DrawOpportunityCard" to="." method="_on_draw_opportunity_card_pressed"]
+[connection signal="pressed" from="FineOrOpportunity/TakeFine" to="." method="_on_take_fine_pressed"]
