@@ -16,24 +16,39 @@ public class Property{
 		numHouses = 0;
 	}
 	
+	public void set_owner(Player player)
+	{
+		owner = player;
+	}
+
+	public Player get_owner()
+	{
+		return owner;
+	}
+
 	public int get_cost()
-  {
+  	{
 		return cost;
 	}
 
-  public string get_name()
-  {
+  	public string get_name()
+  	{
     return name;
-  }
+  	}
   
-  public SpaceType get_type()
-  {
+  	public SpaceType get_type()
+  	{
     return type;
-  }
+  	}
 
-  public int get_num_houses()
-  {
+  	public int get_num_houses()
+  	{
         return numHouses;
-  }
+  	}
+
+	public int get_rent()
+	{
+		return rent[numHouses];
+	}
 }
 

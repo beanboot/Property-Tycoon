@@ -1,11 +1,14 @@
 namespace PropTycoon;
 using Godot;
 using System;
+using System.Collections.Generic;
+
 
 public class BoardData
 {
 	//_boardSpaceData an array that will hold the Board class' information
 	private Space[] _boardSpaceData;
+	private LinkedList<Property> properties;
 
 	public BoardData()
 	{
@@ -17,6 +20,8 @@ public class BoardData
 			bool firstLine = true;
 			int i = 0;
 			int j;
+			properties = new LinkedList<Property>();
+
 			while (boardData.GetPosition() < boardData.GetLength() - 1)
 			{
 				string line = boardData.GetLine();
@@ -49,6 +54,8 @@ public class BoardData
 						}
 						Property property = new Property(values[1], values[2], int.Parse(values[5]), rent);
 						_boardSpaceData[i] = new PropertySpace(int.Parse(values[0]), property);
+						properties.AddLast(property);
+
 						break;
 					case "No":
 						switch (spaceType)
@@ -61,7 +68,7 @@ public class BoardData
 								_boardSpaceData[i] = new Jail(int.Parse(values[0]));
 								break;
 							case SpaceType.FP:
-								_boardSpaceData[i] = new FreeParking(int.Parse(values[0]));
+								_boardSpaceData[i] = new FreeParking(int.Parse(values[0]), values[1]);
 								break;
 							default:
 								_boardSpaceData[i] = new ActionSpace(int.Parse(values[0]), values[1], spaceType, values[3]);
@@ -72,6 +79,7 @@ public class BoardData
 
 				i += 1;
 			}
+
 		}
 	}
 	
@@ -83,5 +91,10 @@ public class BoardData
 	public Space get_space(int index)
 	{
 		return _boardSpaceData[index];
+	}
+
+	public LinkedList<Property> get_property_list()
+	{
+		return properties;
 	}
 }

@@ -1,8 +1,9 @@
 [gd_scene load_steps=17 format=3 uid="uid://c8b72xjdwwdl3"]
 
 [ext_resource type="Script" path="res://Board.cs" id="1_o8w5g"]
-[ext_resource type="Texture2D" uid="uid://s4atf70aapvt" path="res://icons/ffffff/000000/1x1/delapouite/rolling-dice-cup.svg" id="2_1i8ye"]
+[ext_resource type="Texture2D" uid="uid://dtw05dili7vm7" path="res://BoardSprites/Backdrop.png" id="2_euki6"]
 [ext_resource type="Texture2D" uid="uid://dcye6ki23xeje" path="res://Square-white.svg.png" id="2_qw51a"]
+[ext_resource type="Texture2D" uid="uid://xldmjd7nwi3o" path="res://BoardSprites/middleSquare.png" id="3_iy7ot"]
 [ext_resource type="Texture2D" uid="uid://cfe6xa4v3bbr0" path="res://icons/ffffff/000000/1x1/delapouite/dice-six-faces-one.svg" id="3_tqv6b"]
 [ext_resource type="Texture2D" uid="uid://hpq240oq2nx2" path="res://icons/ffffff/000000/1x1/delapouite/dice-six-faces-two.svg" id="4_4lkkb"]
 [ext_resource type="Texture2D" uid="uid://8cptso5co8cl" path="res://icons/ffffff/000000/1x1/delapouite/dice-six-faces-three.svg" id="5_b5ugf"]
@@ -11,7 +12,6 @@
 [ext_resource type="Texture2D" uid="uid://d0h133202yajp" path="res://icons/ffffff/000000/1x1/delapouite/dice-six-faces-six.svg" id="8_qvn64"]
 [ext_resource type="Script" path="res://Dice.cs" id="9_k0pyn"]
 [ext_resource type="Texture2D" uid="uid://c18ws4lj4wt14" path="res://BoardSprites/Go.png" id="10_1gq8e"]
-[ext_resource type="Texture2D" uid="uid://wk7knli1iwjy" path="res://BoardSprites/Property Spaces/brownPSpace.png" id="11_22oym"]
 [ext_resource type="Texture2D" uid="uid://d0clprb0n1rdk" path="res://BoardSprites/Jail.png" id="12_411ix"]
 [ext_resource type="Texture2D" uid="uid://csjf1mgtcgqym" path="res://BoardSprites/FreeParking.png" id="14_lrnli"]
 [ext_resource type="Texture2D" uid="uid://3703jwvbxff5" path="res://BoardSprites/GoToJail.png" id="15_0ri8w"]
@@ -47,18 +47,31 @@ position = Vector2(4, 0)
 scale = Vector2(0.942071, 0.917475)
 script = ExtResource("1_o8w5g")
 
+[node name="Backdrop" type="TextureRect" parent="."]
+offset_left = -25.0
+offset_top = -19.0
+offset_right = 2064.0
+offset_bottom = 1198.0
+texture = ExtResource("2_euki6")
+
+[node name="MiddleSquare" type="TextureRect" parent="."]
+offset_left = 695.0
+offset_top = 180.0
+offset_right = 1510.0
+offset_bottom = 996.0
+texture = ExtResource("3_iy7ot")
+expand_mode = 1
+
 [node name="Button" type="Button" parent="."]
-offset_left = -1.52588e-05
-offset_top = 919.916
-offset_right = 595.0
-offset_bottom = 1439.92
+offset_left = 117.826
+offset_top = 917.736
+offset_right = 657.826
+offset_bottom = 1195.74
 scale = Vector2(0.50726, 0.493322)
-icon = ExtResource("2_1i8ye")
 icon_alignment = 1
-metadata/_edit_use_anchors_ = true
 
 [node name="Dice1" type="AnimatedSprite2D" parent="Button"]
-position = Vector2(690.557, 128.145)
+position = Vector2(138.111, 140)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_lqcvg")
 frame = 3
@@ -66,7 +79,7 @@ frame_progress = 0.556081
 script = ExtResource("9_k0pyn")
 
 [node name="Dice2" type="AnimatedSprite2D" parent="Button"]
-position = Vector2(684.279, 397.693)
+position = Vector2(403.871, 140)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_lqcvg")
 frame = 2
@@ -82,9 +95,9 @@ scale = Vector2(0.167118, 0.160697)
 texture = ExtResource("10_1gq8e")
 
 [node name="BoardSpace2" type="Sprite2D" parent="BoardSpaces"]
-position = Vector2(1244.63, 1043.71)
-scale = Vector2(0.156676, 0.16991)
-texture = ExtResource("11_22oym")
+position = Vector2(1246.93, 1044.37)
+scale = Vector2(0.084, 0.144)
+texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace3" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(1156.93, 1044.37)
@@ -128,7 +141,6 @@ texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace11" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(403.367, 1048.53)
-rotation = 1.5708
 scale = Vector2(0.171904, 0.172329)
 texture = ExtResource("12_411ix")
 
@@ -238,7 +250,6 @@ texture = ExtResource("2_qw51a")
 
 [node name="BoardSpace31" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(1371.45, 78.4762)
-rotation = -1.5708
 scale = Vector2(0.165097, 0.160357)
 texture = ExtResource("15_0ri8w")
 
@@ -303,9 +314,70 @@ offset_right = 474.0
 offset_bottom = 787.0
 
 [node name="CurrentBoardInfo" type="RichTextLabel" parent="."]
-offset_left = 10.6149
-offset_top = 789.122
-offset_right = 477.615
-offset_bottom = 917.122
+offset_left = 14.8609
+offset_top = 730.265
+offset_right = 481.861
+offset_bottom = 858.265
+
+[node name="PlayerBalances" type="RichTextLabel" parent="."]
+offset_left = 140.0
+offset_top = 215.0
+offset_right = 485.0
+offset_bottom = 539.0
+
+[node name="CardDisplay" type="RichTextLabel" parent="."]
+offset_left = 1102.0
+offset_top = 209.0
+offset_right = 1447.0
+offset_bottom = 443.0
+
+[node name="PurchaseDisplay" type="RichTextLabel" parent="."]
+offset_left = 24.4143
+offset_top = 465.408
+offset_right = 510.414
+offset_bottom = 672.408
+text = "Purchase Log:"
+
+[node name="RentDisplay" type="RichTextLabel" parent="."]
+offset_left = 782.319
+offset_top = 706.286
+offset_right = 1414.32
+offset_bottom = 744.286
+
+[node name="CollectDisplay" type="RichTextLabel" parent="."]
+offset_left = 1687.0
+offset_top = 1040.0
+offset_right = 1976.0
+offset_bottom = 1078.0
+
+[node name="OwnedPropertiesDisplay" type="RichTextLabel" parent="."]
+offset_left = 1715.0
+offset_top = 186.0
+offset_right = 1968.0
+offset_bottom = 1002.0
+
+[node name="JailButton(DEBUG)" type="Button" parent="."]
+offset_left = 835.393
+offset_top = 324.805
+offset_right = 1042.39
+offset_bottom = 363.805
+text = "send current player to jail"
+
+[node name="PurchaseButton" type="Button" parent="."]
+offset_left = 775.95
+offset_top = 893.757
+offset_right = 992.95
+offset_bottom = 933.757
+text = "Purchase"
+
+[node name="AuctionButton" type="Button" parent="."]
+offset_left = 1207.98
+offset_top = 898.117
+offset_right = 1419.98
+offset_bottom = 932.117
+text = "Auction"
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="JailButton(DEBUG)" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="PurchaseButton" to="." method="_on_purchase_button_pressed"]
+[connection signal="pressed" from="AuctionButton" to="." method="_on_auction_button_pressed"]

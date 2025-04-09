@@ -12,6 +12,7 @@ public partial class Player : Node2D
 	private LinkedList<Property> properties;
 	public int daysInJail = 0;
 	public bool getOutJail = false;
+	public bool hasPassedGo = true;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -28,13 +29,17 @@ public partial class Player : Node2D
 	}
 
 	// Iterates the currentPos variable by 1, if it surpasses 40 it goes back to 0
-	public void iterate_pos()
+	public bool iterate_pos()
 	{
 	
 		if (currentPos + 1 > 39) {
 			currentPos = 0;
+			hasPassedGo = true;
+			return true;
+
 		} else {
 			currentPos += 1;
+			return false;
 		}
 	}
 
@@ -49,7 +54,7 @@ public partial class Player : Node2D
 		currentPos = position;
 	}
 
-	public int getbalance()
+	public int get_balance()
 	{
 		return balance;
 	}
@@ -59,13 +64,23 @@ public partial class Player : Node2D
 		balance += amount;
 	}
 
-	public void decrease_balance(int amount)
+	public bool decrease_balance(int amount)
 	{
-		balance -= amount;
+		if (balance - amount >= 0)
+		{
+			balance -= amount;
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public void set_name(string name){
 		this.name = name;
+	}
+
+	public void add_to_properties(Property property){
+		properties.AddLast(property);
 	}
 
 	public LinkedList<Property> get_properties()

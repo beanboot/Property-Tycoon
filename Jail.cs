@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 public class Jail:Space{
-    public LinkedList<Player> jailed;
+    private LinkedList<Player> jailed;
     public Jail(int position)
     {
         this.position = position;

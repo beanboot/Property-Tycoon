@@ -10,8 +10,8 @@ public class ActionSpace : Space{
 			this.name = name;
 			this.type = type;
 			string[] actionValues = action.Split("-");
-			GD.Print(actionValues);
 			actionType = Enum.Parse<ActionType>(actionValues[0].ToUpper());
 			actionParameter = int.Parse(actionValues[1]);
 	}
+
 }

@@ -1,34 +1,34 @@
 Description,ActionType,ActionParam,PLOK
-"""You inherit 200""",COLLECT,200,PL
-"""You have won 2nd prize in a beauty contest - collect 50""",COLLECT,50,PL
-"""You are up the creek with no paddle - go back to the Old Creek""",MOVELOCATIONB,1,PL
-"""Student loan refund. Collect 20""",COLLECT,20,PL
-"""Bank error in your favour. Collect 200""",COLLECT,200,PL
-"""Pay bill for text books of 100""",PAYBANK,100,PL
-"""Mega late night taxi bill pay 50""",PAYBANK,50,PL
-"""Advance to GO""",MOVELOCATIONF,0,PL
-"""From sale of Bitcoin you get 50""",COLLECT,50,PL
-"""Bitcoin assets fall - pay off Bitcoin short fall""",PAYBANK,50,PL
-"""Pay a 10 fine or take opportunity knocks""",FINEOROK,10,PL
-"""Pay insurance fee of 50""",FINE,50,PL
-"""Savings bond matures - collect 100",COLLECT,100,PL
-"""Go to jail. Do not pass GO - do not collect 200""",GTJ,0,PL
-"""Received interest on shares of 25""",COLLECT,25,OK
-"""It's your birthday. Collect 10 from each player""",COLLECTALL,10,OK
-"""Get out of jail free""",GOOJF,0,OK
-"""Bank pays you divided of 50""",COLLECT,50,OK
-"""You have won a lip sync battle. Collect 100""",COLLECT,100,OK
-"""Advance to Turing Heights""",MOVELOCATIONF,39,OK
-"""Advance to Han Xin Gardens. If you pass GO - collect 200""",MOVELOCATIONF,24,OK
-"""Fined 15 for speeding""",FINE,15,OK
-"""Pay university fees of 150""",PAYBANK,150,OK
-"""Take a trip to Hove station. If you pass GO collect 200""",MOVELOCATIONF,15,OK
-"""Loan matures - collect 150""",COLLECT,150,OK
-"""You are assessed for repairs. 40/house. 115/hotel""",PAYREPAIRS,40,OK
-"""Advance to GO""",MOVELOCATIONF,0,OK
-"""You are assessed for repairs. 25/house. 100/hotel""",PAYREPAIRS,25,OK
-"""Go back 3 spaces""",MOVESPACESB,3,OK
-"""Advance to Skywalker Drive. If you pass GO collect 200""",MOVELOCATIONF,11,OK
-"""Go to jail. Do not pass GO. Do not collect 200""",GTJ,0,OK
-"""Drunk in charge of a hoverboard. Fine 30""",FINE,20,OK
-"""Get out of jail free""",GOOJF,0,OK
+You inherit £200,COLLECT,200,PL
+You have won 2nd prize in a beauty contest - collect £50,COLLECT,50,PL
+You are up the creek with no paddle - go back to the Old Creek,MOVELOCATIONB,1,PL
+Student loan refund. Collect £20,COLLECT,20,PL
+Bank error in your favour. Collect £200,COLLECT,200,PL
+Pay bill for text books of £100,PAYBANK,100,PL
+Mega late night taxi bill pay £50,PAYBANK,50,PL
+Advance to GO,MOVELOCATIONF,0,PL
+From sale of Bitcoin you get £50,COLLECT,50,PL
+Bitcoin assets fall - pay off Bitcoin short fall,PAYBANK,50,PL
+Pay a £10 fine or take opportunity knocks,FINEOROK,10,PL
+Pay insurance fee of £50,FINE,50,PL
+Savings bond matures - collect £100",COLLECT,100,PL
+Go to jail. Do not pass GO - do not collect £200,GTJ,0,PL
+Received interest on shares of £25,COLLECT,25,OK
+It's your birthday. Collect £10 from each player,COLLECTALL,10,OK
+Get out of jail free,GOOJF,0,OK
+Bank pays you divided of £50,COLLECT,50,OK
+You have won a lip sync battle. Collect £100,COLLECT,100,OK
+Advance to Turing Heights,MOVELOCATIONF,39,OK
+Advance to Han Xin Gardens. If you pass GO - collect £200,MOVELOCATIONF,24,OK
+Fined £15 for speeding,FINE,15,OK
+Pay university fees of £150,PAYBANK,150,OK
+Take a trip to Hove station. If you pass GO collect £200,MOVELOCATIONF,15,OK
+Loan matures - collect £150,COLLECT,150,OK
+You are assessed for repairs. £40/house. £115/hotel,PAYREPAIRS,40,OK
+Advance to GO,MOVELOCATIONF,0,OK
+You are assessed for repairs. £25/house. £100/hotel,PAYREPAIRS,25,OK
+Go back 3 spaces,MOVESPACESB,3,OK
+Advance to Skywalker Drive. If you pass GO collect £200,MOVELOCATIONF,11,OK
+Go to jail. Do not pass GO. Do not collect £200,GTJ,0,OK
+Drunk in charge of a hoverboard. Fine £30,FINE,30,OK
+Get out of jail free,GOOJF,0,OK
