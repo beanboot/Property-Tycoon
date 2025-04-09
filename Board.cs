@@ -7,7 +7,7 @@ using System;
     using System.Threading.Tasks;
 
 
-    public partial class Board : Node2D
+	public partial class Board : Node2D
 {
 	//Global Variables
 	private uint[] _diceRoll;
@@ -318,11 +318,11 @@ using System;
 
 			// targetMoveValue combines each dice roll into one integer
 			int targetMoveValue = Convert.ToInt16(_diceRoll[0] + _diceRoll[1]);
-			move_current_player(targetMoveValue, true);
+			move_current_player(targetMoveValue, true, true);
 	}
 	
 	// Moves the player equal times to the targetMoveValue parameter, canCollect is used to determine whether the player collects £200 when passing go
-	public async void move_current_player(int targetMoveValue, bool canCollect)
+	public async void move_current_player(int targetMoveValue, bool canCollect, bool forward)
 	{
 		Player currentPlayer = _players[_currentPlayerIndex];
 		var collectTextBox = GetNode<RichTextLabel>("CollectDisplay");
@@ -337,24 +337,32 @@ using System;
 			return;
 		}
 
-		// Iterates the current player through the boardSpaces array targetMoveValue times (with a delay)
-		for (int i = 0; i < targetMoveValue; i++) {
-			currentPlayer.player_movement(_boardSpaces[(currentPlayer.get_pos() + 1) % 40].Position + GetNode<Node2D>("BoardSpaces").Position);
-			// if the player moves past go, this method will return true and we will give the player £200 from the bank
-			if (currentPlayer.iterate_pos() && canCollect)
-			{
-				if (bank.take_from_bank(goValue))
-				{
-					currentPlayer.increase_balance(goValue);
-					collectTextBox.Text = currentPlayer.get_name() + " collected £" + goValue;
-					clear_text_after_delay(collectTextBox, 2000);
-				} else
-				{
-					break;
+		if(forward)
+		{
+      // Iterates the current player through the boardSpaces array targetMoveValue times (with a delay)
+      for (int i = 0; i < targetMoveValue; i++) {
+        currentPlayer.player_movement(_boardSpaces[(currentPlayer.get_pos() + 1) % 40].Position + GetNode<Node2D>("BoardSpaces").Position);
+        // if the player moves past go, this method will return true and we will give the player £200 from the bank
+        if (currentPlayer.iterate_pos() && canCollect)
+        {
+          if (bank.take_from_bank(goValue))
+          {
+            currentPlayer.increase_balance(goValue);
+            collectTextBox.Text = currentPlayer.get_name() + " collected £" + goValue;
+            clear_text_after_delay(collectTextBox, 2000);
+          }
 				}
+				await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
+			};
+		}
+		else
+		{
+			for(int i = 0; i < targetMoveValue; i++){
+				_players[_currentPlayerIndex].iterate_pos_backwards();
+				_players[_currentPlayerIndex].player_movement(_boardSpaces[_players[_currentPlayerIndex].get_pos() % 40].Position + GetNode<Node2D>("BoardSpaces").Position);
+				await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
 			}
-			await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
-		};
+		}
 
 		SpaceType type = _boardData.get_space(currentPlayer.get_pos()).land(currentPlayer);
 
@@ -512,7 +520,8 @@ using System;
 				bank.add_to_bank(cardParam);
 				break;
 			case CardType.FINEOROK:
-				// PLAYER HAS TO CHOOSE A FINE OR AN OK CARD
+				_canPressButton = false;
+				GetNode<HBoxContainer>("FineOrOpportunity").Show();
 				break;
 			case CardType.COLLECTALL:
 				for (int i = 0; i < _players.Length; i++)
@@ -543,13 +552,27 @@ using System;
 				player.decrease_balance(totalCost);
 				break;
 			case CardType.MOVESPACESB:
-				
+				move_current_player(cardParam, false, false);
 				break;
 			case CardType.MOVELOCATIONB:
-				
+				if(cardParam < player.get_pos())
+				{
+					move_current_player((player.get_pos() - cardParam), false, false);
+				}
+				else
+				{
+					move_current_player((40 - cardParam) + player.get_pos(), false, false);
+				}
 				break;
 			case CardType.MOVELOCATIONF:
-				
+				if(cardParam > player.get_pos())
+				{
+					move_current_player(cardParam - player.get_pos(), true, true);
+				}
+				else
+				{
+					move_current_player((40 - player.get_pos()) + cardParam, true, true);
+				}
 				break;
 			default:
 				Console.WriteLine("Unknown card type");
@@ -580,6 +603,21 @@ using System;
 			GetNode<Button>("PurchaseButton").Show();
 			GetNode<Button>("AuctionButton").Show();
 		}
+	}
+
+	public void _on_draw_card_button_debug_pressed(){
+		play_card(_players[_currentPlayerIndex], _deck.draw(SpaceType.PL), SpaceType.PL);
+	}
+	public void _on_draw_opportunity_card_pressed(){
+		play_card(_players[_currentPlayerIndex], _deck.draw(SpaceType.OK), SpaceType.OK);
+		GetNode<HBoxContainer>("FineOrOpportunity").Hide();
+		_canPressButton = true;
+	}
+	public void _on_take_fine_pressed(){
+		freeParking.collect_fine(10);
+		_players[_currentPlayerIndex].decrease_balance(10);
+		GetNode<HBoxContainer>("FineOrOpportunity").Hide();
+		_canPressButton = true;
 	}
 }
 }

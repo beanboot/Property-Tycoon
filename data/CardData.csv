@@ -6,7 +6,7 @@ Student loan refund. Collect £20,COLLECT,20,PL
 Bank error in your favour. Collect £200,COLLECT,200,PL
 Pay bill for text books of £100,PAYBANK,100,PL
 Mega late night taxi bill pay £50,PAYBANK,50,PL
-Advance to GO,MOVELOCATIONF,0,PL
+Advance to GO,MOVELOCATIONF,40,PL
 From sale of Bitcoin you get £50,COLLECT,50,PL
 Bitcoin assets fall - pay off Bitcoin short fall,PAYBANK,50,PL
 Pay a £10 fine or take opportunity knocks,FINEOROK,10,PL
@@ -25,7 +25,7 @@ Pay university fees of £150,PAYBANK,150,OK
 Take a trip to Hove station. If you pass GO collect £200,MOVELOCATIONF,15,OK
 Loan matures - collect £150,COLLECT,150,OK
 You are assessed for repairs. £40/house. £115/hotel,PAYREPAIRS,40,OK
-Advance to GO,MOVELOCATIONF,0,OK
+Advance to GO,MOVELOCATIONF,40,OK
 You are assessed for repairs. £25/house. £100/hotel,PAYREPAIRS,25,OK
 Go back 3 spaces,MOVESPACESB,3,OK
 Advance to Skywalker Drive. If you pass GO collect £200,MOVELOCATIONF,11,OK
