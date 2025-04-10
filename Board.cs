@@ -4,13 +4,14 @@ namespace PropTycoon {
 
 using Godot;
 using System;
-    using System.Runtime.CompilerServices;
-    using System.Threading.Tasks;
+	using System.Runtime.CompilerServices;
+	using System.Threading.Tasks;
 
 
 public partial class Board : Node2D
 {
 	//Global Variables
+	private bool displayInfo;
 	private uint[] diceRoll;
 	private Sprite2D[] boardSpaces;
 	private Player[] players;
@@ -28,11 +29,12 @@ public partial class Board : Node2D
 	private int doubleRollCounter = 0;
 	private string purchaseLogString = "Purchase Log:";
 	private Card currentCard;
+	private GameData gameData;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		GameData gameData = (GameData)GetNode<Node>("/root/GameData");
+		gameData = (GameData)GetNode<Node>("/root/GameData");
 		numOfPlayers = gameData.numPlayers + gameData.numBots;
 		deck = new Deck();
 		boardData = new BoardData();
@@ -45,6 +47,8 @@ public partial class Board : Node2D
 		currentPlayerIndex = 0;
 		
 		display_current_player_text();
+
+		show_houses();
 		
 	}
 
@@ -55,7 +59,7 @@ public partial class Board : Node2D
 		for (int i = 0; i < numOfPlayers; i++)
 		{
 			int playerPos = players[i].get_pos();
-			displayBoardInfo += "Player " + (i+1) + " is on " + boardData.get_space(playerPos).get_name() + "\n";
+			displayBoardInfo += players[i].get_name() + " is on " + boardData.get_space(playerPos).get_name() + "\n";
 			
 		}
 		debugTextBox.Text = displayBoardInfo;
@@ -158,7 +162,7 @@ public partial class Board : Node2D
 		playerSprites[4] = (Texture2D)GD.Load("res://BoardSprites/PlayerSprites/pt.mobilephone.png");
 		playerSprites[5] = (Texture2D)GD.Load("res://BoardSprites/PlayerSprites/pt.hatstand.png");
 
-		for (i = 0; i < numOfPlayers; i++)
+		for (i = 0; i < gameData.numPlayers; i++)
 		{
 			var playerInstance = playerScene.Instantiate();
 			playerInstance.Name = "Player" + (i+1);
@@ -168,9 +172,27 @@ public partial class Board : Node2D
 			var playerSprite = GetNode<Sprite2D>("Player" + (i+1) + "/Sprite2D");
 			playerSprite.Texture = playerSprites[i];
 
-			players[i].set_name("Player"+(i+1));
+			players[i].set_name("Player "+(i+1));
 			players[i].player_movement(boardSpaces[0].Position + GetNode<Node2D>("BoardSpaces").Position);
 		};
+
+		for (i = gameData.numPlayers; i < numOfPlayers; i++)
+		{
+			var playerInstance = playerScene.Instantiate();
+			playerInstance.Name = "Player" + (i+1);
+			AddChild(playerInstance);
+
+			players[i] = GetNode<Player>("Player" + (i+1));
+			var playerSprite = GetNode<Sprite2D>("Player" + (i+1) + "/Sprite2D");
+			playerSprite.Texture = playerSprites[i];
+
+			int j = i - gameData.numPlayers;
+			players[i].set_name("Bot "+(j+1));
+			players[i].player_movement(boardSpaces[0].Position + GetNode<Node2D>("BoardSpaces").Position);
+			players[i].isBot = true;
+		};
+
+		displayInfo = true;
 	}
 
 	// Called within _Ready(), fills the array boardSpaces[] with every space on the board
@@ -403,7 +425,8 @@ public partial class Board : Node2D
 	
 			if (bank.does_bank_contain(property)) // bank owns property
 			{
-				if(currentPlayer.hasPassedGo){
+				if(currentPlayer.hasPassedGo)
+				{
 					purchaseable = true;
 				}
 			} else if ((type == SpaceType.BROWN || type == SpaceType.BLUE || type == SpaceType.PURPLE || type == SpaceType.ORANGE
@@ -427,7 +450,7 @@ public partial class Board : Node2D
 			if (!doubleRoll) 
 			{
 				change_player();
-			} 
+			}
 
 			canPressButton = true;
 		}
@@ -510,7 +533,8 @@ public partial class Board : Node2D
 		}
 		GetNode<RichTextLabel>("Card/Description").Text = cardDescription;
 
-		
+		//show the card node
+		GetNode<Node2D>("Card").Show();
 		canPressButton = false;
 		//shows the accept card button unless FINEOROK cardType passed
 		var button = GetNode<Button>("Card/AcceptCard");
@@ -520,8 +544,7 @@ public partial class Board : Node2D
 			button.Hide();
 			GetNode<HBoxContainer>("Card/FineOrOpportunity").Show();
 		}
-		//show the card node
-		GetNode<Node2D>("Card").Show();
+		
 	}
 
 	public void handle_card(int cardParam, CardType cardType, Player player)
@@ -626,13 +649,49 @@ public partial class Board : Node2D
 		players[currentPlayerIndex].player_movement(boardSpaces[players[currentPlayerIndex].get_pos() % 40].Position + GetNode<Node2D>("BoardSpaces").Position + new Vector2(20, -20));
 		jail.send_to_jail(player);
 	}
+	
+	public void show_houses()
+	{
+		for(int i = 0; i < 40; i++)
+		{
+			SpaceType type = boardData.get_space(i).get_type();
+
+			if(type == SpaceType.BROWN || type == SpaceType.BLUE || type == SpaceType.PURPLE || type == SpaceType.ORANGE
+			|| type == SpaceType.RED || type == SpaceType.YELLOW || type == SpaceType.GREEN || type == SpaceType.DEEPBLUE)
+			{
+				PropertySpace propertySpace = (PropertySpace)boardData.get_space(i);
+				Property property = propertySpace.get_property();
+
+				int numHouses = property.get_num_houses();
+
+				Label housesLabel = new Label();
+
+				Vector2 size = new Vector2(200, 50);
+
+				housesLabel.Text = numHouses.ToString() + " House/s";
+				housesLabel.Scale = new Vector2(4, 4);
+				housesLabel.Size = size;
+				housesLabel.Position = -(size * housesLabel.Scale) / 2 + new Vector2(0, 525);
+				housesLabel.HorizontalAlignment = HorizontalAlignment.Center;
+				housesLabel.VerticalAlignment = VerticalAlignment.Center;
+
+				boardSpaces[i].AddChild(housesLabel);
+							
+
+				
+			}
+		}
+	}
 
 	public override void _Process(double delta) 
 	{
-		//constantly displays the player balances, board info and player property lists
+		//constantly displays the player balances, board info and player property lists, once displayInfo is set to true
+		if(displayInfo)
+		{
 		display_player_balances();
 		display_board_info();
 		display_player_properties();
+		}
 
 		//checks if the property the current player is on is purchasable at all times, if so displays the purchasing options
 		if (!purchaseable)

@@ -35,14 +35,17 @@ offset_right = -22.0
 offset_bottom = 31.0
 text = " - "
 
-[node name="numPlayers" type="RichTextLabel" parent="Players"]
-offset_right = 40.0
-offset_bottom = 40.0
-
 [node name="AddPlayer" type="Button" parent="Players"]
-offset_right = 8.0
-offset_bottom = 8.0
+offset_left = -23.0
+offset_right = -5.0
+offset_bottom = 31.0
 text = "+"
+
+[node name="Label" type="Label" parent="Players"]
+offset_left = -4.0
+offset_top = 3.0
+offset_right = 36.0
+offset_bottom = 26.0
 
 [node name="Bots" type="Node2D" parent="."]
 position = Vector2(213, 705)
@@ -54,14 +57,18 @@ offset_right = -29.0
 offset_bottom = 33.0
 text = "-"
 
-[node name="numBots" type="RichTextLabel" parent="Bots"]
-offset_right = 40.0
-offset_bottom = 40.0
-
 [node name="AddBots" type="Button" parent="Bots"]
-offset_right = 8.0
-offset_bottom = 8.0
+offset_left = -27.0
+offset_top = 2.0
+offset_right = -9.0
+offset_bottom = 33.0
 text = "+"
+
+[node name="Label" type="Label" parent="Bots"]
+offset_left = -5.0
+offset_top = 6.0
+offset_right = 35.0
+offset_bottom = 29.0
 
 [connection signal="pressed" from="start_button" to="." method="_on_start_button_pressed"]
 [connection signal="pressed" from="Players/SubtractPlayer" to="." method="_on_subtract_player_pressed"]

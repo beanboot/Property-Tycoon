@@ -15,8 +15,8 @@ public partial class MainMenu : Node
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		GetNode<Label>("Players/numPlayers").Text = "Number of players: " + numPlayers.ToString();
-		GetNode<Label>("Bots/numBots").Text = "Number of bots " + numBots.ToString();
+		GetNode<Label>("Players/Label").Text = "Number of players: " + numPlayers.ToString();
+		GetNode<Label>("Bots/Label").Text = "Number of bots " + numBots.ToString();
 	}
 
 	public void _on_start_button_pressed()
@@ -40,14 +40,14 @@ public partial class MainMenu : Node
 		}
 	}
 
-	public void _on_subtract_bot_pressed(){
+	public void _on_subtract_bots_pressed(){
 		if(numBots > 0)
 		{
 			numBots--;
 		}
 	}
 
-	public void _on_add_bot_pressed(){
+	public void _on_add_bots_pressed(){
 		if(numBots + numPlayers < 6){
 			numBots++;
 		}

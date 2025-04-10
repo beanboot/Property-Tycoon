@@ -13,6 +13,7 @@ public partial class Player : Node2D
 	public int daysInJail = 0;
 	public bool getOutJail = false;
 	public bool hasPassedGo = true;
+	public bool isBot = false;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()

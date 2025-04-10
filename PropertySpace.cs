@@ -15,5 +15,4 @@ public class PropertySpace : Space
 	{
 		return _property;
 	}
-	
 }
