@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://c8b72xjdwwdl3"]
+[gd_scene load_steps=22 format=3 uid="uid://c8b72xjdwwdl3"]
 
 [ext_resource type="Script" path="res://Board.cs" id="1_o8w5g"]
 [ext_resource type="Texture2D" uid="uid://dtw05dili7vm7" path="res://BoardSprites/Backdrop.png" id="2_euki6"]
@@ -15,6 +15,11 @@
 [ext_resource type="Texture2D" uid="uid://d0clprb0n1rdk" path="res://BoardSprites/Jail.png" id="12_411ix"]
 [ext_resource type="Texture2D" uid="uid://csjf1mgtcgqym" path="res://BoardSprites/FreeParking.png" id="14_lrnli"]
 [ext_resource type="Texture2D" uid="uid://3703jwvbxff5" path="res://BoardSprites/GoToJail.png" id="15_0ri8w"]
+[ext_resource type="Texture2D" uid="uid://dpjjlryfjkivc" path="res://BoardSprites/opportunityKnocksCard.png" id="16_cr6pr"]
+[ext_resource type="Texture2D" uid="uid://bgfxfe308nfap" path="res://BoardSprites/potLuckCard.png" id="17_16uqp"]
+[ext_resource type="Texture2D" uid="uid://loptvem3kdbr" path="res://BoardSprites/acceptCard.png" id="18_veke8"]
+[ext_resource type="Texture2D" uid="uid://dr1msjml1ddgx" path="res://BoardSprites/drawOK.png" id="19_t8xlp"]
+[ext_resource type="Texture2D" uid="uid://b5lms4nmc1el8" path="res://BoardSprites/takeFine.png" id="20_7al8f"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_lqcvg"]
 animations = [{
@@ -383,25 +388,55 @@ offset_right = 1790.51
 offset_bottom = 63.6984
 text = "Draw Card"
 
-[node name="FineOrOpportunity" type="HBoxContainer" parent="."]
+[node name="Card" type="Node2D" parent="."]
 visible = false
-offset_left = 807.795
-offset_top = 809.831
-offset_right = 841.795
-offset_bottom = 849.831
+position = Vector2(1013.72, 507.916)
+scale = Vector2(0.6, 0.6)
 
-[node name="DrawOpportunityCard" type="Button" parent="FineOrOpportunity"]
-layout_mode = 2
-text = "Draw Opportunity Knocks"
+[node name="OpportunityKnocks" type="Sprite2D" parent="Card"]
+texture = ExtResource("16_cr6pr")
 
-[node name="TakeFine" type="Button" parent="FineOrOpportunity"]
+[node name="PotLuck" type="Sprite2D" parent="Card"]
+scale = Vector2(1, 1)
+texture = ExtResource("17_16uqp")
+
+[node name="Description" type="RichTextLabel" parent="Card"]
+offset_left = -321.986
+offset_top = -443.246
+offset_right = 342.014
+offset_bottom = -55.2456
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 42
+text = "Test Words"
+
+[node name="AcceptCard" type="Button" parent="Card"]
+visible = false
+offset_left = -183.992
+offset_top = 523.175
+offset_right = 262.008
+offset_bottom = 705.175
+icon = ExtResource("18_veke8")
+
+[node name="FineOrOpportunity" type="HBoxContainer" parent="Card"]
+visible = false
+offset_left = -436.98
+offset_top = 523.175
+offset_right = 460.02
+offset_bottom = 705.175
+
+[node name="DrawOpportunityCard" type="Button" parent="Card/FineOrOpportunity"]
 layout_mode = 2
-text = "Take £10 Fine"
+icon = ExtResource("19_t8xlp")
+
+[node name="TakeFine" type="Button" parent="Card/FineOrOpportunity"]
+layout_mode = 2
+icon = ExtResource("20_7al8f")
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="JailButton(DEBUG)" to="." method="_on_button_2_pressed"]
 [connection signal="pressed" from="PurchaseButton" to="." method="_on_purchase_button_pressed"]
 [connection signal="pressed" from="AuctionButton" to="." method="_on_auction_button_pressed"]
 [connection signal="pressed" from="DrawCardButton(DEBUG)" to="." method="_on_draw_card_button_debug_pressed"]
-[connection signal="pressed" from="FineOrOpportunity/DrawOpportunityCard" to="." method="_on_draw_opportunity_card_pressed"]
-[connection signal="pressed" from="FineOrOpportunity/TakeFine" to="." method="_on_take_fine_pressed"]
+[connection signal="pressed" from="Card/AcceptCard" to="." method="_on_accept_card_pressed"]
+[connection signal="pressed" from="Card/FineOrOpportunity/DrawOpportunityCard" to="." method="_on_draw_opportunity_card_pressed"]
+[connection signal="pressed" from="Card/FineOrOpportunity/TakeFine" to="." method="_on_take_fine_pressed"]

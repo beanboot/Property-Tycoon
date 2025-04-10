@@ -26,6 +26,7 @@ public partial class Board : Node2D
 	private bool doubleRoll = false;
 	private int doubleRollCounter = 0;
 	private string purchaseLogString = "Purchase Log:";
+	private Card currentCard;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -489,23 +490,35 @@ public partial class Board : Node2D
 
 	public void play_card(Player player, Card card, SpaceType spaceType)
 	{
+		currentCard = card;
 		CardType cardType = card.get_cardType();
-		int cardParam = card.get_cardParameter();
 		string cardDescription = card.get_description();
-		var cardTextBox = GetNode<RichTextLabel>("CardDisplay");
 
-		string text = player.get_name();
 		if (spaceType == SpaceType.OK)
 		{
-			text += " drew an opportunity knocks card:";
+			GetNode<Sprite2D>("Card/PotLuck").Hide();
+			GetNode<Sprite2D>("Card/OpportunityKnocks").Show();
 		} else
 		{
-			text += " drew a pot luck card:";
+			GetNode<Sprite2D>("Card/OpportunityKnocks").Hide();
+			GetNode<Sprite2D>("Card/PotLuck").Show();
 		}
-		text += "\n(" + cardType + ")\n" + cardDescription;
-		cardTextBox.Text = text;
+		GetNode<RichTextLabel>("Card/Description").Text = cardDescription;
 
 		//finds which cardType is being played and then applies the card's parameter value
+		canPressButton = false;
+		var button = GetNode<Button>("Card/AcceptCard");
+		if(cardType != CardType.FINEOROK){
+			button.Show();
+		}else{
+			button.Hide();
+			GetNode<HBoxContainer>("Card/FineOrOpportunity").Show();
+		}
+		GetNode<Node2D>("Card").Show();
+	}
+
+	public void handle_card(int cardParam, CardType cardType, Player player)
+	{
 		switch (cardType)
 		{
 			case CardType.GTJ:
@@ -536,10 +549,7 @@ public partial class Board : Node2D
 				player.decrease_balance(cardParam);
 				bank.add_to_bank(cardParam);
 				break;
-			case CardType.FINEOROK:
-				canPressButton = false;
-				GetNode<HBoxContainer>("FineOrOpportunity").Show();
-				break;
+
 			case CardType.COLLECTALL:
 				for (int i = 0; i < players.Length; i++)
 				{
@@ -596,8 +606,9 @@ public partial class Board : Node2D
 			default:
 				Console.WriteLine("Unknown card type");
 				break;
-			
 		}
+		GetNode<Node2D>("Card").Hide();
+		canPressButton = true;
 	}
 
 	public void send_to_jail(Player player)
@@ -624,19 +635,28 @@ public partial class Board : Node2D
 		}
 	}
 
-	public void _on_draw_card_button_debug_pressed(){
+	public void _on_draw_card_button_debug_pressed()
+	{
 		play_card(players[currentPlayerIndex], deck.draw(SpaceType.PL), SpaceType.PL);
 	}
-	public void _on_draw_opportunity_card_pressed(){
+	public void _on_draw_opportunity_card_pressed()
+	{
 		play_card(players[currentPlayerIndex], deck.draw(SpaceType.OK), SpaceType.OK);
-		GetNode<HBoxContainer>("FineOrOpportunity").Hide();
-		canPressButton = true;
+		GetNode<HBoxContainer>("Card/FineOrOpportunity").Hide();
 	}
-	public void _on_take_fine_pressed(){
+	public void _on_accept_card_pressed()
+	{
+		CardType cardType = currentCard.get_cardType();
+		int cardParam = currentCard.get_cardParameter();
+		Player currentPlayer = players[currentPlayerIndex];
+		handle_card(cardParam, cardType, currentPlayer);
+	}
+	public void _on_take_fine_pressed()
+	{
 		freeParking.collect_fine(10);
 		players[currentPlayerIndex].decrease_balance(10);
-		GetNode<HBoxContainer>("FineOrOpportunity").Hide();
-		canPressButton = true;
+		GetNode<HBoxContainer>("Card/FineOrOpportunity").Hide();
+		GetNode<Node2D>("Card").Hide();
 	}
 }
 }
