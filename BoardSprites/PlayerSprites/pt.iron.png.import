@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b2exkab7ujmoi"
-path="res://.godot/imported/greenPCard.png-ffc120ae0998b943537c507c6043cb1c.ctex"
+uid="uid://gfjpwskpp23x"
+path="res://.godot/imported/pt.iron.png-e40e04f366b13850e33d3a1f557392d3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://BoardSprites/Property Cards/greenPCard.png"
-dest_files=["res://.godot/imported/greenPCard.png-ffc120ae0998b943537c507c6043cb1c.ctex"]
+source_file="res://BoardSprites/PlayerSprites/pt.iron.png"
+dest_files=["res://.godot/imported/pt.iron.png-e40e04f366b13850e33d3a1f557392d3.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dw50vefglqtfo"
-path="res://.godot/imported/deepbluePSpace.png-366b458cf0aa2d5a78077c498dd9da17.ctex"
+uid="uid://cwltb181gkdp0"
+path="res://.godot/imported/stationSpace.png-94ff129722fdfdbf4ab6d25f232ef8c4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://BoardSprites/Property Spaces/deepbluePSpace.png"
-dest_files=["res://.godot/imported/deepbluePSpace.png-366b458cf0aa2d5a78077c498dd9da17.ctex"]
+source_file="res://BoardSprites/PropertySpaces/stationSpace.png"
+dest_files=["res://.godot/imported/stationSpace.png-94ff129722fdfdbf4ab6d25f232ef8c4.ctex"]
 
 [params]
 

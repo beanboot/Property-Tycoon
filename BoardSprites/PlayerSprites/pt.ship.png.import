@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cbbnsusbfhi80"
-path="res://.godot/imported/greenPSpace.png-111e5dfe14cc0592f0de63112eb06243.ctex"
+uid="uid://cfgec36jxah2n"
+path="res://.godot/imported/pt.ship.png-737ef2ab2f19533f5ebf1a5725a183a2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://BoardSprites/Property Spaces/greenPSpace.png"
-dest_files=["res://.godot/imported/greenPSpace.png-111e5dfe14cc0592f0de63112eb06243.ctex"]
+source_file="res://BoardSprites/PlayerSprites/pt.ship.png"
+dest_files=["res://.godot/imported/pt.ship.png-737ef2ab2f19533f5ebf1a5725a183a2.ctex"]
 
 [params]
 

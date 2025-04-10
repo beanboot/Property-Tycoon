@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bmxahrgacnjfj"
-path="res://.godot/imported/purplePCard.png-ed64009f86081338f9d422bc727f390d.ctex"
+uid="uid://cob8hlrctcsqa"
+path="res://.godot/imported/redPCard.png-329b1b4e74fc1397fc6ae975e05564b4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://BoardSprites/Property Cards/purplePCard.png"
-dest_files=["res://.godot/imported/purplePCard.png-ed64009f86081338f9d422bc727f390d.ctex"]
+source_file="res://BoardSprites/PropertyCards/redPCard.png"
+dest_files=["res://.godot/imported/redPCard.png-329b1b4e74fc1397fc6ae975e05564b4.ctex"]
 
 [params]
 

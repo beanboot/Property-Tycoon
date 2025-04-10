@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cwltb181gkdp0"
-path="res://.godot/imported/stationSpace.png-8f9d204f36f04d750314cd8213195291.ctex"
+uid="uid://cp7002my3m042"
+path="res://.godot/imported/pt.mobilephone.png-101e705a050cbc648908040fa6a1106d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://BoardSprites/Property Spaces/stationSpace.png"
-dest_files=["res://.godot/imported/stationSpace.png-8f9d204f36f04d750314cd8213195291.ctex"]
+source_file="res://BoardSprites/PlayerSprites/pt.mobilephone.png"
+dest_files=["res://.godot/imported/pt.mobilephone.png-101e705a050cbc648908040fa6a1106d.ctex"]
 
 [params]
 

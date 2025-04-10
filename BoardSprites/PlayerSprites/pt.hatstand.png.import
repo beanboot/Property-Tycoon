@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://nai0xlr5pbhj"
-path="res://.godot/imported/orangePCard.png-713fee5995402f715c34ae8870237b98.ctex"
+uid="uid://bmu20vh57e50k"
+path="res://.godot/imported/pt.hatstand.png-b34ce30758415130f636efeb7a42eedc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://BoardSprites/Property Cards/orangePCard.png"
-dest_files=["res://.godot/imported/orangePCard.png-713fee5995402f715c34ae8870237b98.ctex"]
+source_file="res://BoardSprites/PlayerSprites/pt.hatstand.png"
+dest_files=["res://.godot/imported/pt.hatstand.png-b34ce30758415130f636efeb7a42eedc.ctex"]
 
 [params]
 

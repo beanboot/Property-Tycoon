@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bxlc7xvyrcr1s"
-path="res://.godot/imported/waterworksSpace.png-c2a063ec53007339a45cf260ba9a65d7.ctex"
+uid="uid://nai0xlr5pbhj"
+path="res://.godot/imported/orangePCard.png-31990a6d4bcb9ccd72cc7bcb23672ee7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://BoardSprites/Property Spaces/waterworksSpace.png"
-dest_files=["res://.godot/imported/waterworksSpace.png-c2a063ec53007339a45cf260ba9a65d7.ctex"]
+source_file="res://BoardSprites/PropertyCards/orangePCard.png"
+dest_files=["res://.godot/imported/orangePCard.png-31990a6d4bcb9ccd72cc7bcb23672ee7.ctex"]
 
 [params]
 

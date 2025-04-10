@@ -55,18 +55,18 @@ offset_bottom = 1198.0
 texture = ExtResource("2_euki6")
 
 [node name="MiddleSquare" type="TextureRect" parent="."]
-offset_left = 695.0
-offset_top = 180.0
-offset_right = 1510.0
-offset_bottom = 996.0
+offset_left = 606.896
+offset_top = 187.63
+offset_right = 1421.9
+offset_bottom = 1003.63
 texture = ExtResource("3_iy7ot")
 expand_mode = 1
 
 [node name="Button" type="Button" parent="."]
-offset_left = 117.826
-offset_top = 917.736
-offset_right = 657.826
-offset_bottom = 1195.74
+offset_left = 14.8609
+offset_top = 693.207
+offset_right = 554.861
+offset_bottom = 971.211
 scale = Vector2(0.50726, 0.493322)
 icon_alignment = 1
 
@@ -87,7 +87,7 @@ frame_progress = 0.798442
 script = ExtResource("9_k0pyn")
 
 [node name="BoardSpaces" type="Node2D" parent="."]
-position = Vector2(215.483, 23.9789)
+position = Vector2(127.379, 31.6085)
 
 [node name="BoardSpace1" type="Sprite2D" parent="BoardSpaces"]
 position = Vector2(1366.13, 1045.26)
@@ -308,41 +308,40 @@ scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="CurrentPlayerDebug" type="RichTextLabel" parent="."]
-offset_left = 7.0
-offset_top = 705.0
-offset_right = 474.0
-offset_bottom = 787.0
+offset_left = 28.0
+offset_top = 1044.0
+offset_right = 440.0
+offset_bottom = 1126.0
 
 [node name="CurrentBoardInfo" type="RichTextLabel" parent="."]
-offset_left = 14.8609
-offset_top = 730.265
-offset_right = 481.861
-offset_bottom = 858.265
+offset_left = 24.0
+offset_top = 840.0
+offset_right = 517.0
+offset_bottom = 1054.0
 
 [node name="PlayerBalances" type="RichTextLabel" parent="."]
-offset_left = 140.0
-offset_top = 215.0
-offset_right = 485.0
-offset_bottom = 539.0
+offset_left = 1619.84
+offset_top = 102.455
+offset_right = 1981.84
+offset_bottom = 439.455
 
 [node name="CardDisplay" type="RichTextLabel" parent="."]
-offset_left = 1102.0
-offset_top = 209.0
-offset_right = 1447.0
-offset_bottom = 443.0
+offset_left = 1013.9
+offset_top = 216.63
+offset_right = 1358.9
+offset_bottom = 450.63
 
 [node name="PurchaseDisplay" type="RichTextLabel" parent="."]
-offset_left = 24.4143
-offset_top = 465.408
-offset_right = 510.414
-offset_bottom = 672.408
-text = "Purchase Log:"
+offset_left = 1604.0
+offset_top = 926.0
+offset_right = 2016.0
+offset_bottom = 1149.0
 
 [node name="RentDisplay" type="RichTextLabel" parent="."]
-offset_left = 782.319
-offset_top = 706.286
-offset_right = 1414.32
-offset_bottom = 744.286
+offset_left = 694.215
+offset_top = 713.916
+offset_right = 1326.22
+offset_bottom = 751.916
 
 [node name="CollectDisplay" type="RichTextLabel" parent="."]
 offset_left = 1687.0
@@ -351,35 +350,37 @@ offset_right = 1976.0
 offset_bottom = 1078.0
 
 [node name="OwnedPropertiesDisplay" type="RichTextLabel" parent="."]
-offset_left = 1715.0
-offset_top = 186.0
-offset_right = 1968.0
-offset_bottom = 1002.0
+offset_left = 21.0
+offset_top = 29.0
+offset_right = 428.0
+offset_bottom = 670.0
 
 [node name="JailButton(DEBUG)" type="Button" parent="."]
-offset_left = 835.393
-offset_top = 324.805
-offset_right = 1042.39
-offset_bottom = 363.805
+offset_left = 1806.66
+offset_top = 29.4286
+offset_right = 2013.66
+offset_bottom = 68.4286
 text = "send current player to jail"
 
 [node name="PurchaseButton" type="Button" parent="."]
-offset_left = 775.95
-offset_top = 893.757
-offset_right = 992.95
-offset_bottom = 933.757
+offset_left = 799.896
+offset_top = 903.63
+offset_right = 1016.9
+offset_bottom = 937.63
 text = "Purchase"
 
 [node name="AuctionButton" type="Button" parent="."]
-offset_left = 1207.98
-offset_top = 898.117
-offset_right = 1419.98
-offset_bottom = 932.117
+offset_left = 1029.65
+offset_top = 903.567
+offset_right = 1241.65
+offset_bottom = 937.567
 text = "Auction"
 
 [node name="DrawCardButton(DEBUG)" type="Button" parent="."]
-offset_right = 8.0
-offset_bottom = 8.0
+offset_left = 1700.51
+offset_top = 32.6984
+offset_right = 1790.51
+offset_bottom = 63.6984
 text = "Draw Card"
 
 [node name="FineOrOpportunity" type="HBoxContainer" parent="."]

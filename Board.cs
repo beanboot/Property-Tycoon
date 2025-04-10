@@ -1,43 +1,44 @@
 using System.Collections.Generic;
 
-namespace PropTycoon
-{
+namespace PropTycoon {
+
 using Godot;
 using System;
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 
-	public partial class Board : Node2D
+public partial class Board : Node2D
 {
 	//Global Variables
-	private uint[] _diceRoll;
-	private Sprite2D[] _boardSpaces;
-	private Player[] _players;
-	private bool _canPressButton = true;
-	private int _numOfPlayers = 4;
-	private int _currentPlayerIndex;
+	private uint[] diceRoll;
+	private Sprite2D[] boardSpaces;
+	private Player[] players;
+	private bool canPressButton = true;
+	private int numOfPlayers = 6;
+	private int currentPlayerIndex;
 	private Jail jail;
 	private FreeParking freeParking;
-	private BoardData _boardData;
-	private Deck _deck;
+	private BoardData boardData;
+	private Deck deck;
 	private Bank bank;
 	private int goValue = 200;
 	private bool purchaseable;
 	private bool doubleRoll = false;
 	private int doubleRollCounter = 0;
+	private string purchaseLogString = "Purchase Log:";
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_deck = new Deck();
-		_boardData = new BoardData();
-		bank = new Bank(_boardData.get_property_list(), 50000);
+		deck = new Deck();
+		boardData = new BoardData();
+		bank = new Bank(boardData.get_property_list(), 50000);
 
 		initialise_board();
 		
 		initialise_players();
 		
-		_currentPlayerIndex = 0;
+		currentPlayerIndex = 0;
 		
 		display_current_player_text();
 		
@@ -47,10 +48,10 @@ using System;
 	{
 		var debugTextBox = GetNode<RichTextLabel>("CurrentBoardInfo");
 		string displayBoardInfo = "";
-		for (int i = 0; i < _numOfPlayers; i++)
+		for (int i = 0; i < numOfPlayers; i++)
 		{
-			int playerPos = _players[i].get_pos();
-			displayBoardInfo += "Player " + (i+1) + " is on " + _boardData.get_space(playerPos).get_name() + "\n";
+			int playerPos = players[i].get_pos();
+			displayBoardInfo += "Player " + (i+1) + " is on " + boardData.get_space(playerPos).get_name() + "\n";
 			
 		}
 		debugTextBox.Text = displayBoardInfo;
@@ -59,14 +60,14 @@ using System;
 	// Iterates the currentPlayer variable by 1 unless it excedes the number of players
 	public void change_player()
 	{
-		if (_currentPlayerIndex >= (_numOfPlayers - 1)) {
-			_currentPlayerIndex = 0;
+		if (currentPlayerIndex >= (numOfPlayers - 1)) {
+			currentPlayerIndex = 0;
 		}
 
 		else {
-			_currentPlayerIndex += 1;
+			currentPlayerIndex += 1;
 		}
-		Player currentPlayer = _players[_currentPlayerIndex];
+		Player currentPlayer = players[currentPlayerIndex];
 		//if the player is in prison they can either use their Get out of jail free card or remain in prison until daysInJail reaches 2
 		//leaving prison uses your turn so no matter what the player is changed after a turn concerning prison sentence
 			
@@ -94,7 +95,7 @@ using System;
 	public void display_current_player_text()
 	{
 		var playerTextBox = GetNode<RichTextLabel>("CurrentPlayerDebug");
-		playerTextBox.Text = "It is currently: " + _players[_currentPlayerIndex].Name + "'s turn";
+		playerTextBox.Text = "It is currently: " + players[currentPlayerIndex].Name + "'s turn";
 		
 	}
 
@@ -103,10 +104,10 @@ using System;
 		var balanceTextBox = GetNode<RichTextLabel>("PlayerBalances");
 		string displayBalances = "Bank balance: £" + bank.get_bank_balance() + "\n\n";
 		
-		for (int i = 0; i < _numOfPlayers; i++)
+		for (int i = 0; i < numOfPlayers; i++)
 		{
-			int playerBalance = _players[i].get_balance();
-			string playerName = _players[i].get_name();
+			int playerBalance = players[i].get_balance();
+			string playerName = players[i].get_name();
 			displayBalances += playerName + "'s balance is: £" + playerBalance + "\n";
 			
 		}
@@ -119,10 +120,10 @@ using System;
 		var propertiesTextBox = GetNode<RichTextLabel>("OwnedPropertiesDisplay");
 		string propertiesText = "";
 		
-		for (int i = 0; i < _numOfPlayers; i++)
+		for (int i = 0; i < numOfPlayers; i++)
 		{
-			string playerName = _players[i].get_name();
-			LinkedList<Property> properties = _players[i].get_properties();
+			string playerName = players[i].get_name();
+			LinkedList<Property> properties = players[i].get_properties();
 			propertiesText += "\n" + playerName + " owns:" + "\n";
 
 			var current = properties.First;
@@ -143,15 +144,28 @@ using System;
 	{
 		int i;
 		var playerScene = GD.Load<PackedScene>("res://player.tscn");
-		_players = new Player[_numOfPlayers];
-		for (i = 0; i < _numOfPlayers; i++)
+		players = new Player[numOfPlayers];
+		Texture2D[] playerSprites = new Texture2D[6];
+
+		playerSprites[0] = (Texture2D)GD.Load("res://BoardSprites/PlayerSprites/pt.boot.png");
+		playerSprites[1] = (Texture2D)GD.Load("res://BoardSprites/PlayerSprites/pt.cat.png");
+		playerSprites[2] = (Texture2D)GD.Load("res://BoardSprites/PlayerSprites/pt.ship.png");
+		playerSprites[3] = (Texture2D)GD.Load("res://BoardSprites/PlayerSprites/pt.iron.png");
+		playerSprites[4] = (Texture2D)GD.Load("res://BoardSprites/PlayerSprites/pt.mobilephone.png");
+		playerSprites[5] = (Texture2D)GD.Load("res://BoardSprites/PlayerSprites/pt.hatstand.png");
+
+		for (i = 0; i < numOfPlayers; i++)
 		{
 			var playerInstance = playerScene.Instantiate();
 			playerInstance.Name = "Player" + (i+1);
 			AddChild(playerInstance);
-			_players[i] = GetNode<Player>("Player" + (i+1));
-			_players[i].set_name("Player"+(i+1));
-			_players[i].player_movement(_boardSpaces[0].Position + GetNode<Node2D>("BoardSpaces").Position);
+
+			players[i] = GetNode<Player>("Player" + (i+1));
+			var playerSprite = GetNode<Sprite2D>("Player" + (i+1) + "/Sprite2D");
+			playerSprite.Texture = playerSprites[i];
+
+			players[i].set_name("Player"+(i+1));
+			players[i].player_movement(boardSpaces[0].Position + GetNode<Node2D>("BoardSpaces").Position);
 		};
 	}
 
@@ -159,65 +173,65 @@ using System;
 	public void initialise_board() 
 	{
 		int i;
-		_boardSpaces = new Sprite2D[40];
+		boardSpaces = new Sprite2D[40];
 		for (i = 0; i < 40; i++) {
-			_boardSpaces[i] = GetNode<Sprite2D>("BoardSpaces/BoardSpace" + (i+1));
+			boardSpaces[i] = GetNode<Sprite2D>("BoardSpaces/BoardSpace" + (i+1));
 			//determines the type of board space and loads the respective texture
-			SpaceType type = _boardData.get_space(i).get_type();
-			Console.WriteLine(_boardData.get_space(i));
+			SpaceType type = boardData.get_space(i).get_type();
+			Console.WriteLine(boardData.get_space(i));
 			switch (type)
 			{
 				case SpaceType.PL:
-					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/potluckSpace.png");
+					boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/potluckSpace.png");
 					break;
 				case SpaceType.OK:
-					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/opportunityknocksSpace.png");
+					boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/opportunityknocksSpace.png");
 					break;
 				case SpaceType.FINE:
 					if (i == 4)
 					{
-						_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/taxSpace.png");
+						boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/taxSpace.png");
 					} else if (i == 38)
 					{
-						_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/supertaxSpace.png");
+						boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/supertaxSpace.png");
 					}
 					break;
 				case SpaceType.STATION:
-					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/stationSpace.png");
+					boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/PropertySpaces/stationSpace.png");
 					break;
 				case SpaceType.UTIL:
 					if (i == 12)
 					{
-						_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/electriccompanySpace.png");
+						boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/PropertySpaces/electriccompanySpace.png");
 					}
 					else if (i == 28)
 					{
-						_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/waterworksSpace.png");
+						boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/PropertySpaces/waterworksSpace.png");
 					}
 					break;
 				case SpaceType.BROWN:
-					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/brownPSpace.png");
+					boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/PropertySpaces/brownPSpace.png");
 					break;
 				case SpaceType.BLUE:
-					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/bluePSpace.png");
+					boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/PropertySpaces/bluePSpace.png");
 					break;
 				case SpaceType.PURPLE:
-					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/purplePSpace.png");
+					boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/PropertySpaces/purplePSpace.png");
 					break;
 				case SpaceType.ORANGE:
-					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/orangePSpace.png");
+					boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/PropertySpaces/orangePSpace.png");
 					break;
 				case SpaceType.RED:
-					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/redPSpace.png");
+					boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/PropertySpaces/redPSpace.png");
 					break;
 				case SpaceType.YELLOW:
-					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/yellowPSpace.png");
+					boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/PropertySpaces/yellowPSpace.png");
 					break;
 				case SpaceType.GREEN:
-					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/greenPSpace.png");
+					boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/PropertySpaces/greenPSpace.png");
 					break;
 				case SpaceType.DEEPBLUE:
-					_boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/Property Spaces/deepbluePSpace.png");
+					boardSpaces[i].Texture = (Texture2D)GD.Load("res://BoardSprites/PropertySpaces/deepbluePSpace.png");
 					break;
 			}
 			
@@ -225,32 +239,32 @@ using System;
 			|| type == SpaceType.RED || type == SpaceType.YELLOW || type == SpaceType.GREEN || type == SpaceType.DEEPBLUE
 			|| type == SpaceType.STATION || type == SpaceType.UTIL)
 			{
-				add_cost_label_to_space(_boardSpaces[i], i);
+				add_cost_label_to_space(boardSpaces[i], i);
 			}
 			
 			//sets the scale for each space that isn't on a corner
 			if ((i+1) % 10 != 1)
 			{
 				//sets scale and adds label to space
-				_boardSpaces[i].Scale = new Vector2((float)0.157, (float)0.17);
+				boardSpaces[i].Scale = new Vector2((float)0.157, (float)0.17);
 
 				if (!(type == SpaceType.OK) && !(type == SpaceType.PL))
 				{
 					if (type == SpaceType.BROWN || type == SpaceType.BLUE || type == SpaceType.PURPLE || type == SpaceType.ORANGE
 					|| type == SpaceType.RED || type == SpaceType.YELLOW || type == SpaceType.GREEN || type == SpaceType.DEEPBLUE)
 					{
-						add_name_label_to_space(_boardSpaces[i], i, -265);
+						add_name_label_to_space(boardSpaces[i], i, -265);
 					} else
 					{
-						add_name_label_to_space(_boardSpaces[i], i, -320);
+						add_name_label_to_space(boardSpaces[i], i, -320);
 					}
 					
 				}
 				
 			}
 			
-			jail = (Jail) _boardData.get_space(10);
-			freeParking = (FreeParking) _boardData.get_space(20);
+			jail = (Jail) boardData.get_space(10);
+			freeParking = (FreeParking) boardData.get_space(20);
 		};
 	}
 
@@ -259,7 +273,7 @@ using System;
 		//creates a label, adds the name and then sets the position
 		Label name = new Label();
 
-		name.Text = _boardData.get_space(pos).get_name();
+		name.Text = boardData.get_space(pos).get_name();
 
 		Vector2 size = new Vector2(100, 50);
 		name.CustomMinimumSize = size;
@@ -282,7 +296,7 @@ using System;
 
 		Vector2 size = new Vector2(200, 50);
 
-		PropertySpace propertySpace = (PropertySpace) _boardData.get_space(pos);
+		PropertySpace propertySpace = (PropertySpace) boardData.get_space(pos);
 		int costValue = propertySpace.get_property().get_cost();
 
 		cost.Text = "£" + costValue.ToString();
@@ -299,14 +313,14 @@ using System;
 	// Rolls two d6s and stores each roll in the diceRoll array, displays results via 2 AnimatedSprite2Ds
 	public async void dice_roll()
 	{
-			_diceRoll = new []{GD.Randi() % 6 + 1, GD.Randi() % 6 + 1};
+			diceRoll = new []{GD.Randi() % 6 + 1, GD.Randi() % 6 + 1};
 			var dice1 = GetNode<Dice>("Button/Dice1");
-			dice1.roll(_diceRoll[0]);
+			dice1.roll(diceRoll[0]);
 			var dice2 = GetNode<Dice>("Button/Dice2");
-			dice2.roll(_diceRoll[1]);
+			dice2.roll(diceRoll[1]);
 			await ToSignal(GetTree().CreateTimer(2.0f), "timeout");
 
-			if (_diceRoll[0] == _diceRoll[1]) 
+			if (diceRoll[0] == diceRoll[1]) 
 			{
 				doubleRoll = true;
 				doubleRollCounter++;
@@ -317,14 +331,14 @@ using System;
 			}
 
 			// targetMoveValue combines each dice roll into one integer
-			int targetMoveValue = Convert.ToInt16(_diceRoll[0] + _diceRoll[1]);
+			int targetMoveValue = Convert.ToInt16(diceRoll[0] + diceRoll[1]);
 			move_current_player(targetMoveValue, true, true);
 	}
 	
 	// Moves the player equal times to the targetMoveValue parameter, canCollect is used to determine whether the player collects £200 when passing go
 	public async void move_current_player(int targetMoveValue, bool canCollect, bool forward)
 	{
-		Player currentPlayer = _players[_currentPlayerIndex];
+		Player currentPlayer = players[currentPlayerIndex];
 		var collectTextBox = GetNode<RichTextLabel>("CollectDisplay");
 		var rentTextBox = GetNode<RichTextLabel>("RentDisplay");
 
@@ -333,7 +347,7 @@ using System;
 			send_to_jail(currentPlayer);
 			doubleRollCounter = 0;
 			change_player();
-			_canPressButton = true;
+			canPressButton = true;
 			return;
 		}
 
@@ -341,7 +355,7 @@ using System;
 		{
 			// Iterates the current player through the boardSpaces array targetMoveValue times (with a delay)
 			for (int i = 0; i < targetMoveValue; i++) {
-			currentPlayer.player_movement(_boardSpaces[(currentPlayer.get_pos() + 1) % 40].Position + GetNode<Node2D>("BoardSpaces").Position);
+			currentPlayer.player_movement(boardSpaces[(currentPlayer.get_pos() + 1) % 40].Position + GetNode<Node2D>("BoardSpaces").Position);
 			// if the player moves past go, this method will return true and we will give the player £200 from the bank
 			if (currentPlayer.iterate_pos() && canCollect)
 			{
@@ -357,30 +371,30 @@ using System;
 		} else
 		{
 			for(int i = 0; i < targetMoveValue; i++){
-				_players[_currentPlayerIndex].iterate_pos_backwards();
-				_players[_currentPlayerIndex].player_movement(_boardSpaces[_players[_currentPlayerIndex].get_pos() % 40].Position + GetNode<Node2D>("BoardSpaces").Position);
+				players[currentPlayerIndex].iterate_pos_backwards();
+				players[currentPlayerIndex].player_movement(boardSpaces[players[currentPlayerIndex].get_pos() % 40].Position + GetNode<Node2D>("BoardSpaces").Position);
 				await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
 			}
 		}
 
-		SpaceType type = _boardData.get_space(currentPlayer.get_pos()).land(currentPlayer);
+		SpaceType type = boardData.get_space(currentPlayer.get_pos()).land(currentPlayer);
 
 		if (type == SpaceType.PL | type == SpaceType.OK)
 		{
-			play_card(currentPlayer, _deck.draw(type), type);
+			play_card(currentPlayer, deck.draw(type), type);
 		} 
 		else if (type == SpaceType.GTJ)
 		{
 			send_to_jail(currentPlayer);
 			change_player();
-			_canPressButton = true;
+			canPressButton = true;
 			return;
 		} 
 		else if (type == SpaceType.BROWN || type == SpaceType.BLUE || type == SpaceType.PURPLE || type == SpaceType.ORANGE
 		|| type == SpaceType.RED || type == SpaceType.YELLOW || type == SpaceType.GREEN || type == SpaceType.DEEPBLUE
 		|| type == SpaceType.STATION || type == SpaceType.UTIL)
 		{
-			PropertySpace currentSpace = (PropertySpace) _boardData.get_space(currentPlayer.get_pos());
+			PropertySpace currentSpace = (PropertySpace) boardData.get_space(currentPlayer.get_pos());
 			Property property = currentSpace.get_property();
 	
 			if (bank.does_bank_contain(property)) // bank owns property
@@ -398,6 +412,9 @@ using System;
 					rentTextBox.Text = currentPlayer.get_name() + " paid £" + rentDue + " in rent to " + property.get_owner().get_name();
 					clear_text_after_delay(rentTextBox, 5000);
 				}
+			} else if (type == SpaceType.UTIL && currentPlayer != property.get_owner())
+			{
+				
 			}
 		}
 
@@ -408,7 +425,7 @@ using System;
 				change_player();
 			} 
 
-			_canPressButton = true;
+			canPressButton = true;
 		}
 	}
 
@@ -423,8 +440,8 @@ using System;
 	private void _on_button_pressed()
 	{
 		// If statement will only run if a player is not currently moving
-		if (_canPressButton) {
-			_canPressButton = false;
+		if (canPressButton) {
+			canPressButton = false;
 			dice_roll();
 		}
 
@@ -432,14 +449,14 @@ using System;
 
 	private void _on_button_2_pressed()
 	{
-		send_to_jail(_players[_currentPlayerIndex]);
+		send_to_jail(players[currentPlayerIndex]);
 		change_player();
 	}
 
 	public void _on_purchase_button_pressed()
 	{
-		Player currentPlayer = _players[_currentPlayerIndex];
-		PropertySpace currentSpace = (PropertySpace) _boardData.get_space(currentPlayer.get_pos());
+		Player currentPlayer = players[currentPlayerIndex];
+		PropertySpace currentSpace = (PropertySpace) boardData.get_space(currentPlayer.get_pos());
 		Property property = currentSpace.get_property();
 
 		if (bank.purchase_property(property))
@@ -449,7 +466,8 @@ using System;
 				property.set_owner(currentPlayer);
 				currentPlayer.add_to_properties(property);
 				var purchaseTextBox = GetNode<RichTextLabel>("PurchaseDisplay");
-				purchaseTextBox.Text = "Purchase Log: \n" + currentPlayer.get_name() + " has purchased " + property.get_name() + " for £" + property.get_cost();
+				purchaseLogString += "\n" + currentPlayer.get_name() + " has purchased " + property.get_name() + " for £" + property.get_cost();
+				purchaseTextBox.Text = purchaseLogString;
 			} else {
 				return;
 			}
@@ -461,7 +479,7 @@ using System;
 		} 
 
 		purchaseable = false;
-		_canPressButton = true;
+		canPressButton = true;
 	}
 
 	public void _on_auction_button_pressed()
@@ -502,12 +520,12 @@ using System;
 				player.getOutJail = true;
 				break;
 			case CardType.PAYALL:
-				for (int i = 0; i < _players.Length; i++)
+				for (int i = 0; i < players.Length; i++)
 				{
-					if (i != _currentPlayerIndex)
+					if (i != currentPlayerIndex)
 					{
 						player.decrease_balance(cardParam);
-						_players[i].increase_balance(cardParam);
+						players[i].increase_balance(cardParam);
 					}
 				}
 				break;
@@ -519,16 +537,16 @@ using System;
 				bank.add_to_bank(cardParam);
 				break;
 			case CardType.FINEOROK:
-				_canPressButton = false;
+				canPressButton = false;
 				GetNode<HBoxContainer>("FineOrOpportunity").Show();
 				break;
 			case CardType.COLLECTALL:
-				for (int i = 0; i < _players.Length; i++)
+				for (int i = 0; i < players.Length; i++)
 				{
-					if (i != _currentPlayerIndex)
+					if (i != currentPlayerIndex)
 					{
 						player.increase_balance(cardParam);
-						_players[i].decrease_balance(cardParam);
+						players[i].decrease_balance(cardParam);
 					}
 				}
 				break;
@@ -540,10 +558,12 @@ using System;
 					if (property.get_num_houses() < 5)
 					{
 						totalCost += cardParam * property.get_num_houses();
-					}else if(property.get_num_houses() == 5){
-						if(cardParam == 25){
+					} else if (property.get_num_houses() == 5)
+					{
+						if (cardParam == 25) {
 							totalCost += 100;
-						}if(cardParam == 40){
+						} 
+						if(cardParam == 40) {
 							totalCost += 115;
 						}
 					}
@@ -556,11 +576,11 @@ using System;
 			case CardType.MOVELOCATIONB:
 				if(cardParam < player.get_pos())
 				{
-					move_current_player((player.get_pos() - cardParam), false, false);
+					move_current_player(player.get_pos() - cardParam, false, false);
 				}
 				else
 				{
-					move_current_player((40 - cardParam) + player.get_pos(), false, false);
+					move_current_player(40 - cardParam + player.get_pos(), false, false);
 				}
 				break;
 			case CardType.MOVELOCATIONF:
@@ -570,7 +590,7 @@ using System;
 				}
 				else
 				{
-					move_current_player((40 - player.get_pos()) + cardParam, true, true);
+					move_current_player(40 - player.get_pos() + cardParam, true, true);
 				}
 				break;
 			default:
@@ -582,8 +602,8 @@ using System;
 
 	public void send_to_jail(Player player)
 	{
-		_players[_currentPlayerIndex].set_pos(10);
-		_players[_currentPlayerIndex].player_movement(_boardSpaces[_players[_currentPlayerIndex].get_pos() % 40].Position + GetNode<Node2D>("BoardSpaces").Position + new Vector2(20, -20));
+		players[currentPlayerIndex].set_pos(10);
+		players[currentPlayerIndex].player_movement(boardSpaces[players[currentPlayerIndex].get_pos() % 40].Position + GetNode<Node2D>("BoardSpaces").Position + new Vector2(20, -20));
 		jail.send_to_jail(player);
 	}
 
@@ -605,18 +625,18 @@ using System;
 	}
 
 	public void _on_draw_card_button_debug_pressed(){
-		play_card(_players[_currentPlayerIndex], _deck.draw(SpaceType.PL), SpaceType.PL);
+		play_card(players[currentPlayerIndex], deck.draw(SpaceType.PL), SpaceType.PL);
 	}
 	public void _on_draw_opportunity_card_pressed(){
-		play_card(_players[_currentPlayerIndex], _deck.draw(SpaceType.OK), SpaceType.OK);
+		play_card(players[currentPlayerIndex], deck.draw(SpaceType.OK), SpaceType.OK);
 		GetNode<HBoxContainer>("FineOrOpportunity").Hide();
-		_canPressButton = true;
+		canPressButton = true;
 	}
 	public void _on_take_fine_pressed(){
 		freeParking.collect_fine(10);
-		_players[_currentPlayerIndex].decrease_balance(10);
+		players[currentPlayerIndex].decrease_balance(10);
 		GetNode<HBoxContainer>("FineOrOpportunity").Hide();
-		_canPressButton = true;
+		canPressButton = true;
 	}
 }
 }

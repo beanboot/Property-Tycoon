@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bmu20vh57e50k"
-path="res://.godot/imported/pt.hatstand.png-7fefd38b34c70a491ec6554373300f75.ctex"
+uid="uid://d1fmgsxte4iww"
+path="res://.godot/imported/bluePSpace.png-1595e9a327b4edf41b73b14970ee1f38.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://BoardSprites/Player Sprites/pt.hatstand.png"
-dest_files=["res://.godot/imported/pt.hatstand.png-7fefd38b34c70a491ec6554373300f75.ctex"]
+source_file="res://BoardSprites/PropertySpaces/bluePSpace.png"
+dest_files=["res://.godot/imported/bluePSpace.png-1595e9a327b4edf41b73b14970ee1f38.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cfgec36jxah2n"
-path="res://.godot/imported/pt.ship.png-23d4bc6011ec643ae02192bd874c7c9d.ctex"
+uid="uid://5opb62eorscy"
+path="res://.godot/imported/electriccompanySpace.png-50c2f0584e918bfe3f6af1298da597bb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://BoardSprites/Player Sprites/pt.ship.png"
-dest_files=["res://.godot/imported/pt.ship.png-23d4bc6011ec643ae02192bd874c7c9d.ctex"]
+source_file="res://BoardSprites/PropertySpaces/electriccompanySpace.png"
+dest_files=["res://.godot/imported/electriccompanySpace.png-50c2f0584e918bfe3f6af1298da597bb.ctex"]
 
 [params]
 
