@@ -339,23 +339,22 @@ using System;
 
 		if(forward)
 		{
-      // Iterates the current player through the boardSpaces array targetMoveValue times (with a delay)
-      for (int i = 0; i < targetMoveValue; i++) {
-        currentPlayer.player_movement(_boardSpaces[(currentPlayer.get_pos() + 1) % 40].Position + GetNode<Node2D>("BoardSpaces").Position);
-        // if the player moves past go, this method will return true and we will give the player £200 from the bank
-        if (currentPlayer.iterate_pos() && canCollect)
-        {
-          if (bank.take_from_bank(goValue))
-          {
-            currentPlayer.increase_balance(goValue);
-            collectTextBox.Text = currentPlayer.get_name() + " collected £" + goValue;
-            clear_text_after_delay(collectTextBox, 2000);
-          }
-				}
-				await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
+			// Iterates the current player through the boardSpaces array targetMoveValue times (with a delay)
+			for (int i = 0; i < targetMoveValue; i++) {
+			currentPlayer.player_movement(_boardSpaces[(currentPlayer.get_pos() + 1) % 40].Position + GetNode<Node2D>("BoardSpaces").Position);
+			// if the player moves past go, this method will return true and we will give the player £200 from the bank
+			if (currentPlayer.iterate_pos() && canCollect)
+			{
+			if (bank.take_from_bank(goValue))
+			{
+				currentPlayer.increase_balance(goValue);
+				collectTextBox.Text = currentPlayer.get_name() + " collected £" + goValue;
+				clear_text_after_delay(collectTextBox, 2000);
+			}
+			}
+			await ToSignal(GetTree().CreateTimer(0.2f), "timeout");
 			};
-		}
-		else
+		} else
 		{
 			for(int i = 0; i < targetMoveValue; i++){
 				_players[_currentPlayerIndex].iterate_pos_backwards();
