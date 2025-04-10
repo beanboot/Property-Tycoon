@@ -13,7 +13,17 @@ public partial class Player : Node2D
 	public int daysInJail = 0;
 	public bool getOutJail = false;
 	public bool hasPassedGo = true;
+	// Colour set booleans
+	public bool hasBrownSet = false;
+	public bool hasBlueSet = false;
+	public bool hasPurpleSet = false;
+	public bool hasOrangeSet = false;
+	public bool hasRedSet = false;
+	public bool hasYellowSet = false;
+	public bool hasGreenSet = false;
+	public bool hasDeepBlueSet = false;
 	public bool isBot = false;
+
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -99,5 +109,54 @@ public partial class Player : Node2D
 	
 	public string get_name(){
 		return name;
+	}
+
+	public bool does_player_have_colour_set(SpaceType type)
+	{
+		switch (type)
+		{
+			case SpaceType.BROWN:
+				if (hasBrownSet) {
+					return true;
+				}
+				break;
+			case SpaceType.BLUE:
+				if (hasBlueSet) {
+					return true;
+				}
+				break;
+			case SpaceType.PURPLE:
+				if (hasPurpleSet) {
+					return true;
+				}
+				break;
+			case SpaceType.ORANGE:
+				if (hasOrangeSet) {
+					return true;
+				}
+				break;
+			case SpaceType.RED:
+				if (hasRedSet) {
+					return true;
+				}
+				break;
+			case SpaceType.YELLOW:
+				if (hasYellowSet) {
+					return true;
+				}
+				break;
+			case SpaceType.GREEN:
+				if (hasGreenSet) {
+					return true;
+				}
+				break;
+			case SpaceType.DEEPBLUE:
+				if (hasDeepBlueSet) {
+					return true;
+				}
+				break;
+		}
+
+		return false;
 	}
 }

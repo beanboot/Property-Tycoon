@@ -337,10 +337,10 @@ offset_right = 1358.9
 offset_bottom = 450.63
 
 [node name="PurchaseDisplay" type="RichTextLabel" parent="."]
-offset_left = 1604.0
-offset_top = 926.0
-offset_right = 2016.0
-offset_bottom = 1149.0
+offset_left = 1597.54
+offset_top = 843.62
+offset_right = 2009.54
+offset_bottom = 1066.62
 
 [node name="RentDisplay" type="RichTextLabel" parent="."]
 offset_left = 694.215
@@ -349,10 +349,10 @@ offset_right = 1326.22
 offset_bottom = 751.916
 
 [node name="CollectDisplay" type="RichTextLabel" parent="."]
-offset_left = 1687.0
-offset_top = 1040.0
-offset_right = 1976.0
-offset_bottom = 1078.0
+offset_left = 1580.56
+offset_top = 1111.75
+offset_right = 1869.56
+offset_bottom = 1149.75
 
 [node name="OwnedPropertiesDisplay" type="RichTextLabel" parent="."]
 offset_left = 21.0
@@ -368,18 +368,32 @@ offset_bottom = 68.4286
 text = "send current player to jail"
 
 [node name="PurchaseButton" type="Button" parent="."]
-offset_left = 799.896
-offset_top = 903.63
-offset_right = 1016.9
-offset_bottom = 937.63
+offset_left = 805.672
+offset_top = 902.54
+offset_right = 1022.67
+offset_bottom = 936.54
 text = "Purchase"
 
 [node name="AuctionButton" type="Button" parent="."]
-offset_left = 1029.65
-offset_top = 903.567
-offset_right = 1241.65
-offset_bottom = 937.567
+offset_left = 1035.42
+offset_top = 902.477
+offset_right = 1247.42
+offset_bottom = 936.477
 text = "Auction"
+
+[node name="MovePlayerSpaces(DEBUG)" type="Button" parent="."]
+offset_left = 1848.06
+offset_top = 75.2064
+offset_right = 2014.06
+offset_bottom = 106.206
+text = "move current player"
+
+[node name="LineEdit" type="LineEdit" parent="MovePlayerSpaces(DEBUG)"]
+layout_mode = 0
+offset_left = 2.12311
+offset_top = 35.9683
+offset_right = 69.1856
+offset_bottom = 66.9683
 
 [node name="DrawCardButton(DEBUG)" type="Button" parent="."]
 offset_left = 1700.51
@@ -390,6 +404,10 @@ text = "Draw Card"
 
 [node name="Card" type="Node2D" parent="."]
 visible = false
+offset_left = 861.931
+offset_top = 846.89
+offset_right = 1186.93
+offset_bottom = 886.89
 position = Vector2(1013.72, 507.916)
 scale = Vector2(0.6, 0.6)
 
@@ -432,10 +450,43 @@ icon = ExtResource("19_t8xlp")
 layout_mode = 2
 icon = ExtResource("20_7al8f")
 
+[node name="AuctionDisplay" type="RichTextLabel" parent="."]
+visible = false
+offset_left = 860.869
+offset_top = 740.075
+offset_right = 1189.87
+offset_bottom = 879.075
+text = "Player 1: Please type your desired auction
+price:"
+
+[node name="£" type="RichTextLabel" parent="AuctionDisplay"]
+layout_mode = 0
+offset_left = 1.37732
+offset_top = 62.705
+offset_right = 20.3773
+offset_bottom = 87.705
+text = "£"
+
+[node name="LineEdit" type="LineEdit" parent="AuctionDisplay"]
+layout_mode = 0
+offset_left = 14.854
+offset_top = 58.6831
+offset_right = 81.9165
+offset_bottom = 89.6831
+
+[node name="DoneButton" type="Button" parent="AuctionDisplay"]
+layout_mode = 0
+offset_left = 117.826
+offset_top = 58.8571
+offset_right = 171.826
+offset_bottom = 89.8571
+text = "DONE"
+
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="JailButton(DEBUG)" to="." method="_on_button_2_pressed"]
 [connection signal="pressed" from="PurchaseButton" to="." method="_on_purchase_button_pressed"]
 [connection signal="pressed" from="AuctionButton" to="." method="_on_auction_button_pressed"]
+[connection signal="pressed" from="MovePlayerSpaces(DEBUG)" to="." method="_on_move_player_spaces_debug_pressed"]
 [connection signal="pressed" from="DrawCardButton(DEBUG)" to="." method="_on_draw_card_button_debug_pressed"]
 [connection signal="pressed" from="Card/AcceptCard" to="." method="_on_accept_card_pressed"]
 [connection signal="pressed" from="Card/FineOrOpportunity/DrawOpportunityCard" to="." method="_on_draw_opportunity_card_pressed"]

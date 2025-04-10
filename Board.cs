@@ -28,6 +28,18 @@ public partial class Board : Node2D
 	private bool doubleRoll = false;
 	private int doubleRollCounter = 0;
 	private string purchaseLogString = "Purchase Log:";
+	private Dictionary<SpaceType, int> colourSetSizes = new()
+	{
+		{SpaceType.BROWN, 2},
+		{SpaceType.BLUE, 3},
+		{SpaceType.PURPLE, 3},
+		{SpaceType.ORANGE, 3},
+		{SpaceType.RED, 3},
+		{SpaceType.YELLOW, 3},
+		{SpaceType.GREEN, 3},
+		{SpaceType.DEEPBLUE, 2}
+	};
+	private bool doneButtonPressed = false;
 	private Card currentCard;
 	private GameData gameData;
 
@@ -358,11 +370,11 @@ public partial class Board : Node2D
 
 			// targetMoveValue combines each dice roll into one integer
 			int targetMoveValue = Convert.ToInt16(diceRoll[0] + diceRoll[1]);
-			move_current_player(targetMoveValue, true, true);
+			handle_current_player(targetMoveValue, true, true);
 	}
 	
 	// Moves the player equal times to the targetMoveValue parameter, canCollect is used to determine whether the player collects £200 when passing go
-	public async void move_current_player(int targetMoveValue, bool canCollect, bool forward)
+	public async void handle_current_player(int targetMoveValue, bool canCollect, bool forward)
 	{
 		Player currentPlayer = players[currentPlayerIndex];
 		var collectTextBox = GetNode<RichTextLabel>("CollectDisplay");
@@ -433,6 +445,12 @@ public partial class Board : Node2D
 			|| type == SpaceType.RED || type == SpaceType.YELLOW || type == SpaceType.GREEN || type == SpaceType.DEEPBLUE) && currentPlayer != property.get_owner()) // a player owns property
 			{
 				int rentDue = property.get_rent();
+
+				if (property.get_owner().does_player_have_colour_set(type) && property.get_num_houses() == 0)
+				{
+					rentDue = rentDue * 2;
+				}
+
 				if (currentPlayer.decrease_balance(rentDue))
 				{
 					property.get_owner().increase_balance(rentDue);
@@ -441,7 +459,51 @@ public partial class Board : Node2D
 				}
 			} else if (type == SpaceType.UTIL && currentPlayer != property.get_owner())
 			{
+				int ownedUtils = 0;
+				int rentDue = Convert.ToInt16(diceRoll[0] + diceRoll[1]);
+
+				foreach (Property p in property.get_owner().get_properties())
+				{
+					if (p.get_type() == SpaceType.UTIL)
+					{
+						ownedUtils++;
+					}
+				}
+
+				if (ownedUtils == 2)
+				{
+					rentDue = rentDue * 10;
+				} else if (ownedUtils == 1) {
+					rentDue = rentDue * 4;
+				}
+
+				if (currentPlayer.decrease_balance(rentDue))
+				{
+					property.get_owner().increase_balance(rentDue);
+					rentTextBox.Text = currentPlayer.get_name() + " paid £" + rentDue + " in rent to " + property.get_owner().get_name();
+					clear_text_after_delay(rentTextBox, 5000);
+				}
 				
+			} else if (type == SpaceType.STATION && currentPlayer != property.get_owner())
+			{
+				int ownedStations = 0;
+
+				foreach (Property p in property.get_owner().get_properties())
+				{
+					if (p.get_type() == SpaceType.STATION)
+					{
+						ownedStations++;
+					}
+				}
+
+				int[] rentDue = property.get_rent_array();
+
+				if (currentPlayer.decrease_balance(rentDue[ownedStations - 1]))
+				{
+					property.get_owner().increase_balance(rentDue[ownedStations - 1]);
+					rentTextBox.Text = currentPlayer.get_name() + " paid £" + rentDue[ownedStations - 1] + " in rent to " + property.get_owner().get_name();
+					clear_text_after_delay(rentTextBox, 5000);
+				}
 			}
 		}
 
@@ -480,22 +542,31 @@ public partial class Board : Node2D
 		change_player();
 	}
 
-	public void _on_purchase_button_pressed()
+	private void _on_purchase_button_pressed()
 	{
 		Player currentPlayer = players[currentPlayerIndex];
 		PropertySpace currentSpace = (PropertySpace) boardData.get_space(currentPlayer.get_pos());
 		Property property = currentSpace.get_property();
+		SpaceType type = property.get_type();
 
-		if (bank.purchase_property(property))
+		if (bank.remove_from_properties(property, property.get_cost())) // returns true if property has been removed from bank
 		{
 			if (currentPlayer.decrease_balance(property.get_cost()))
 			{
 				property.set_owner(currentPlayer);
 				currentPlayer.add_to_properties(property);
+
+				if (type == SpaceType.BROWN || type == SpaceType.BLUE || type == SpaceType.PURPLE || type == SpaceType.ORANGE
+				|| type == SpaceType.RED || type == SpaceType.YELLOW || type == SpaceType.GREEN || type == SpaceType.DEEPBLUE)
+				{
+					update_owned_colour_sets(currentPlayer, type);
+				}
+				
 				var purchaseTextBox = GetNode<RichTextLabel>("PurchaseDisplay");
 				purchaseLogString += "\n" + currentPlayer.get_name() + " has purchased " + property.get_name() + " for £" + property.get_cost();
 				purchaseTextBox.Text = purchaseLogString;
 			} else {
+				bank.add_to_properties(property); // adds the property back if the player doesn't have enough to buy property
 				return;
 			}
 		}
@@ -509,12 +580,139 @@ public partial class Board : Node2D
 		canPressButton = true;
 	}
 
-	public void _on_auction_button_pressed()
+	private async void _on_auction_button_pressed()
 	{
+		Player currentPlayer = players[currentPlayerIndex];
+		PropertySpace currentSpace = (PropertySpace) boardData.get_space(currentPlayer.get_pos());
+		Property property = currentSpace.get_property();
+		SpaceType type = property.get_type();
+		var auctionTextBox = GetNode<RichTextLabel>("AuctionDisplay");
+		var inputBox = GetNode<LineEdit>("AuctionDisplay/LineEdit");
+		var doneButton = GetNode<Button>("AuctionDisplay/DoneButton");
+		int[] playerAuctions = new int[numOfPlayers];
+	
+		
+		auctionTextBox.Text = "";
+		auctionTextBox.Show();
 
+		purchaseable = false;
+
+		for (int i = 0; i < numOfPlayers; i++)
+		{
+			int userInput;
+			bool validInput = false;
+
+			while (!validInput)
+			{
+				inputBox.Text = "";
+				auctionTextBox.Text = players[i].get_name() + ": Please type your desired auction \n price:";
+
+				await ToSignal(doneButton, "pressed");
+
+				if (int.TryParse(inputBox.Text, out userInput))
+				{
+					if (!(userInput > players[i].get_balance()) && userInput >= 0)
+					{
+						validInput = true;
+						playerAuctions[i] = userInput;
+					}
+				}
+			}
+		}
+
+		auctionTextBox.Hide();
+
+		int highestBid = -1;
+		int highestBidderIndex = -1;
+
+		for (int i = 0; i < playerAuctions.Length; i++)
+		{
+			if (playerAuctions[i] > highestBid)
+			{
+				highestBid = playerAuctions[i];
+				highestBidderIndex = i;
+			}
+		}
+
+		if (bank.remove_from_properties(property, highestBid)) // returns true if property has been removed from bank
+		{
+			if (players[highestBidderIndex].decrease_balance(highestBid))
+			{
+				property.set_owner(players[highestBidderIndex]);
+				players[highestBidderIndex].add_to_properties(property);
+
+				if (type == SpaceType.BROWN || type == SpaceType.BLUE || type == SpaceType.PURPLE || type == SpaceType.ORANGE
+				|| type == SpaceType.RED || type == SpaceType.YELLOW || type == SpaceType.GREEN || type == SpaceType.DEEPBLUE)
+				{
+					update_owned_colour_sets(players[highestBidderIndex], type);
+				}
+				
+				var purchaseTextBox = GetNode<RichTextLabel>("PurchaseDisplay");
+				purchaseLogString += "\n" + players[highestBidderIndex].get_name() + " has purchased " + property.get_name() + " for £" + highestBid;
+				purchaseTextBox.Text = purchaseLogString;
+			} else {
+				bank.add_to_properties(property); // adds the property back if the player doesn't have enough to buy property
+				return;
+			}
+		}
+
+		if (!doubleRoll) 
+		{
+			change_player();
+		} 
+
+		canPressButton = true;
 	}
 
-	public void play_card(Player player, Card card, SpaceType spaceType)
+	private void update_owned_colour_sets(Player player, SpaceType type)
+	{
+		LinkedList<Property> playerOwnedProperties = player.get_properties();
+
+		int ownedCount = 0;
+
+		foreach (Property p in playerOwnedProperties)
+		{
+			if (p.get_type() == type)
+			{
+				ownedCount++;
+			}
+		}
+
+		int requiredCount = colourSetSizes[type];
+
+		if (ownedCount == requiredCount)
+		{
+			switch(type)
+			{
+				case SpaceType.BROWN:
+					player.hasBrownSet = true;
+					break;
+				case SpaceType.BLUE:
+					player.hasBlueSet = true;
+					break;
+				case SpaceType.PURPLE:
+					player.hasPurpleSet = true;
+					break;
+				case SpaceType.ORANGE:
+					player.hasOrangeSet = true;
+					break;
+				case SpaceType.RED:
+					player.hasRedSet = true;
+					break;
+				case SpaceType.YELLOW:
+					player.hasYellowSet = true;
+					break;
+				case SpaceType.GREEN:
+					player.hasGreenSet = true;
+					break;
+				case SpaceType.DEEPBLUE:
+					player.hasDeepBlueSet = true;
+					break;
+			}
+		}
+	}
+
+	private void play_card(Player player, Card card, SpaceType spaceType)
 	{
 		//updates global variable currentCard to the card drawn
 		currentCard = card;
@@ -612,26 +810,26 @@ public partial class Board : Node2D
 				player.decrease_balance(totalCost);
 				break;
 			case CardType.MOVESPACESB:
-				move_current_player(cardParam, false, false);
+				handle_current_player(cardParam, false, false);
 				break;
 			case CardType.MOVELOCATIONB:
 				if(cardParam < player.get_pos())
 				{
-					move_current_player(player.get_pos() - cardParam, false, false);
+					handle_current_player(player.get_pos() - cardParam, false, false);
 				}
 				else
 				{
-					move_current_player(40 - cardParam + player.get_pos(), false, false);
+					handle_current_player(40 - cardParam + player.get_pos(), false, false);
 				}
 				break;
 			case CardType.MOVELOCATIONF:
 				if(cardParam > player.get_pos())
 				{
-					move_current_player(cardParam - player.get_pos(), true, true);
+					handle_current_player(cardParam - player.get_pos(), true, true);
 				}
 				else
 				{
-					move_current_player(40 - player.get_pos() + cardParam, true, true);
+					handle_current_player(40 - player.get_pos() + cardParam, true, true);
 				}
 				break;
 			default:
@@ -726,6 +924,7 @@ public partial class Board : Node2D
 		Player currentPlayer = players[currentPlayerIndex];
 		handle_card(cardParam, cardType, currentPlayer);
 	}
+
 	public void _on_take_fine_pressed()
 	{
 		//called when TakeFine button is pressed
@@ -734,6 +933,12 @@ public partial class Board : Node2D
 		players[currentPlayerIndex].decrease_balance(10);
 		GetNode<HBoxContainer>("Card/FineOrOpportunity").Hide();
 		GetNode<Node2D>("Card").Hide();
+	}
+
+	public void _on_move_player_spaces_debug_pressed() {
+		var inputBox = GetNode<LineEdit>("MovePlayerSpaces(DEBUG)/LineEdit");
+		int spaces = int.Parse(inputBox.Text);
+		handle_current_player(spaces, true, true);
 	}
 }
 }

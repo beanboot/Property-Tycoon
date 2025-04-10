@@ -37,7 +37,7 @@ public class Bank
         }
     }
 
-    public bool purchase_property(Property property)
+    public bool remove_from_properties(Property property, int cost)
     {
         if(!properties.Contains(property))
         {
@@ -46,7 +46,7 @@ public class Bank
         else
         {
             properties.Remove(property);
-            balance += property.get_cost();
+            balance += cost;
             return true;
         }
     }
@@ -61,4 +61,8 @@ public class Bank
             return false;
         }
     }
+
+	public void add_to_properties(Property property){
+		properties.AddLast(property);
+	}
 }

@@ -50,5 +50,10 @@ public class Property{
 	{
 		return rent[numHouses];
 	}
+
+	public int[] get_rent_array()
+	{
+		return rent;
+	}
 }
 
