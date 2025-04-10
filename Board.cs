@@ -4,7 +4,8 @@ namespace PropTycoon {
 
 using Godot;
 using System;
-using System.Threading.Tasks;
+    using System.Runtime.CompilerServices;
+    using System.Threading.Tasks;
 
 
 public partial class Board : Node2D
@@ -31,6 +32,8 @@ public partial class Board : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		GameData gameData = (GameData)GetNode<Node>("/root/GameData");
+		numOfPlayers = gameData.numPlayers + gameData.numBots;
 		deck = new Deck();
 		boardData = new BoardData();
 		bank = new Bank(boardData.get_property_list(), 50000);
@@ -490,10 +493,12 @@ public partial class Board : Node2D
 
 	public void play_card(Player player, Card card, SpaceType spaceType)
 	{
+		//updates global variable currentCard to the card drawn
 		currentCard = card;
 		CardType cardType = card.get_cardType();
 		string cardDescription = card.get_description();
 
+		//shows the correct sprite depending on the type of card
 		if (spaceType == SpaceType.OK)
 		{
 			GetNode<Sprite2D>("Card/PotLuck").Hide();
@@ -505,8 +510,9 @@ public partial class Board : Node2D
 		}
 		GetNode<RichTextLabel>("Card/Description").Text = cardDescription;
 
-		//finds which cardType is being played and then applies the card's parameter value
+		
 		canPressButton = false;
+		//shows the accept card button unless FINEOROK cardType passed
 		var button = GetNode<Button>("Card/AcceptCard");
 		if(cardType != CardType.FINEOROK){
 			button.Show();
@@ -514,11 +520,13 @@ public partial class Board : Node2D
 			button.Hide();
 			GetNode<HBoxContainer>("Card/FineOrOpportunity").Show();
 		}
+		//show the card node
 		GetNode<Node2D>("Card").Show();
 	}
 
 	public void handle_card(int cardParam, CardType cardType, Player player)
 	{
+		//Handles card operation based on cardType and cardParam
 		switch (cardType)
 		{
 			case CardType.GTJ:
@@ -613,6 +621,7 @@ public partial class Board : Node2D
 
 	public void send_to_jail(Player player)
 	{
+		//sets players position to the index of Jail and then updates the Jail class
 		players[currentPlayerIndex].set_pos(10);
 		players[currentPlayerIndex].player_movement(boardSpaces[players[currentPlayerIndex].get_pos() % 40].Position + GetNode<Node2D>("BoardSpaces").Position + new Vector2(20, -20));
 		jail.send_to_jail(player);
@@ -620,10 +629,12 @@ public partial class Board : Node2D
 
 	public override void _Process(double delta) 
 	{
+		//constantly displays the player balances, board info and player property lists
 		display_player_balances();
 		display_board_info();
 		display_player_properties();
 
+		//checks if the property the current player is on is purchasable at all times, if so displays the purchasing options
 		if (!purchaseable)
 		{
 			GetNode<Button>("PurchaseButton").Hide();
@@ -637,15 +648,20 @@ public partial class Board : Node2D
 
 	public void _on_draw_card_button_debug_pressed()
 	{
+		//called when the DrawCard button is pressed
+		//debug method to draw a random PotLuck card
 		play_card(players[currentPlayerIndex], deck.draw(SpaceType.PL), SpaceType.PL);
 	}
 	public void _on_draw_opportunity_card_pressed()
 	{
+		//called when the DrawOpportunityCard button is pressed
+		//draws an opportunity knocks card when the potluck card with type FINEOROK is called
 		play_card(players[currentPlayerIndex], deck.draw(SpaceType.OK), SpaceType.OK);
 		GetNode<HBoxContainer>("Card/FineOrOpportunity").Hide();
 	}
 	public void _on_accept_card_pressed()
 	{
+		//calls handle_card with the apropriate parameters once AcceptCard is pressed
 		CardType cardType = currentCard.get_cardType();
 		int cardParam = currentCard.get_cardParameter();
 		Player currentPlayer = players[currentPlayerIndex];
@@ -653,6 +669,8 @@ public partial class Board : Node2D
 	}
 	public void _on_take_fine_pressed()
 	{
+		//called when TakeFine button is pressed
+		//takes £10 when the potluck card with type FINEOROK is called
 		freeParking.collect_fine(10);
 		players[currentPlayerIndex].decrease_balance(10);
 		GetNode<HBoxContainer>("Card/FineOrOpportunity").Hide();

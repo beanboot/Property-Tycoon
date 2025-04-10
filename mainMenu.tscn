@@ -26,17 +26,45 @@ theme_override_colors/icon_normal_color = Color(0.0687983, 0.0687983, 0.0687983,
 theme_override_font_sizes/font_size = 30
 text = "Play Game"
 
-[node name="Button2" type="Button" parent="."]
-layout_mode = 0
-offset_left = 192.0
-offset_top = 536.0
-offset_right = 512.0
-offset_bottom = 664.0
-theme = SubResource("Theme_ul47s")
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/icon_normal_color = Color(0.0687983, 0.0687983, 0.0687983, 1)
-theme_override_font_sizes/font_size = 30
-text = "Settings"
+[node name="Players" type="Node2D" parent="."]
+position = Vector2(212, 574)
+
+[node name="SubtractPlayer" type="Button" parent="Players"]
+offset_left = -44.0
+offset_right = -22.0
+offset_bottom = 31.0
+text = " - "
+
+[node name="numPlayers" type="RichTextLabel" parent="Players"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="AddPlayer" type="Button" parent="Players"]
+offset_right = 8.0
+offset_bottom = 8.0
+text = "+"
+
+[node name="Bots" type="Node2D" parent="."]
+position = Vector2(213, 705)
+
+[node name="SubtractBots" type="Button" parent="Bots"]
+offset_left = -43.0
+offset_top = 2.0
+offset_right = -29.0
+offset_bottom = 33.0
+text = "-"
+
+[node name="numBots" type="RichTextLabel" parent="Bots"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="AddBots" type="Button" parent="Bots"]
+offset_right = 8.0
+offset_bottom = 8.0
+text = "+"
 
 [connection signal="pressed" from="start_button" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="Players/SubtractPlayer" to="." method="_on_subtract_player_pressed"]
+[connection signal="pressed" from="Players/AddPlayer" to="." method="_on_add_player_pressed"]
+[connection signal="pressed" from="Bots/SubtractBots" to="." method="_on_subtract_bots_pressed"]
+[connection signal="pressed" from="Bots/AddBots" to="." method="_on_add_bots_pressed"]
