@@ -52,7 +52,7 @@ public class BoardData
 								rent[j] = int.Parse(values[j + 6]);
 							}
 						}
-						Property property = new Property(values[1], values[2], int.Parse(values[5]), rent);
+						Property property = new Property(values[1], values[2], int.Parse(values[5]), rent, int.Parse(values[0]));
 						_boardSpaceData[i] = new PropertySpace(int.Parse(values[0]), property);
 						properties.AddLast(property);
 

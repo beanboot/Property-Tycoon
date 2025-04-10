@@ -368,6 +368,7 @@ offset_bottom = 68.4286
 text = "send current player to jail"
 
 [node name="PurchaseButton" type="Button" parent="."]
+visible = false
 offset_left = 805.672
 offset_top = 902.54
 offset_right = 1022.67
@@ -375,6 +376,7 @@ offset_bottom = 936.54
 text = "Purchase"
 
 [node name="AuctionButton" type="Button" parent="."]
+visible = false
 offset_left = 1035.42
 offset_top = 902.477
 offset_right = 1247.42
@@ -404,10 +406,6 @@ text = "Draw Card"
 
 [node name="Card" type="Node2D" parent="."]
 visible = false
-offset_left = 861.931
-offset_top = 846.89
-offset_right = 1186.93
-offset_bottom = 886.89
 position = Vector2(1013.72, 507.916)
 scale = Vector2(0.6, 0.6)
 
@@ -415,7 +413,6 @@ scale = Vector2(0.6, 0.6)
 texture = ExtResource("16_cr6pr")
 
 [node name="PotLuck" type="Sprite2D" parent="Card"]
-scale = Vector2(1, 1)
 texture = ExtResource("17_16uqp")
 
 [node name="Description" type="RichTextLabel" parent="Card"]
@@ -481,6 +478,106 @@ offset_top = 58.8571
 offset_right = 171.826
 offset_bottom = 89.8571
 text = "DONE"
+
+[node name="PurchaseHousesQuery" type="RichTextLabel" parent="."]
+visible = false
+offset_left = 891.653
+offset_top = 798.932
+offset_right = 1196.65
+offset_bottom = 906.932
+text = "Would you like to buy houses?"
+
+[node name="Button" type="Button" parent="PurchaseHousesQuery"]
+layout_mode = 0
+offset_left = 39.2752
+offset_top = 34.8783
+offset_right = 75.2752
+offset_bottom = 65.8783
+text = "YES"
+
+[node name="Button2" type="Button" parent="PurchaseHousesQuery"]
+layout_mode = 0
+offset_left = 151.793
+offset_top = 34.8783
+offset_right = 185.793
+offset_bottom = 65.8783
+text = "NO"
+
+[node name="PurchaseHousesMenu" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="OwnedProperties" type="RichTextLabel" parent="PurchaseHousesMenu"]
+layout_mode = 0
+offset_left = 810.979
+offset_top = 761.874
+offset_right = 1037.98
+offset_bottom = 879.874
+text = "You can buy houses for:
+Example1
+Example2
+Example3
+Example4
+Example5
+Example6"
+
+[node name="ConfirmationTextBox" type="RichTextLabel" parent="PurchaseHousesMenu"]
+layout_mode = 0
+offset_left = 1061.49
+offset_top = 768.413
+offset_right = 1361.49
+offset_bottom = 816.413
+text = "Enter property name:"
+
+[node name="LineEdit" type="LineEdit" parent="PurchaseHousesMenu"]
+layout_mode = 0
+offset_left = 1062.55
+offset_top = 798.932
+offset_right = 1241.55
+offset_bottom = 829.932
+
+[node name="EnterButton" type="Button" parent="PurchaseHousesMenu"]
+layout_mode = 0
+offset_left = 1064.68
+offset_top = 840.35
+offset_right = 1122.68
+offset_bottom = 871.35
+text = "ENTER"
+
+[node name="QuitButton" type="Button" parent="PurchaseHousesMenu"]
+layout_mode = 0
+offset_left = 984.002
+offset_top = 931.906
+offset_right = 1093.0
+offset_bottom = 962.906
+text = "END TURN"
+
+[node name="PurchaseHousesConfirmation" type="RichTextLabel" parent="."]
+visible = false
+offset_left = 857.0
+offset_top = 772.0
+offset_right = 1207.0
+offset_bottom = 883.0
+text = "Are you sure you want to buy a house at Example1 for £250?"
+
+[node name="Button" type="Button" parent="PurchaseHousesConfirmation"]
+layout_mode = 0
+offset_left = 90.9115
+offset_top = 65.08
+offset_right = 126.912
+offset_bottom = 96.08
+text = "YES"
+
+[node name="Button2" type="Button" parent="PurchaseHousesConfirmation"]
+layout_mode = 0
+offset_left = 203.43
+offset_top = 65.08
+offset_right = 237.43
+offset_bottom = 96.08
+text = "NO"
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="JailButton(DEBUG)" to="." method="_on_button_2_pressed"]

@@ -111,6 +111,16 @@ public partial class Player : Node2D
 		return name;
 	}
 
+	public bool does_player_have_colour_set()
+	{
+		if (hasBrownSet || hasBlueSet || hasPurpleSet || hasOrangeSet || hasRedSet || hasYellowSet || hasGreenSet || hasDeepBlueSet)
+		{
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public bool does_player_have_colour_set(SpaceType type)
 	{
 		switch (type)

@@ -7,13 +7,20 @@ public class Property{
 	private int[] rent;
 	private int numHouses;
 	private Player owner;
+	private int position;
 
-	public Property(string name, string type, int cost, int[] rent){
+	public Property(string name, string type, int cost, int[] rent, int position){
 		this.name = name;
 		this.type = Enum.Parse<SpaceType>(type);
 		this.cost = cost;
 		this.rent = rent;
 		numHouses = 0;
+		this.position = position;
+	}
+
+	public int get_position()
+	{
+		return position;
 	}
 	
 	public void set_owner(Player player)
@@ -45,6 +52,11 @@ public class Property{
   	{
         return numHouses;
   	}
+
+	public void add_house()
+	{
+		numHouses++;
+	}
 
 	public int get_rent()
 	{

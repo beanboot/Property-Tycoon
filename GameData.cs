@@ -1,6 +1,6 @@
 using Godot;
 
 public partial class GameData:Node{
-	public int numPlayers;
-	public int numBots;
+	public int numPlayers = 1;
+	public int numBots = 1;
 }
