@@ -12,7 +12,7 @@ public partial class Player : Node2D
 	private LinkedList<Property> properties;
 	public int daysInJail = 0;
 	public bool getOutJail = false;
-	public bool hasPassedGo = true;
+	public bool hasPassedGo = false;
 	// Colour set booleans
 	public bool hasBrownSet = false;
 	public bool hasBlueSet = false;
@@ -30,7 +30,7 @@ public partial class Player : Node2D
 	public override void _Ready()
 	{
 		currentPos = 0;
-		balance = 500;
+		balance = 1500;
 		properties = new LinkedList<Property>();
 	}
 

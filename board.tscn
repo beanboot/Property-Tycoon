@@ -67,7 +67,7 @@ offset_bottom = 1003.63
 texture = ExtResource("3_iy7ot")
 expand_mode = 1
 
-[node name="Button" type="Button" parent="."]
+[node name="DiceButton" type="Button" parent="."]
 offset_left = 14.8609
 offset_top = 693.207
 offset_right = 554.861
@@ -75,7 +75,7 @@ offset_bottom = 971.211
 scale = Vector2(0.50726, 0.493322)
 icon_alignment = 1
 
-[node name="Dice1" type="AnimatedSprite2D" parent="Button"]
+[node name="Dice1" type="AnimatedSprite2D" parent="DiceButton"]
 position = Vector2(138.111, 140)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_lqcvg")
@@ -83,7 +83,7 @@ frame = 3
 frame_progress = 0.556081
 script = ExtResource("9_k0pyn")
 
-[node name="Dice2" type="AnimatedSprite2D" parent="Button"]
+[node name="Dice2" type="AnimatedSprite2D" parent="DiceButton"]
 position = Vector2(403.871, 140)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_lqcvg")
@@ -362,13 +362,6 @@ offset_top = 29.0
 offset_right = 428.0
 offset_bottom = 670.0
 
-[node name="JailButton(DEBUG)" type="Button" parent="."]
-offset_left = 1806.66
-offset_top = 29.4286
-offset_right = 2013.66
-offset_bottom = 68.4286
-text = "send current player to jail"
-
 [node name="PurchaseButton" type="Button" parent="."]
 visible = false
 offset_left = 805.672
@@ -384,27 +377,6 @@ offset_top = 902.477
 offset_right = 1247.42
 offset_bottom = 936.477
 text = "Auction"
-
-[node name="MovePlayerSpaces(DEBUG)" type="Button" parent="."]
-offset_left = 1848.06
-offset_top = 75.2064
-offset_right = 2014.06
-offset_bottom = 106.206
-text = "move current player"
-
-[node name="LineEdit" type="LineEdit" parent="MovePlayerSpaces(DEBUG)"]
-layout_mode = 0
-offset_left = 2.12311
-offset_top = 35.9683
-offset_right = 69.1856
-offset_bottom = 66.9683
-
-[node name="DrawCardButton(DEBUG)" type="Button" parent="."]
-offset_left = 1700.51
-offset_top = 32.6984
-offset_right = 1790.51
-offset_bottom = 63.6984
-text = "Draw Card"
 
 [node name="AuctionDisplay" type="RichTextLabel" parent="."]
 visible = false
@@ -690,12 +662,9 @@ icon = ExtResource("19_t8xlp")
 layout_mode = 2
 icon = ExtResource("20_7al8f")
 
-[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
-[connection signal="pressed" from="JailButton(DEBUG)" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="DiceButton" to="." method="_on_dice_button_pressed"]
 [connection signal="pressed" from="PurchaseButton" to="." method="_on_purchase_button_pressed"]
 [connection signal="pressed" from="AuctionButton" to="." method="_on_auction_button_pressed"]
-[connection signal="pressed" from="MovePlayerSpaces(DEBUG)" to="." method="_on_move_player_spaces_debug_pressed"]
-[connection signal="pressed" from="DrawCardButton(DEBUG)" to="." method="_on_draw_card_button_debug_pressed"]
 [connection signal="pressed" from="WinScreen/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="pressed" from="Card/AcceptCard" to="." method="_on_accept_card_pressed"]
 [connection signal="pressed" from="Card/FineOrOpportunity/DrawOpportunityCard" to="." method="_on_draw_opportunity_card_pressed"]
