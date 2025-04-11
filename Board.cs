@@ -1200,7 +1200,7 @@ public partial class Board : Node2D
 		int highestBid = -1;
 		int highestBidderIndex = -1;
 
-		for (int i = 0; i < playerAuctions.Length; i++)
+		for (int i = 0; i < playerAuctions.Length; i++) // finds the highest bidder
 		{
 			if (playerAuctions[i] > highestBid)
 			{
@@ -1246,6 +1246,7 @@ public partial class Board : Node2D
 		canPressButton = true;
 	}
 
+	// checks if the player owns any colour sets and upadtes the respective player's colour set booleans
 	private void update_owned_colour_sets(Player player, SpaceType type)
 	{
 		LinkedList<Property> playerOwnedProperties = player.get_properties();
@@ -1262,9 +1263,9 @@ public partial class Board : Node2D
 
 		int requiredCount = colourSetSizes[type];
 
-		if (ownedCount == requiredCount)
+		if (ownedCount == requiredCount) // uses the colourSetSizes dictionary to determine if the player has a colour set 
 		{
-			switch(type)
+			switch(type) 
 			{
 				case SpaceType.BROWN:
 					player.hasBrownSet = true;
@@ -1294,14 +1295,15 @@ public partial class Board : Node2D
 		}
 	}
 
+	// displays the card on screen
 	private void play_card(Player player, Card card, SpaceType spaceType)
 	{
-		//updates global variable currentCard to the card drawn
+		// updates global variable currentCard to the card drawn
 		currentCard = card;
 		CardType cardType = card.get_cardType();
 		string cardDescription = card.get_description();
 
-		//shows the correct sprite depending on the type of card
+		// shows the correct sprite depending on the type of card
 		if (spaceType == SpaceType.OK)
 		{
 			GetNode<Sprite2D>("Card/PotLuck").Hide();
@@ -1311,25 +1313,30 @@ public partial class Board : Node2D
 			GetNode<Sprite2D>("Card/OpportunityKnocks").Hide();
 			GetNode<Sprite2D>("Card/PotLuck").Show();
 		}
+
 		GetNode<RichTextLabel>("Card/Description").Text = cardDescription;
 
-		//show the card node
+		// show the card node
 		GetNode<Node2D>("Card").Show();
 		canPressButton = false;
-		//shows the accept card button unless FINEOROK cardType passed
+
+		// shows the accept card button unless FINEOROK cardType passed
 		var button = GetNode<Button>("Card/AcceptCard");
-		if(cardType != CardType.FINEOROK){
+
+		if (cardType != CardType.FINEOROK) 
+		{
 			button.Show();
-		}else{
+		} else
+		{
 			button.Hide();
 			GetNode<HBoxContainer>("Card/FineOrOpportunity").Show();
 		}
 		
 	}
 
+	// handles card operation based on cardType and cardParam
 	public void handle_card(int cardParam, CardType cardType, Player player)
 	{
-		//Handles card operation based on cardType and cardParam
 		switch (cardType)
 		{
 			case CardType.GTJ:
@@ -1352,6 +1359,7 @@ public partial class Board : Node2D
 						players[i].increase_balance(cardParam);
 					}
 				}
+
 				break;
 			case CardType.COLLECT:
 				player.increase_balance(cardParam);
@@ -1362,7 +1370,7 @@ public partial class Board : Node2D
 				break;
 
 			case CardType.COLLECTALL:
-				for (int i = 0; i < players.Length; i++)
+				for (int i = 0; i < players.Length; i++) // collects the required ammount of all players
 				{
 					if (i != currentPlayerIndex)
 					{
@@ -1376,7 +1384,7 @@ public partial class Board : Node2D
 				int totalCost = 0;
 				foreach (Property property in properties)
 				{
-					if (property.get_num_houses() < 5)
+					if (property.get_num_houses() < 5) // owrks out the required amount in repairs
 					{
 						totalCost += cardParam * property.get_num_houses();
 					} else if (property.get_num_houses() == 5)
@@ -1389,6 +1397,7 @@ public partial class Board : Node2D
 						}
 					}
 				}
+
 				player.decrease_balance(totalCost);
 				break;
 			case CardType.MOVESPACESB:
@@ -1396,7 +1405,7 @@ public partial class Board : Node2D
 				handle_current_player(cardParam, false, false);
 				return;
 			case CardType.MOVELOCATIONB:
-				if (cardParam < player.get_pos())
+				if (cardParam < player.get_pos()) // moves player backwards
 				{
 					GetNode<Node2D>("Card").Hide();
 					handle_current_player(player.get_pos() - cardParam, false, false);
@@ -1409,7 +1418,7 @@ public partial class Board : Node2D
 					return;
 				}
 			case CardType.MOVELOCATIONF:
-				if(cardParam > player.get_pos())
+				if(cardParam > player.get_pos()) // moves player forwards
 				{
 					GetNode<Node2D>("Card").Hide();
 					handle_current_player(cardParam - player.get_pos(), true, true);
@@ -1442,14 +1451,16 @@ public partial class Board : Node2D
 		canPressButton = true;
 	}
 
+	// sends player to jail
 	public void send_to_jail(Player player)
 	{
-		//sets players position to the index of Jail and then updates the Jail class
+		// sets players position to the index of Jail and then updates the Jail class
 		players[currentPlayerIndex].set_pos(10);
 		players[currentPlayerIndex].player_movement(boardSpaces[players[currentPlayerIndex].get_pos() % 40].Position + GetNode<Node2D>("BoardSpaces").Position + new Vector2(20, -20));
 		jail.send_to_jail(player);
 	}
 	
+	// adds labels to all properties to display their houses
 	public void show_houses()
 	{
 		for(int i = 0; i < 40; i++)
@@ -1484,14 +1495,14 @@ public partial class Board : Node2D
 
 	public void _on_draw_opportunity_card_pressed()
 	{
-		//called when the DrawOpportunityCard button is pressed
-		//draws an opportunity knocks card when the potluck card with type FINEOROK is called
+		// called when the DrawOpportunityCard button is pressed
+		// draws an opportunity knocks card when the potluck card with type FINEOROK is called
 		play_card(players[currentPlayerIndex], deck.draw(SpaceType.OK), SpaceType.OK);
 		GetNode<HBoxContainer>("Card/FineOrOpportunity").Hide();
 	}
 	public void _on_accept_card_pressed()
 	{
-		//calls handle_card with the apropriate parameters once AcceptCard is pressed
+		// calls handle_card with the apropriate parameters once AcceptCard is pressed
 		CardType cardType = currentCard.get_cardType();
 		int cardParam = currentCard.get_cardParameter();
 		Player currentPlayer = players[currentPlayerIndex];
@@ -1500,14 +1511,15 @@ public partial class Board : Node2D
 
 	public void _on_take_fine_pressed()
 	{
-		//called when TakeFine button is pressed
-		//takes £10 when the potluck card with type FINEOROK is called
+		// called when TakeFine button is pressed
+		// takes £10 when the potluck card with type FINEOROK is called
 		freeParking.collect_fine(10);
 		players[currentPlayerIndex].decrease_balance(10);
 		GetNode<HBoxContainer>("Card/FineOrOpportunity").Hide();
 		GetNode<Node2D>("Card").Hide();
 	}
 
+	// checks to see if a player has won the game
 	private void check_for_winners()
 	{
 		int bankruptPlayers = 0;
@@ -1540,11 +1552,13 @@ public partial class Board : Node2D
 		}
 	}
 
+	// quits to main menu
 	private void _on_quit_button_pressed()
 	{
 		GetTree().ChangeSceneToFile("res://mainMenu.tscn");
 	}
 
+	// runs every frame
 	public override void _Process(double delta) 
 	{
 		//constantly displays the player balances, board info and player property lists, once displayInfo is set to true
@@ -1566,6 +1580,7 @@ public partial class Board : Node2D
 			GetNode<Button>("AuctionButton").Show();
 		}
 
+		// checks for winners every frame
 		check_for_winners();
 	}
 }
