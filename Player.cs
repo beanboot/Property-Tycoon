@@ -12,7 +12,7 @@ public partial class Player : Node2D
 	private LinkedList<Property> properties;
 	public int daysInJail = 0;
 	public bool getOutJail = false;
-	public bool hasPassedGo = true;
+	public bool hasPassedGo = false;
 	// Colour set booleans
 	public bool hasBrownSet = false;
 	public bool hasBlueSet = false;
@@ -23,6 +23,7 @@ public partial class Player : Node2D
 	public bool hasGreenSet = false;
 	public bool hasDeepBlueSet = false;
 	public bool isBot = false;
+	public bool isBankrupt = false;
 
 
 	// Called when the node enters the scene tree for the first time.
@@ -105,6 +106,19 @@ public partial class Player : Node2D
 	public LinkedList<Property> get_properties()
 	{
 		return properties;
+	}
+
+	public bool remove_from_properties(Property property)
+	{
+		if (properties.Contains(property))
+		{
+			properties.Remove(property);
+			property.set_owner(null);
+			return true;
+		} else
+		{
+			return false;
+		}
 	}
 	
 	public string get_name(){

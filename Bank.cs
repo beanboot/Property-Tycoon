@@ -37,7 +37,7 @@ public class Bank
         }
     }
 
-    public bool remove_from_properties(Property property, int cost)
+    public bool remove_from_properties(Property property)
     {
         if(!properties.Contains(property))
         {
@@ -46,7 +46,6 @@ public class Bank
         else
         {
             properties.Remove(property);
-            balance += cost;
             return true;
         }
     }

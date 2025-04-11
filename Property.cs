@@ -58,6 +58,11 @@ public class Property{
 		numHouses++;
 	}
 
+	public void remove_house()
+	{
+		numHouses = numHouses - 1;
+	}
+
 	public int get_rent()
 	{
 		return rent[numHouses];
