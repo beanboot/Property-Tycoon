@@ -23,13 +23,14 @@ public partial class Player : Node2D
 	public bool hasGreenSet = false;
 	public bool hasDeepBlueSet = false;
 	public bool isBot = false;
+	public bool isBankrupt = false;
 
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		currentPos = 0;
-		balance = 1500;
+		balance = 500;
 		properties = new LinkedList<Property>();
 	}
 
@@ -105,6 +106,19 @@ public partial class Player : Node2D
 	public LinkedList<Property> get_properties()
 	{
 		return properties;
+	}
+
+	public bool remove_from_properties(Property property)
+	{
+		if (properties.Contains(property))
+		{
+			properties.Remove(property);
+			property.set_owner(null);
+			return true;
+		} else
+		{
+			return false;
+		}
 	}
 	
 	public string get_name(){

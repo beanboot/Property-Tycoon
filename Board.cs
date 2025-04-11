@@ -51,7 +51,7 @@ public partial class Board : Node2D
 		numOfPlayers = gameData.numPlayers + gameData.numBots;
 		deck = new Deck();
 		boardData = new BoardData();
-		bank = new Bank(boardData.get_property_list(), 50000);
+		bank = new Bank(boardData.get_property_list(), 10000);
 
 		initialise_board();
 		
@@ -109,6 +109,11 @@ public partial class Board : Node2D
 				currentPlayer.daysInJail++;
 				change_player();
 			}
+		}
+
+		if (currentPlayer.isBankrupt)
+		{
+			change_player();
 		}
 
 		display_current_player_text();
@@ -432,6 +437,34 @@ public partial class Board : Node2D
 			canPressButton = true;
 			return;
 		} 
+		else if (type == SpaceType.FINE)
+		{
+			int tax = 0;
+
+			if (currentPlayer.get_pos() == 4)
+			{
+				tax = 200;
+			} else
+			{
+				tax = 100;
+			}
+
+			if (currentPlayer.decrease_balance(tax))
+			{
+				bank.add_to_bank(tax);
+				rentTextBox.Text = currentPlayer.get_name() + " paid £" + tax + " in taxes";
+				clear_text_after_delay(rentTextBox, 5000);
+			} else
+				{
+					await selling(tax, currentPlayer);
+
+					if (!currentPlayer.isBankrupt) {
+						bank.add_to_bank(tax);
+						rentTextBox.Text = currentPlayer.get_name() + " paid £" + tax + " in taxes";
+						clear_text_after_delay(rentTextBox, 5000);
+					}
+				}
+		}
 		else if (type == SpaceType.BROWN || type == SpaceType.BLUE || type == SpaceType.PURPLE || type == SpaceType.ORANGE
 		|| type == SpaceType.RED || type == SpaceType.YELLOW || type == SpaceType.GREEN || type == SpaceType.DEEPBLUE
 		|| type == SpaceType.STATION || type == SpaceType.UTIL)
@@ -460,6 +493,21 @@ public partial class Board : Node2D
 					property.get_owner().increase_balance(rentDue);
 					rentTextBox.Text = currentPlayer.get_name() + " paid £" + rentDue + " in rent to " + property.get_owner().get_name();
 					clear_text_after_delay(rentTextBox, 5000);
+				} else
+				{
+					await selling(rentDue, currentPlayer);
+
+					if (currentPlayer.isBankrupt) {
+						property.get_owner().increase_balance(rentDue);
+						bank.take_from_bank(rentDue);
+						rentTextBox.Text = "The bank paid £" + rentDue + " in rent to " + property.get_owner().get_name() + " because " + currentPlayer.get_name() + " went bankrupt";
+						clear_text_after_delay(rentTextBox, 5000);
+					} else 
+					{
+						property.get_owner().increase_balance(rentDue);
+						rentTextBox.Text = currentPlayer.get_name() + " paid £" + rentDue + " in rent to " + property.get_owner().get_name();
+						clear_text_after_delay(rentTextBox, 5000);
+					}
 				}
 			} else if (type == SpaceType.UTIL && currentPlayer != property.get_owner())
 			{
@@ -486,6 +534,21 @@ public partial class Board : Node2D
 					property.get_owner().increase_balance(rentDue);
 					rentTextBox.Text = currentPlayer.get_name() + " paid £" + rentDue + " in rent to " + property.get_owner().get_name();
 					clear_text_after_delay(rentTextBox, 5000);
+				} else
+				{
+					await selling(rentDue, currentPlayer);
+
+					if (currentPlayer.isBankrupt) {
+						property.get_owner().increase_balance(rentDue);
+						bank.take_from_bank(rentDue);
+						rentTextBox.Text = "The bank paid £" + rentDue + " in rent to " + property.get_owner().get_name() + " because " + currentPlayer.get_name() + " went bankrupt";
+						clear_text_after_delay(rentTextBox, 5000);
+					} else 
+					{
+						property.get_owner().increase_balance(rentDue);
+						rentTextBox.Text = currentPlayer.get_name() + " paid £" + rentDue + " in rent to " + property.get_owner().get_name();
+						clear_text_after_delay(rentTextBox, 5000);
+					}
 				}
 				
 			} else if (type == SpaceType.STATION && currentPlayer != property.get_owner())
@@ -507,6 +570,21 @@ public partial class Board : Node2D
 					property.get_owner().increase_balance(rentDue[ownedStations - 1]);
 					rentTextBox.Text = currentPlayer.get_name() + " paid £" + rentDue[ownedStations - 1] + " in rent to " + property.get_owner().get_name();
 					clear_text_after_delay(rentTextBox, 5000);
+				} else
+				{
+					await selling(rentDue[ownedStations - 1], currentPlayer);
+
+					if (currentPlayer.isBankrupt) {
+						property.get_owner().increase_balance(rentDue[ownedStations - 1]);
+						bank.take_from_bank(rentDue[ownedStations - 1]);
+						rentTextBox.Text = "The bank paid £" + rentDue[ownedStations - 1] + " in rent to " + property.get_owner().get_name() + " because " + currentPlayer.get_name() + " went bankrupt";
+						clear_text_after_delay(rentTextBox, 5000);
+					} else 
+					{
+						property.get_owner().increase_balance(rentDue[ownedStations - 1]);
+						rentTextBox.Text = currentPlayer.get_name() + " paid £" + rentDue[ownedStations - 1] + " in rent to " + property.get_owner().get_name();
+						clear_text_after_delay(rentTextBox, 5000);
+					}
 				}
 			}
 		}
@@ -641,7 +719,7 @@ public partial class Board : Node2D
 
 			foreach (Property p in validProperties)
 			{
-				if (inputBox.Text == p.get_name())
+				if (inputBox.Text.ToLower() == p.get_name().ToLower())
 				{
 					validInput = true;
 					selectedProperty = p;
@@ -654,8 +732,33 @@ public partial class Board : Node2D
 
 				var purchaseConfirmationTextBox = GetNode<RichTextLabel>("PurchaseHousesConfirmation");
 
+				string houseOrHotel = "";
+				if (selectedProperty.get_num_houses() == 4)
+				{
+					houseOrHotel = "hotel";
+				} else
+				{
+					houseOrHotel = "house";
+				}
+
+				int houseCost = 0;
+				SpaceType type = selectedProperty.get_type();
+				if (type == SpaceType.BROWN || type == SpaceType.BLUE)
+				{
+					houseCost = 50;
+				} else if (type == SpaceType.PURPLE || type == SpaceType.ORANGE)
+				{
+					houseCost = 100;
+				} else if (type == SpaceType.RED || type == SpaceType.YELLOW)
+				{
+					houseCost = 150;
+				} else if (type == SpaceType.GREEN || type == SpaceType.DEEPBLUE)
+				{
+					houseCost = 200;
+				}
+
 				purchaseConfirmationTextBox.Show();
-				purchaseConfirmationTextBox.Text = "Are you sure you want to buy a house at " + selectedProperty.get_name() + " for £" + selectedProperty.get_cost();
+				purchaseConfirmationTextBox.Text = "Are you sure you want to buy a " + houseOrHotel + " at " + selectedProperty.get_name() + " for £" + houseCost;
 				
 				var yesButton = GetNode<Button>("PurchaseHousesConfirmation/Button");
 				var noButton = GetNode<Button>("PurchaseHousesConfirmation/Button2");
@@ -680,11 +783,22 @@ public partial class Board : Node2D
 
 				if (result == true)
 				{
-					if (players[currentPlayerIndex].decrease_balance(selectedProperty.get_cost()))
+					if (players[currentPlayerIndex].decrease_balance(houseCost))
 					{
 						selectedProperty.add_house();
 						purchaseConfirmationTextBox.Hide();
-						labelArray[selectedProperty.get_position() - 1].Text = selectedProperty.get_num_houses() + " House/s";
+
+						if (selectedProperty.get_num_houses() == 5)
+						{
+							labelArray[selectedProperty.get_position() - 1].Text = "1 Hotel";
+						} else
+						{
+							labelArray[selectedProperty.get_position() - 1].Text = selectedProperty.get_num_houses() + " House/s";
+						}
+						
+						purchase_houses();
+					} else {
+						purchaseConfirmationTextBox.Hide();
 						purchase_houses();
 					}
 				} else 
@@ -710,19 +824,245 @@ public partial class Board : Node2D
 		}
 	}
 
-	private void _on_purchase_button_pressed()
+	private async Task selling(int debt, Player player)
+	{
+		GetNode<Control>("SellingMenu").Show();
+		var sellableProperties = GetNode<RichTextLabel>("SellingMenu/SellableProperties");
+		var inputBox = GetNode<LineEdit>("SellingMenu/LineEdit");
+		var enterButton = GetNode<Button>("SellingMenu/EnterButton");
+		var stopButton = GetNode<Button>("SellingMenu/StopButton");
+		var bankruptButton = GetNode<Button>("SellingMenu/BankruptButton");
+
+		stopButton.Hide();
+
+		if (player.get_balance() > debt)
+		{
+			stopButton.Show();
+		}
+
+		inputBox.Text = "";
+
+		string validPropertiesText = "Insufficient funds " + player.get_name() + "! You can sell: \n";
+		LinkedList<Property> validProperties = new LinkedList<Property>();
+		foreach (Property p in player.get_properties())
+		{
+			validPropertiesText += "\n" + p.get_name();
+			validProperties.AddLast(p);
+		}
+
+		sellableProperties.Text = validPropertiesText;
+
+		string? buttonPressed = null;
+
+		void on_enter_pressed() {
+			buttonPressed = "enter";
+		}
+
+		void on_stop_pressed() {
+			buttonPressed = "stop";
+		}
+
+		void on_bankrupt_pressed() {
+			buttonPressed = "bankrupt";
+		}
+
+		enterButton.Pressed += on_enter_pressed;
+		stopButton.Pressed += on_stop_pressed;
+		bankruptButton.Pressed += on_bankrupt_pressed;
+
+		while (buttonPressed == null)
+		{
+			await ToSignal(GetTree().CreateTimer(0.01f), "timeout");
+		}
+
+		if (buttonPressed == "enter")
+		{
+			bool validInput = false;
+			Property selectedProperty = null;
+
+			foreach (Property p in validProperties)
+			{
+				if (inputBox.Text.ToLower() == p.get_name().ToLower())
+				{
+					validInput = true;
+					selectedProperty = p;
+				}
+			}
+
+			if (validInput)
+			{
+				GetNode<Control>("SellingMenu").Hide();
+
+				var sellingConfirmationTextBox = GetNode<RichTextLabel>("SellingConfirmation");
+
+				int sellPrice = 0;
+				bool sellingProperty = false;
+
+				if (selectedProperty.get_num_houses() > 0)
+				{
+					string houseOrHotel = "";
+					if (selectedProperty.get_num_houses() == 4)
+					{
+						houseOrHotel = "hotel";
+					} else
+					{
+						houseOrHotel = "house";
+					}
+
+					int houseCost = 0;
+					SpaceType type = selectedProperty.get_type();
+					if (type == SpaceType.BROWN || type == SpaceType.BLUE)
+					{
+						houseCost = 50;
+					} else if (type == SpaceType.PURPLE || type == SpaceType.ORANGE)
+					{
+						houseCost = 100;
+					} else if (type == SpaceType.RED || type == SpaceType.YELLOW)
+					{
+						houseCost = 150;
+					} else if (type == SpaceType.GREEN || type == SpaceType.DEEPBLUE)
+					{
+						houseCost = 200;
+					}
+
+					sellingConfirmationTextBox.Text = "Are you sure you want to sell a " + houseOrHotel + " at " + selectedProperty.get_name() + " for £" + houseCost;
+
+					sellPrice = houseCost;
+					sellingProperty = false;
+				} else
+				{
+					sellingConfirmationTextBox.Text = "Are you sure you want to sell " + selectedProperty.get_name() + " for £" + selectedProperty.get_cost();
+					sellPrice = selectedProperty.get_cost();
+					sellingProperty = true;
+				}
+
+				sellingConfirmationTextBox.Show();
+
+				var yesButton = GetNode<Button>("SellingConfirmation/Button");
+				var noButton = GetNode<Button>("SellingConfirmation/Button2");
+
+				bool? result = null;
+
+				void on_yes_pressed() {
+					result = true;
+				}
+
+				void on_no_pressed() {
+					result = false;
+				}
+
+				yesButton.Pressed += on_yes_pressed;
+				noButton.Pressed += on_no_pressed;
+
+				while (result == null)
+				{
+					await ToSignal(GetTree().CreateTimer(0.01f), "timeout");
+				}
+
+				if (result == true)
+				{
+					if (sellingProperty)
+					{
+						if (bank.take_from_bank(sellPrice))
+						{
+							player.remove_from_properties(selectedProperty);
+							bank.add_to_properties(selectedProperty);
+							player.increase_balance(sellPrice);
+
+							sellingConfirmationTextBox.Hide();
+
+							await selling(debt, player);
+						} else
+						{
+							sellingConfirmationTextBox.Hide();
+							bankrupt(player, validProperties);
+						}
+					} else
+					{
+						if (bank.take_from_bank(sellPrice))
+						{
+							selectedProperty.remove_house();
+							player.increase_balance(sellPrice);
+
+							sellingConfirmationTextBox.Hide();
+
+							await selling(debt, player);
+						} else
+						{
+							sellingConfirmationTextBox.Hide();
+							bankrupt(player, validProperties);
+						}
+					}
+				} else
+				{
+					sellingConfirmationTextBox.Hide();
+
+					await selling(debt, player);
+				}
+			} else
+			{
+				await selling(debt, player);
+			}
+		} else if (buttonPressed == "stop")
+		{
+			GetNode<Control>("SellingMenu").Hide();
+			return;
+		} else if (buttonPressed == "bankrupt")
+		{
+			GetNode<Control>("SellingMenu").Hide();
+			bankrupt(player, validProperties);
+			return;
+		}
+	}
+
+	private void bankrupt(Player player, LinkedList<Property> properties)
+	{
+		foreach (Property p in properties)
+		{
+			while(p.get_num_houses() > 0)
+			{
+				int houseCost = 0;
+				SpaceType type = p.get_type();
+				if (type == SpaceType.BROWN || type == SpaceType.BLUE)
+				{
+					houseCost = 50;
+				} else if (type == SpaceType.PURPLE || type == SpaceType.ORANGE)
+				{
+					houseCost = 100;
+				} else if (type == SpaceType.RED || type == SpaceType.YELLOW)
+				{
+					houseCost = 150;
+				} else if (type == SpaceType.GREEN || type == SpaceType.DEEPBLUE)
+				{
+					houseCost = 200;
+				}
+
+				p.remove_house();
+				bank.add_to_bank(houseCost);
+			}
+
+			p.set_owner(null);
+			bank.add_to_properties(p);
+
+			player.isBankrupt = true;
+			player.Hide();
+ 		}
+	}
+
+	private async void _on_purchase_button_pressed()
 	{
 		Player currentPlayer = players[currentPlayerIndex];
 		PropertySpace currentSpace = (PropertySpace) boardData.get_space(currentPlayer.get_pos());
 		Property property = currentSpace.get_property();
 		SpaceType type = property.get_type();
 
-		if (bank.remove_from_properties(property, property.get_cost())) // returns true if property has been removed from bank
+		if (bank.remove_from_properties(property)) // returns true if property has been removed from bank
 		{
 			if (currentPlayer.decrease_balance(property.get_cost()))
 			{
 				property.set_owner(currentPlayer);
 				currentPlayer.add_to_properties(property);
+				bank.add_to_bank(property.get_cost());
 
 				if (type == SpaceType.BROWN || type == SpaceType.BLUE || type == SpaceType.PURPLE || type == SpaceType.ORANGE
 				|| type == SpaceType.RED || type == SpaceType.YELLOW || type == SpaceType.GREEN || type == SpaceType.DEEPBLUE)
@@ -733,9 +1073,32 @@ public partial class Board : Node2D
 				var purchaseTextBox = GetNode<RichTextLabel>("PurchaseDisplay");
 				purchaseLogString += "\n" + currentPlayer.get_name() + " has purchased " + property.get_name() + " for £" + property.get_cost();
 				purchaseTextBox.Text = purchaseLogString;
-			} else {
-				bank.add_to_properties(property); // adds the property back if the player doesn't have enough to buy property
-				return;
+			} else
+			 {
+				purchaseable = false;
+
+				await selling(property.get_cost(), currentPlayer);
+
+				if (currentPlayer.isBankrupt)
+				{
+					bank.add_to_properties(property);
+				} else
+				{
+					currentPlayer.decrease_balance(property.get_cost());
+					property.set_owner(currentPlayer);
+					currentPlayer.add_to_properties(property);
+					bank.add_to_bank(property.get_cost());
+
+					if (type == SpaceType.BROWN || type == SpaceType.BLUE || type == SpaceType.PURPLE || type == SpaceType.ORANGE
+					|| type == SpaceType.RED || type == SpaceType.YELLOW || type == SpaceType.GREEN || type == SpaceType.DEEPBLUE)
+					{
+						update_owned_colour_sets(currentPlayer, type);
+					}
+					
+					var purchaseTextBox = GetNode<RichTextLabel>("PurchaseDisplay");
+					purchaseLogString += "\n" + currentPlayer.get_name() + " has purchased " + property.get_name() + " for £" + property.get_cost();
+					purchaseTextBox.Text = purchaseLogString;
+				}
 			}
 		}
 
@@ -774,22 +1137,25 @@ public partial class Board : Node2D
 
 		for (int i = 0; i < numOfPlayers; i++)
 		{
-			int userInput;
-			bool validInput = false;
-
-			while (!validInput)
+			if (!jail.is_in_jail(players[i]) || !players[i].hasPassedGo)
 			{
-				inputBox.Text = "";
-				auctionTextBox.Text = players[i].get_name() + ": Please type your desired auction \n price:";
+				int userInput;
+				bool validInput = false;
 
-				await ToSignal(doneButton, "pressed");
-
-				if (int.TryParse(inputBox.Text, out userInput))
+				while (!validInput)
 				{
-					if (!(userInput > players[i].get_balance()) && userInput >= 0)
+					inputBox.Text = "";
+					auctionTextBox.Text = players[i].get_name() + ": Please type your desired auction \n price:";
+
+					await ToSignal(doneButton, "pressed");
+
+					if (int.TryParse(inputBox.Text, out userInput))
 					{
-						validInput = true;
-						playerAuctions[i] = userInput;
+						if (!(userInput > players[i].get_balance()) && userInput >= 0)
+						{
+							validInput = true;
+							playerAuctions[i] = userInput;
+						}
 					}
 				}
 			}
@@ -809,12 +1175,13 @@ public partial class Board : Node2D
 			}
 		}
 
-		if (bank.remove_from_properties(property, highestBid)) // returns true if property has been removed from bank
+		if (bank.remove_from_properties(property)) // returns true if property has been removed from bank
 		{
 			if (players[highestBidderIndex].decrease_balance(highestBid))
 			{
 				property.set_owner(players[highestBidderIndex]);
 				players[highestBidderIndex].add_to_properties(property);
+				bank.add_to_bank(highestBid);
 
 				if (type == SpaceType.BROWN || type == SpaceType.BLUE || type == SpaceType.PURPLE || type == SpaceType.ORANGE
 				|| type == SpaceType.RED || type == SpaceType.YELLOW || type == SpaceType.GREEN || type == SpaceType.DEEPBLUE)
@@ -1081,6 +1448,43 @@ public partial class Board : Node2D
 		}
 	}
 
+	private void check_for_winners()
+	{
+		int bankruptPlayers = 0;
+
+		foreach (Player p in players)
+		{
+			if (p.isBankrupt)
+			{
+				bankruptPlayers++;
+			}
+		}
+
+		if (bankruptPlayers == players.Length - 1)
+		{
+			Player winner = null;
+
+			foreach (Player p in players)
+			{
+				if (!p.isBankrupt)
+				{
+					winner = p;
+				}
+			}
+
+			var winScreen = GetNode<Control>("WinScreen");
+			var winText = GetNode<RichTextLabel>("WinScreen/WinText");
+
+			winScreen.Show();
+			winText.Text = winner.get_name().ToUpper() + " WINS!";
+		}
+	}
+
+	private void _on_quit_button_pressed()
+	{
+		GetTree().ChangeSceneToFile("res://mainMenu.tscn");
+	}
+
 	public override void _Process(double delta) 
 	{
 		//constantly displays the player balances, board info and player property lists, once displayInfo is set to true
@@ -1101,6 +1505,8 @@ public partial class Board : Node2D
 			GetNode<Button>("PurchaseButton").Show();
 			GetNode<Button>("AuctionButton").Show();
 		}
+
+		check_for_winners();
 	}
 
 	public void _on_draw_card_button_debug_pressed()

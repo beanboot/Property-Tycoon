@@ -313,10 +313,12 @@ scale = Vector2(0.0843754, 0.144)
 texture = ExtResource("2_qw51a")
 
 [node name="CurrentPlayerDebug" type="RichTextLabel" parent="."]
-offset_left = 28.0
-offset_top = 1044.0
-offset_right = 440.0
-offset_bottom = 1126.0
+offset_left = 789.749
+offset_top = 405.461
+offset_right = 1201.75
+offset_bottom = 487.461
+scale = Vector2(2, 2)
+text = "Player 1's Turn"
 
 [node name="CurrentBoardInfo" type="RichTextLabel" parent="."]
 offset_left = 24.0
@@ -403,49 +405,6 @@ offset_top = 32.6984
 offset_right = 1790.51
 offset_bottom = 63.6984
 text = "Draw Card"
-
-[node name="Card" type="Node2D" parent="."]
-visible = false
-position = Vector2(1013.72, 507.916)
-scale = Vector2(0.6, 0.6)
-
-[node name="OpportunityKnocks" type="Sprite2D" parent="Card"]
-texture = ExtResource("16_cr6pr")
-
-[node name="PotLuck" type="Sprite2D" parent="Card"]
-texture = ExtResource("17_16uqp")
-
-[node name="Description" type="RichTextLabel" parent="Card"]
-offset_left = -321.986
-offset_top = -443.246
-offset_right = 342.014
-offset_bottom = -55.2456
-theme_override_colors/default_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/normal_font_size = 42
-text = "Test Words"
-
-[node name="AcceptCard" type="Button" parent="Card"]
-visible = false
-offset_left = -183.992
-offset_top = 523.175
-offset_right = 262.008
-offset_bottom = 705.175
-icon = ExtResource("18_veke8")
-
-[node name="FineOrOpportunity" type="HBoxContainer" parent="Card"]
-visible = false
-offset_left = -436.98
-offset_top = 523.175
-offset_right = 460.02
-offset_bottom = 705.175
-
-[node name="DrawOpportunityCard" type="Button" parent="Card/FineOrOpportunity"]
-layout_mode = 2
-icon = ExtResource("19_t8xlp")
-
-[node name="TakeFine" type="Button" parent="Card/FineOrOpportunity"]
-layout_mode = 2
-icon = ExtResource("20_7al8f")
 
 [node name="AuctionDisplay" type="RichTextLabel" parent="."]
 visible = false
@@ -579,12 +538,165 @@ offset_right = 237.43
 offset_bottom = 96.08
 text = "NO"
 
+[node name="SellingMenu" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SellableProperties" type="RichTextLabel" parent="SellingMenu"]
+layout_mode = 0
+offset_left = 810.979
+offset_top = 761.874
+offset_right = 1037.98
+offset_bottom = 879.874
+text = "You can sell:
+Example1
+Example2
+Example3
+Example4
+Example5
+Example6"
+
+[node name="ConfirmationTextBox" type="RichTextLabel" parent="SellingMenu"]
+layout_mode = 0
+offset_left = 1061.49
+offset_top = 768.413
+offset_right = 1361.49
+offset_bottom = 816.413
+text = "Enter property name:"
+
+[node name="LineEdit" type="LineEdit" parent="SellingMenu"]
+layout_mode = 0
+offset_left = 1062.55
+offset_top = 798.932
+offset_right = 1241.55
+offset_bottom = 829.932
+
+[node name="EnterButton" type="Button" parent="SellingMenu"]
+layout_mode = 0
+offset_left = 1064.68
+offset_top = 840.35
+offset_right = 1122.68
+offset_bottom = 871.35
+text = "ENTER"
+
+[node name="StopButton" type="Button" parent="SellingMenu"]
+layout_mode = 0
+offset_left = 967.018
+offset_top = 931.906
+offset_right = 1084.02
+offset_bottom = 962.906
+text = "STOP SELLING"
+
+[node name="BankruptButton" type="Button" parent="SellingMenu"]
+layout_mode = 0
+offset_left = 1110.32
+offset_top = 931.906
+offset_right = 1232.32
+offset_bottom = 962.906
+text = "GO BANKRUPT"
+
+[node name="SellingConfirmation" type="RichTextLabel" parent="."]
+visible = false
+offset_left = 857.0
+offset_top = 772.0
+offset_right = 1207.0
+offset_bottom = 883.0
+text = "Are you sure you want to sell a house at Example1 for £200?"
+
+[node name="Button" type="Button" parent="SellingConfirmation"]
+layout_mode = 0
+offset_left = 90.9115
+offset_top = 65.08
+offset_right = 126.912
+offset_bottom = 96.08
+text = "YES"
+
+[node name="Button2" type="Button" parent="SellingConfirmation"]
+layout_mode = 0
+offset_left = 203.43
+offset_top = 65.08
+offset_right = 237.43
+offset_bottom = 96.08
+text = "NO"
+
+[node name="WinScreen" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="QuitButton" type="Button" parent="WinScreen"]
+layout_mode = 0
+offset_left = 823.717
+offset_top = 810.921
+offset_right = 1019.72
+offset_bottom = 841.921
+scale = Vector2(2, 2)
+text = "RETURN TO MAIN MENU"
+
+[node name="WinText" type="RichTextLabel" parent="WinScreen"]
+layout_mode = 0
+offset_left = 712.26
+offset_top = 297.556
+offset_right = 964.26
+offset_bottom = 379.556
+scale = Vector2(4.905, 4.905)
+text = "PLAYER1 WINS!"
+
+[node name="Card" type="Node2D" parent="."]
+visible = false
+position = Vector2(1013.72, 507.916)
+scale = Vector2(0.6, 0.6)
+
+[node name="OpportunityKnocks" type="Sprite2D" parent="Card"]
+texture = ExtResource("16_cr6pr")
+
+[node name="PotLuck" type="Sprite2D" parent="Card"]
+texture = ExtResource("17_16uqp")
+
+[node name="Description" type="RichTextLabel" parent="Card"]
+offset_left = -321.986
+offset_top = -443.246
+offset_right = 342.014
+offset_bottom = -55.2456
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 42
+text = "Test Words"
+
+[node name="AcceptCard" type="Button" parent="Card"]
+visible = false
+offset_left = -226.445
+offset_top = 523.175
+offset_right = 219.555
+offset_bottom = 705.175
+icon = ExtResource("18_veke8")
+
+[node name="FineOrOpportunity" type="HBoxContainer" parent="Card"]
+visible = false
+offset_left = -436.98
+offset_top = 523.175
+offset_right = 460.02
+offset_bottom = 705.175
+
+[node name="DrawOpportunityCard" type="Button" parent="Card/FineOrOpportunity"]
+layout_mode = 2
+icon = ExtResource("19_t8xlp")
+
+[node name="TakeFine" type="Button" parent="Card/FineOrOpportunity"]
+layout_mode = 2
+icon = ExtResource("20_7al8f")
+
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="JailButton(DEBUG)" to="." method="_on_button_2_pressed"]
 [connection signal="pressed" from="PurchaseButton" to="." method="_on_purchase_button_pressed"]
 [connection signal="pressed" from="AuctionButton" to="." method="_on_auction_button_pressed"]
 [connection signal="pressed" from="MovePlayerSpaces(DEBUG)" to="." method="_on_move_player_spaces_debug_pressed"]
 [connection signal="pressed" from="DrawCardButton(DEBUG)" to="." method="_on_draw_card_button_debug_pressed"]
+[connection signal="pressed" from="WinScreen/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="pressed" from="Card/AcceptCard" to="." method="_on_accept_card_pressed"]
 [connection signal="pressed" from="Card/FineOrOpportunity/DrawOpportunityCard" to="." method="_on_draw_opportunity_card_pressed"]
 [connection signal="pressed" from="Card/FineOrOpportunity/TakeFine" to="." method="_on_take_fine_pressed"]
