@@ -3,7 +3,7 @@ using System;
 
 public partial class MainMenu : Node
 {
-	private int numPlayers = 0;
+	private int numPlayers = 2;
 	private int numBots = 0;
 	
 	// Called when the node enters the scene tree for the first time.

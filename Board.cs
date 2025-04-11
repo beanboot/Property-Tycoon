@@ -16,7 +16,7 @@ public partial class Board : Node2D
 	private Sprite2D[] boardSpaces;
 	private Player[] players;
 	private bool canPressButton = true;
-	private int numOfPlayers = 6;
+	private int numOfPlayers;
 	private int currentPlayerIndex;
 	private Jail jail;
 	private FreeParking freeParking;
@@ -42,6 +42,7 @@ public partial class Board : Node2D
 	private bool doneButtonPressed = false;
 	private Card currentCard;
 	private GameData gameData;
+	private Label[] labelArray = new Label[40];
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -61,7 +62,6 @@ public partial class Board : Node2D
 		display_current_player_text();
 
 		show_houses();
-		
 	}
 
 	public void display_board_info() 
@@ -87,6 +87,7 @@ public partial class Board : Node2D
 		else {
 			currentPlayerIndex += 1;
 		}
+
 		Player currentPlayer = players[currentPlayerIndex];
 		//if the player is in prison they can either use their Get out of jail free card or remain in prison until daysInJail reaches 2
 		//leaving prison uses your turn so no matter what the player is changed after a turn concerning prison sentence
@@ -99,15 +100,17 @@ public partial class Board : Node2D
 			}
 			else
 			{
-				if (currentPlayer.daysInJail >= 2)
+				if (currentPlayer.daysInJail >= 2) // released on third turn
 				{
 					jail.release_from_jail(currentPlayer);
 					currentPlayer.daysInJail = 0;
 				}
+
 				currentPlayer.daysInJail++;
+				change_player();
 			}
-			change_player();
 		}
+
 		display_current_player_text();
 	}
 
@@ -389,7 +392,7 @@ public partial class Board : Node2D
 			return;
 		}
 
-		if(forward)
+		if (forward)
 		{
 			// Iterates the current player through the boardSpaces array targetMoveValue times (with a delay)
 			for (int i = 0; i < targetMoveValue; i++) {
@@ -420,6 +423,7 @@ public partial class Board : Node2D
 		if (type == SpaceType.PL | type == SpaceType.OK)
 		{
 			play_card(currentPlayer, deck.draw(type), type);
+			return;
 		} 
 		else if (type == SpaceType.GTJ)
 		{
@@ -507,6 +511,12 @@ public partial class Board : Node2D
 			}
 		}
 
+		if (currentPlayer.does_player_have_colour_set() && !purchaseable)
+		{
+			purchase_houses_confirmation();
+			return;
+		}
+
 		if (!purchaseable)
 		{
 			if (!doubleRoll) 
@@ -542,6 +552,164 @@ public partial class Board : Node2D
 		change_player();
 	}
 
+	private async void purchase_houses_confirmation()
+	{
+		GetNode<RichTextLabel>("PurchaseHousesQuery").Show();
+		var yesButton = GetNode<Button>("PurchaseHousesQuery/Button");
+		var noButton = GetNode<Button>("PurchaseHousesQuery/Button2");
+
+		bool? result = null;
+
+		void on_yes_pressed() {
+			result = true;
+		}
+
+		void on_no_pressed() {
+			result = false;
+		}
+
+		yesButton.Pressed += on_yes_pressed;
+		noButton.Pressed += on_no_pressed;
+
+		while (result == null)
+		{
+			await ToSignal(GetTree().CreateTimer(0.01f), "timeout");
+		}
+
+		if (result == true)
+		{
+			GetNode<RichTextLabel>("PurchaseHousesQuery").Hide();
+			purchase_houses();
+		} else 
+		{
+			GetNode<RichTextLabel>("PurchaseHousesQuery").Hide();
+
+			if (!doubleRoll) 
+			{
+				change_player();
+			}
+
+			canPressButton = true;
+		}
+	}
+
+	private async void purchase_houses()
+	{
+		GetNode<Control>("PurchaseHousesMenu").Show();
+		var ownedProperties = GetNode<RichTextLabel>("PurchaseHousesMenu/OwnedProperties");
+		var inputBox = GetNode<LineEdit>("PurchaseHousesMenu/LineEdit");
+		var enterButton = GetNode<Button>("PurchaseHousesMenu/EnterButton");
+		var quitButton = GetNode<Button>("PurchaseHousesMenu/QuitButton");
+
+		inputBox.Text = "";
+
+		string validPropertiesText = "You can buy houses for:";
+		LinkedList<Property> validProperties = new LinkedList<Property>();
+		foreach (Property p in players[currentPlayerIndex].get_properties())
+		{
+			if (players[currentPlayerIndex].does_player_have_colour_set(p.get_type()) && p.get_num_houses() < 5)
+			{
+				validPropertiesText += "\n" + p.get_name();
+				validProperties.AddLast(p);
+			}
+		}
+
+		ownedProperties.Text = validPropertiesText;
+
+		bool? endTurn = null;
+
+		void on_enter_pressed() {
+			endTurn = false;
+		}
+
+		void on_quit_pressed() {
+			endTurn = true;
+		}
+
+		enterButton.Pressed += on_enter_pressed;
+		quitButton.Pressed += on_quit_pressed;
+
+		while(endTurn == null)
+		{
+			await ToSignal(GetTree().CreateTimer(0.01f), "timeout");
+		}
+
+		if (endTurn == false)
+		{
+			bool validInput = false;
+			Property selectedProperty = null;
+
+			foreach (Property p in validProperties)
+			{
+				if (inputBox.Text == p.get_name())
+				{
+					validInput = true;
+					selectedProperty = p;
+				}
+			}
+
+			if (validInput)
+			{
+				GetNode<Control>("PurchaseHousesMenu").Hide();
+
+				var purchaseConfirmationTextBox = GetNode<RichTextLabel>("PurchaseHousesConfirmation");
+
+				purchaseConfirmationTextBox.Show();
+				purchaseConfirmationTextBox.Text = "Are you sure you want to buy a house at " + selectedProperty.get_name() + " for £" + selectedProperty.get_cost();
+				
+				var yesButton = GetNode<Button>("PurchaseHousesConfirmation/Button");
+				var noButton = GetNode<Button>("PurchaseHousesConfirmation/Button2");
+
+				bool? result = null;
+
+				void on_yes_pressed() {
+					result = true;
+				}
+
+				void on_no_pressed() {
+					result = false;
+				}
+
+				yesButton.Pressed += on_yes_pressed;
+				noButton.Pressed += on_no_pressed;
+
+				while (result == null)
+				{
+					await ToSignal(GetTree().CreateTimer(0.01f), "timeout");
+				}
+
+				if (result == true)
+				{
+					if (players[currentPlayerIndex].decrease_balance(selectedProperty.get_cost()))
+					{
+						selectedProperty.add_house();
+						purchaseConfirmationTextBox.Hide();
+						labelArray[selectedProperty.get_position() - 1].Text = selectedProperty.get_num_houses() + " House/s";
+						purchase_houses();
+					}
+				} else 
+				{
+					purchaseConfirmationTextBox.Hide();
+					purchase_houses();
+				}
+
+			} else
+			{
+				purchase_houses();
+			}
+		} else 
+		{
+			GetNode<Control>("PurchaseHousesMenu").Hide();
+
+			if (!doubleRoll) 
+			{
+				change_player();
+			}
+
+			canPressButton = true;
+		}
+	}
+
 	private void _on_purchase_button_pressed()
 	{
 		Player currentPlayer = players[currentPlayerIndex];
@@ -569,6 +737,13 @@ public partial class Board : Node2D
 				bank.add_to_properties(property); // adds the property back if the player doesn't have enough to buy property
 				return;
 			}
+		}
+
+		if (currentPlayer.does_player_have_colour_set())
+		{
+			purchase_houses_confirmation();
+			purchaseable = false;
+			return;
 		}
 
 		if (!doubleRoll) 
@@ -654,6 +829,12 @@ public partial class Board : Node2D
 				bank.add_to_properties(property); // adds the property back if the player doesn't have enough to buy property
 				return;
 			}
+		}
+
+		if (currentPlayer.does_player_have_colour_set())
+		{
+			purchase_houses_confirmation();
+			return;
 		}
 
 		if (!doubleRoll) 
@@ -810,33 +991,53 @@ public partial class Board : Node2D
 				player.decrease_balance(totalCost);
 				break;
 			case CardType.MOVESPACESB:
+				GetNode<Node2D>("Card").Hide();
 				handle_current_player(cardParam, false, false);
-				break;
+				return;
 			case CardType.MOVELOCATIONB:
-				if(cardParam < player.get_pos())
+				if (cardParam < player.get_pos())
 				{
+					GetNode<Node2D>("Card").Hide();
 					handle_current_player(player.get_pos() - cardParam, false, false);
+					return;
 				}
 				else
 				{
+					GetNode<Node2D>("Card").Hide();
 					handle_current_player(40 - cardParam + player.get_pos(), false, false);
+					return;
 				}
-				break;
 			case CardType.MOVELOCATIONF:
 				if(cardParam > player.get_pos())
 				{
+					GetNode<Node2D>("Card").Hide();
 					handle_current_player(cardParam - player.get_pos(), true, true);
+					return;
 				}
 				else
 				{
+					GetNode<Node2D>("Card").Hide();
 					handle_current_player(40 - player.get_pos() + cardParam, true, true);
+					return;
 				}
-				break;
 			default:
 				Console.WriteLine("Unknown card type");
 				break;
 		}
+
 		GetNode<Node2D>("Card").Hide();
+
+		if (players[currentPlayerIndex].does_player_have_colour_set())
+		{
+			purchase_houses_confirmation();
+			return;
+		}
+
+		if (!doubleRoll) 
+		{
+			change_player();
+		}
+
 		canPressButton = true;
 	}
 
@@ -873,10 +1074,9 @@ public partial class Board : Node2D
 				housesLabel.HorizontalAlignment = HorizontalAlignment.Center;
 				housesLabel.VerticalAlignment = VerticalAlignment.Center;
 
-				boardSpaces[i].AddChild(housesLabel);
-							
+				labelArray[i] = housesLabel;
 
-				
+				boardSpaces[i].AddChild(housesLabel);
 			}
 		}
 	}
@@ -907,7 +1107,8 @@ public partial class Board : Node2D
 	{
 		//called when the DrawCard button is pressed
 		//debug method to draw a random PotLuck card
-		play_card(players[currentPlayerIndex], deck.draw(SpaceType.PL), SpaceType.PL);
+		SpaceType randomType = GD.Randf() < 0.5 ? SpaceType.PL : SpaceType.OK;
+		play_card(players[currentPlayerIndex], deck.draw(randomType), randomType);
 	}
 	public void _on_draw_opportunity_card_pressed()
 	{
