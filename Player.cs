@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public partial class Player : Node2D
 {
-	// CurrentPos is unique to each player and holds the current position of the player
+	// initialise global variables
 	private int currentPos;
 	private int balance; 
 	private string name;
@@ -13,7 +13,10 @@ public partial class Player : Node2D
 	public int daysInJail = 0;
 	public bool getOutJail = false;
 	public bool hasPassedGo = false;
-	// Colour set booleans
+	public bool isBot = false;
+	public bool isBankrupt = false;
+
+	// colour set booleans
 	public bool hasBrownSet = false;
 	public bool hasBlueSet = false;
 	public bool hasPurpleSet = false;
@@ -22,11 +25,11 @@ public partial class Player : Node2D
 	public bool hasYellowSet = false;
 	public bool hasGreenSet = false;
 	public bool hasDeepBlueSet = false;
-	public bool isBot = false;
-	public bool isBankrupt = false;
 
 
-	// Called when the node enters the scene tree for the first time.
+
+
+	// called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		currentPos = 0;
@@ -34,13 +37,13 @@ public partial class Player : Node2D
 		properties = new LinkedList<Property>();
 	}
 
-	// Takes a vector2 as a parameter (p1) and sets the player's spacial position to that of p1
+	// takes a vector2 as a parameter (p1) and sets the player's spacial position to that of p1
 	public void player_movement(Godot.Vector2 p1)
 	{
 		Position = p1;
 	}
 
-	// Iterates the currentPos variable by 1, if it surpasses 40 it goes back to 0
+	// iterates the currentPos variable by 1, if it surpasses 40 it goes back to 0
 	public bool iterate_pos()
 	{
 	
@@ -63,7 +66,7 @@ public partial class Player : Node2D
 		}
 	}
 
-	// Returns the player's current position
+	// returns the player's current position
 	public int get_pos()
 	{
 		return currentPos;
@@ -74,16 +77,19 @@ public partial class Player : Node2D
 		currentPos = position;
 	}
 
+
 	public int get_balance()
 	{
 		return balance;
 	}
 
+	// increases player balance
 	public void increase_balance(int amount)
 	{
 		balance += amount;
 	}
 
+	// returns true if the player afford to lose the amount (and updates balance), false if they cannot
 	public bool decrease_balance(int amount)
 	{
 		if (balance - amount >= 0)
@@ -95,19 +101,23 @@ public partial class Player : Node2D
 		}
 	}
 
+	// sets the players name
 	public void set_name(string name){
 		this.name = name;
 	}
 
+	// adds to the players property list
 	public void add_to_properties(Property property){
 		properties.AddLast(property);
 	}
 
+	// returns the players property list
 	public LinkedList<Property> get_properties()
 	{
 		return properties;
 	}
 
+	// removes a property from the players properties
 	public bool remove_from_properties(Property property)
 	{
 		if (properties.Contains(property))
@@ -121,10 +131,12 @@ public partial class Player : Node2D
 		}
 	}
 	
+	// returns player name
 	public string get_name(){
 		return name;
 	}
 
+	// checks if player has any colour set, returns true if they do
 	public bool does_player_have_colour_set()
 	{
 		if (hasBrownSet || hasBlueSet || hasPurpleSet || hasOrangeSet || hasRedSet || hasYellowSet || hasGreenSet || hasDeepBlueSet)
@@ -135,6 +147,7 @@ public partial class Player : Node2D
 		}
 	}
 
+	// checks if player has a specific type's colour set, returns true if they do
 	public bool does_player_have_colour_set(SpaceType type)
 	{
 		switch (type)
